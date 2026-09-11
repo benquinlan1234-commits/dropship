@@ -44,7 +44,9 @@ setting id charsets, default-vs-type agreement, select defaults present in their
 options, declared block types, `order`/`block_order` integrity, `settings_data`
 keys existing in `settings_schema`, and `render`/`section` targets resolving.
 
-It exits non-zero on failure, so it drops straight into CI or a pre-push hook.
+Both run in CI on every pull request
+([`.github/workflows/theme-checks.yml`](.github/workflows/theme-checks.yml)),
+and `validate-theme.py` exits non-zero, so it also drops into a pre-push hook.
 This is not hypothetical — a range value of `34` against `step: 5` passed theme
 check and made every page render the 404 template. See
 [`DECISIONS.md`](DECISIONS.md) for that one.

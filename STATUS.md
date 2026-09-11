@@ -5,7 +5,7 @@ Where the theme stands, what was done to get here, and what is left.
 - **Branch:** `claude/pdrn-orb-serum-theme-iqu86p` — [PR #2](https://github.com/benquinlan1234-commits/dropship/pull/2), 5 commits ahead of `main`
 - **`main`** is v1, merged as PR #1. It renders, but it is the pre-design-pass theme
 - **To upload:** `dist/v2-fixed.zip`
-- **Checks:** `shopify theme check` 0 errors / 2 warnings · `scripts/validate-theme.py` 0 failures
+- **Checks:** `shopify theme check` 0 errors / 2 warnings · `scripts/validate-theme.py` 0 failures · both run in CI on every PR
 
 Companion documents:
 
@@ -106,6 +106,11 @@ Four layers, because theme check alone let a page-breaking bug through.
 | Real Liquid | Ruby `liquid` gem, strict parse | Genuine parse errors, free of theme-check's reimplementation |
 | Rendered | Chromium at 1440 and 390 | Contrast against real backdrops, hover states, reduced motion, overflow |
 
+The first two run in CI on every pull request
+([`.github/workflows/theme-checks.yml`](.github/workflows/theme-checks.yml)).
+The Ruby parse and the Chromium renders are manual — worth doing after any
+change to Liquid or to the design system.
+
 `validate-theme.py` was regression-tested rather than trusted: 3 failures on the
 broken head, 1 on `main`, 0 on this branch. It exits non-zero, so it drops
 straight into CI or a pre-push hook.
@@ -159,10 +164,11 @@ straight into CI or a pre-push hook.
 
 ### Recommended — not blocking
 
-12. **Add CI.** There is no `.github/workflows/` at all, so nothing verifies the
-    theme on push and the checks above only ran because I ran them. A workflow
-    running `shopify theme check` plus `scripts/validate-theme.py` would have
-    caught the 404 before upload. Offered, not yet built.
+12. ~~**Add CI.**~~ **Done** — `.github/workflows/theme-checks.yml` runs
+    `shopify theme check --fail-level error` and `scripts/validate-theme.py` as
+    two jobs on every pull request and on pushes to `main`. Verified against the
+    commit that broke Shopify: theme check passes it, the runtime-rules job
+    fails it, so this would have blocked the 404 before upload.
 13. **Measure Lighthouse** once the store is live with real imagery. The
     structural work is done — one deferred script, lazy images, `srcset`,
     explicit dimensions, `preload="none"` video, non-blocking fonts — but the
