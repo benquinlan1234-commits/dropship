@@ -1,0 +1,409 @@
+<div class="section reviews{% if section.settings.show_divider %} section--bordered{% endif %}">
+  <div class="page-width">
+    <div class="reviews__header">
+      <div>
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="section__eyebrow">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2>{{ section.settings.heading }}</h2>
+        {%- endif -%}
+      </div>
+
+      {%- if section.settings.show_summary -%}
+        <div class="reviews__summary">
+          {% render 'star-rating',
+            rating: section.settings.rating_value,
+            count_text: section.settings.review_count_text
+          %}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+
+  {%- if section.blocks.size > 0 -%}
+    <scroll-carousel class="reviews__carousel">
+      <div class="reviews__track-wrap">
+        <ul
+          class="reviews__track"
+          data-carousel-track
+          role="list"
+          tabindex="0"
+          aria-label="{{ section.settings.heading | default: 'Reviews' | escape }}"
+        >
+          {%- for block in section.blocks -%}
+            <li class="reviews__item" data-carousel-item {{ block.shopify_attributes }}>
+              <figure class="review">
+                {%- if block.settings.image != blank -%}
+                  <div class="media media--landscape review__media">
+                    <img
+                      src="{{ block.settings.image | image_url: width: 700 }}"
+                      srcset="
+                        {{ block.settings.image | image_url: width: 400 }} 400w,
+                        {{ block.settings.image | image_url: width: 700 }} 700w
+                      "
+                      sizes="(min-width: 750px) 340px, 78vw"
+                      width="{{ block.settings.image.width }}"
+                      height="{{ block.settings.image.height }}"
+                      alt="{{ block.settings.image_alt | escape }}"
+                      loading="lazy"
+                    >
+                  </div>
+                {%- endif -%}
+
+                {%- if block.settings.rating != blank -%}
+                  <div class="review__rating">
+                    {% render 'star-rating', rating: block.settings.rating %}
+                  </div>
+                {%- endif -%}
+
+                <blockquote class="review__quote">
+                  <p>{{ block.settings.text }}</p>
+                </blockquote>
+
+                <figcaption class="review__meta">
+                  <span class="review__name">{{ block.settings.name }}</span>
+                  {%- if block.settings.meta != blank -%}
+                    <span class="review__detail text-small text-secondary">{{ block.settings.meta }}</span>
+                  {%- endif -%}
+                  {%- if block.settings.verified -%}
+                    <span class="review__verified text-small">
+                      {% render 'icon', icon: 'check' %}
+                      {{ section.settings.verified_label | default: 'Verified purchase' }}
+                    </span>
+                  {%- endif -%}
+                </figcaption>
+              </figure>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </div>
+
+      <div class="page-width reviews__controls">
+        <button class="carousel-control" type="button" data-carousel-prev aria-label="{{ 'general.accessibility.previous' | t }}">
+          {% render 'icon', icon: 'chevron' %}
+        </button>
+        <button class="carousel-control" type="button" data-carousel-next aria-label="{{ 'general.accessibility.next' | t }}">
+          {% render 'icon', icon: 'chevron' %}
+        </button>
+      </div>
+    </scroll-carousel>
+  {%- endif -%}
+
+  {%- if section.settings.show_app_slot -%}
+    <div class="page-width reviews__app">
+      {% render 'reviews-app-slot', product: section.settings.product %}
+    </div>
+  {%- endif -%}
+</div>
+
+{% style %}
+  .reviews__header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 40px;
+  }
+
+  .reviews__header h2 {
+    margin-bottom: 0;
+  }
+
+  .reviews__summary {
+    flex: 0 0 auto;
+  }
+
+  .reviews__track-wrap {
+    overflow: hidden;
+  }
+
+  .reviews__track {
+    display: flex;
+    gap: 16px;
+    margin: 0;
+    padding: 0 var(--gutter);
+    list-style: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .reviews__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .reviews__item {
+    flex: 0 0 auto;
+    width: min(78vw, 340px);
+    scroll-snap-align: start;
+  }
+
+  .review {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    margin: 0;
+    padding: 26px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background-color: var(--color-surface);
+  }
+
+  .review__media {
+    margin: -26px -26px 22px;
+    border-radius: var(--radius) var(--radius) 0 0;
+  }
+
+  .review__rating {
+    margin-bottom: 16px;
+  }
+
+  .review__quote {
+    flex: 1 1 auto;
+    margin: 0 0 22px;
+  }
+
+  .review__quote p {
+    margin: 0;
+    font-size: 0.9375rem;
+    line-height: 1.65;
+  }
+
+  .review__meta {
+    display: grid;
+    gap: 2px;
+    padding-top: 18px;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .review__name {
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .review__verified {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 6px;
+    color: var(--color-accent);
+  }
+
+  .review__verified .icon {
+    width: 14px;
+    height: 14px;
+  }
+
+  .reviews__controls {
+    display: none;
+    gap: 8px;
+    justify-content: flex-end;
+    margin-top: 24px;
+  }
+
+  .carousel-control {
+    display: inline-flex;
+    width: 42px;
+    height: 42px;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 1px solid var(--color-silver);
+    border-radius: 999px;
+    background: none;
+    color: inherit;
+    cursor: pointer;
+    transition: background-color var(--duration) var(--ease), color var(--duration) var(--ease);
+  }
+
+  .carousel-control:hover:not([disabled]) {
+    background-color: var(--color-text);
+    color: var(--color-background);
+  }
+
+  .carousel-control[disabled] {
+    opacity: 0.3;
+    cursor: default;
+  }
+
+  .carousel-control:first-child .icon {
+    transform: rotate(90deg);
+  }
+
+  .carousel-control:last-child .icon {
+    transform: rotate(-90deg);
+  }
+
+  .reviews__app:not(:empty) {
+    margin-top: 40px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .reviews__controls {
+      display: flex;
+    }
+
+    .reviews__track {
+      gap: 20px;
+    }
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Reviews",
+  "tag": "section",
+  "class": "reviews-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Customer love"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "What people say after a month"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_summary",
+      "label": "Show rating summary",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "rating_value",
+      "label": "Star rating",
+      "default": "4.8"
+    },
+    {
+      "type": "text",
+      "id": "review_count_text",
+      "label": "Review count text",
+      "default": "2,431 reviews"
+    },
+    {
+      "type": "text",
+      "id": "verified_label",
+      "label": "Verified badge label",
+      "default": "Verified purchase"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_divider",
+      "label": "Show top divider",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Reviews app"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_app_slot",
+      "label": "Show reviews app slot",
+      "default": true,
+      "info": "Renders snippets/reviews-app-slot.liquid so a reviews app can be dropped in later."
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product for the app slot",
+      "info": "Leave empty to use the featured product from Theme settings."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name",
+          "default": "Mina"
+        },
+        {
+          "type": "text",
+          "id": "meta",
+          "label": "Detail line",
+          "default": "Combination skin · 6 weeks in",
+          "info": "Age, skin type or how long they have used it."
+        },
+        {
+          "type": "text",
+          "id": "rating",
+          "label": "Star rating",
+          "default": "5"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Review",
+          "default": "The orbs burst the second I press them. My skin feels cushioned by the afternoon instead of tight."
+        },
+        {
+          "type": "checkbox",
+          "id": "verified",
+          "label": "Show verified badge",
+          "default": true
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "image_alt",
+          "label": "Image alt text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Reviews",
+      "blocks": [
+        {
+          "type": "review",
+          "settings": {
+            "name": "Mina",
+            "meta": "Combination skin · 6 weeks in",
+            "text": "The orbs burst the second I press them. My skin feels cushioned by the afternoon instead of tight."
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "name": "Soo-Ah",
+            "meta": "Dry skin · 3 months in",
+            "text": "I was sceptical about the capsules, but it sinks in faster than any serum I have used and leaves nothing sticky behind."
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "name": "Hana",
+            "meta": "Sensitive skin · 4 weeks in",
+            "text": "Nothing stung, which is rare for me. My cheeks look calmer and the texture around my nose is softer."
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "name": "Yuna",
+            "meta": "Oily skin · 8 weeks in",
+            "text": "Light enough that makeup still sits properly on top. I use two orbs morning and night and the bottle lasted the full two months."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
