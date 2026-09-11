@@ -7,6 +7,10 @@ settings.
 
 - **52 files, `shopify theme check` clean** (0 errors; 2 warnings, both from the
   Google Fonts `<link>` — see [Known warnings](#known-warnings)).
+
+> **[`STATUS.md`](STATUS.md) is the handover** — what is built, what is left
+> before this can sell anything, and what is still open. Start there if you are
+> picking this up.
 - Mobile-first, lazy-loaded imagery, `prefers-reduced-motion` respected.
 - Cart is a slide-out drawer using `/cart/add.js` and the Section Rendering API.
 
