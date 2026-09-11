@@ -205,9 +205,32 @@ page selling an ingredient concentration, the figures are the argument.
 **Materials over flat colour.** A 3% grain generated from an inline SVG
 turbulence filter (no asset request), a pearl-to-lilac radial wash behind the
 hero and the offer, a blurred violet orb on a 60-second drift, and pearl
-surfaces with a hairline plus a 1px inner top highlight. Still no drop shadows
-— verified as zero non-inset box-shadows on the rendered page. The orb and the
-grain are settings, so the page can be taken completely flat.
+surfaces with a sheen gradient and an inner top highlight. The orb, grain, glow
+and sheen are all settings, so the page can be taken completely flat.
+
+**Depth is a violet halo, and the earlier no-drop-shadows rule is retired.**
+The first pass banned shadows outright, which is what made the page read
+architectural rather than dewy. Reading the reference page's CSS, its depth is
+`0 16px 40px rgba(150,130,200,.22)` — the accent colour, wide blur, low opacity
+— and its surfaces carry soft diagonal gradients. Both are tokens here, scaled
+by a **Glow** setting; 0 restores the flat look exactly. No grey shadow is used
+anywhere.
+
+**Silver is drawn as metal.** Every rule is a gradient that fades at both ends
+and brightens in the middle; every ring, tag and frame edge is a gradient border
+painted in the border box with the fill in the padding box, so the metal follows
+the curve. A second token, **Silver — highlight `#EDEBF2`**, provides the bright
+point. Flat `1px solid grey` disappears next to purple; this does not.
+
+**Motion is tokenised, not hand-written per rule.** Hero copy rises on load
+(520ms, 80ms stagger); sections reveal on scroll (900ms expo-out, siblings
+staggered 90ms by an index set in JS); the hero media parallaxes on a
+rAF-throttled listener clamped to ±48px; cards, buttons and rings lift on hover
+over 240ms with their halo widening. Every displacement is a custom property
+(`--lift-y`, `--lift-y-sm`, `--lift-scale`) so `prefers-reduced-motion` zeroes
+all of them in one block. That mattered: the first attempt reset hovers rule by
+rule and the bundle card still lifted under reduced motion — rendering in
+`reducedMotion: 'reduce'` caught it.
 
 **A second accent token, and why.** `#6E5AAB` passes AA on the page ground and
 with white button text, but violet *text* on the tinted fills did not: the

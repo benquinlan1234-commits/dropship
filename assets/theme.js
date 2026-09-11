@@ -585,8 +585,25 @@
      ---------------------------------------------------------------------- */
 
   function setupReveal() {
-    if (settings.animationsEnabled === false || prefersReducedMotion.matches) return;
-    if (!('IntersectionObserver' in window)) return;
+    var items = document.querySelectorAll('.reveal');
+    if (!items.length) return;
+
+    if (settings.animationsEnabled === false || prefersReducedMotion.matches || !('IntersectionObserver' in window)) {
+      items.forEach(function (el) {
+        el.classList.add('is-visible');
+      });
+      return;
+    }
+
+    /* Siblings inside one parent arrive in sequence. The index drives a CSS
+       transition-delay, so a row of three cards cascades instead of popping. */
+    var groups = new Map();
+    items.forEach(function (el) {
+      var parent = el.parentElement;
+      var index = groups.get(parent) || 0;
+      el.style.setProperty('--reveal-index', Math.min(index, 5));
+      groups.set(parent, index + 1);
+    });
 
     var observer = new IntersectionObserver(
       function (entries, obs) {
@@ -596,17 +613,66 @@
           obs.unobserve(entry.target);
         });
       },
-      { rootMargin: '0px 0px -10% 0px' }
+      { rootMargin: '0px 0px -12% 0px', threshold: 0.05 }
     );
 
-    document.querySelectorAll('.reveal').forEach(function (el) {
+    items.forEach(function (el) {
       observer.observe(el);
+    });
+  }
+
+  /* Parallax: the hero media drifts slower than the page. Driven from a
+     single rAF-throttled scroll listener, and clamped so nothing ever
+     detaches from its column. */
+  function setupParallax() {
+    var layers = Array.prototype.slice.call(document.querySelectorAll('[data-parallax]'));
+    if (!layers.length) return;
+
+    if (prefersReducedMotion.matches || settings.animationsEnabled === false) {
+      layers.forEach(function (el) {
+        el.style.setProperty('--parallax-y', '0px');
+      });
+      return;
+    }
+
+    var ticking = false;
+
+    var update = function () {
+      ticking = false;
+      var viewport = window.innerHeight;
+      layers.forEach(function (el) {
+        var rect = el.getBoundingClientRect();
+        if (rect.bottom < -200 || rect.top > viewport + 200) return;
+        var rate = parseFloat(el.dataset.parallax) || 0.06;
+        /* Distance of the element's centre from the viewport centre. */
+        var offset = rect.top + rect.height / 2 - viewport / 2;
+        var shift = Math.max(-48, Math.min(48, offset * rate * -1));
+        el.style.setProperty('--parallax-y', shift.toFixed(1) + 'px');
+      });
+    };
+
+    var onScroll = function () {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(update);
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    update();
+
+    prefersReducedMotion.addEventListener('change', function () {
+      if (!prefersReducedMotion.matches) return;
+      layers.forEach(function (el) {
+        el.style.setProperty('--parallax-y', '0px');
+      });
     });
   }
 
   function init() {
     setupVideos();
     setupReveal();
+    setupParallax();
   }
 
   if (document.readyState === 'loading') {

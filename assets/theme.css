@@ -206,9 +206,9 @@ ol {
 .eyebrow--rule::after {
   content: '';
   flex: 0 0 auto;
-  width: 36px;
+  width: 48px;
   height: 1px;
-  background-color: var(--color-silver);
+  background-image: var(--silver-line);
 }
 
 .text-secondary {
@@ -262,7 +262,8 @@ ol {
 }
 
 .section--bordered {
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid transparent;
+  border-image: var(--silver-line) 1;
 }
 
 @media screen and (min-width: 750px) {
@@ -363,15 +364,15 @@ ol {
   content: '';
   flex: 1 1 auto;
   height: 1px;
-  background-color: var(--color-border);
+  background-image: var(--silver-line);
 }
 
 .orb-rule__dot {
   flex: 0 0 auto;
-  width: 7px;
-  height: 7px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  background-color: var(--color-silver);
+  background-image: var(--silver-fill);
 }
 
 /* Buttons ------------------------------------------------------------- */
@@ -396,17 +397,23 @@ ol {
   text-align: center;
   text-decoration: none;
   cursor: pointer;
-  transition: background-color var(--duration) var(--ease), color var(--duration) var(--ease),
-    transform var(--duration) var(--ease), border-color var(--duration) var(--ease);
+  box-shadow: var(--shadow-soft);
+  transition: background-color var(--duration-hover) var(--ease-out),
+    color var(--duration-hover) var(--ease-out),
+    transform var(--duration-hover) var(--ease-out),
+    box-shadow var(--duration-hover) var(--ease-out),
+    border-color var(--duration-hover) var(--ease-out);
 }
 
 .button:hover {
   background-color: var(--color-text);
-  transform: translateY(-1px);
+  transform: translateY(var(--lift-y-sm));
+  box-shadow: var(--shadow-lift);
 }
 
 .button:active {
-  transform: none;
+  transform: translateY(0);
+  box-shadow: var(--shadow-press);
 }
 
 .button[disabled],
@@ -415,6 +422,7 @@ ol {
   color: var(--color-text-secondary);
   cursor: not-allowed;
   transform: none;
+  box-shadow: none;
 }
 
 .button--full {
@@ -493,9 +501,24 @@ ol {
    along the top edge. No drop shadows anywhere in this theme. */
 .surface {
   background-color: var(--color-surface);
+  background-image: var(--sheen);
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
-  box-shadow: var(--edge-light);
+  box-shadow: var(--edge-light), var(--shadow-soft);
+}
+
+/* Lifts on hover with a violet halo, the way a jar catches light when you
+   pick it up. Used by every card the visitor can act on. */
+.hover-lift {
+  transition: transform var(--duration-hover) var(--ease-out),
+    box-shadow var(--duration-hover) var(--ease-out),
+    border-color var(--duration-hover) var(--ease-out);
+}
+
+.hover-lift:hover {
+  transform: translateY(var(--lift-y));
+  box-shadow: var(--edge-light), var(--shadow-lift);
+  border-color: var(--color-silver);
 }
 
 .media {
@@ -510,6 +533,13 @@ ol {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 1.2s var(--ease-out);
+}
+
+/* A slow drift in, never a snap. */
+.media--zoom:hover img,
+.hover-lift:hover .media img {
+  transform: scale(1.03);
 }
 
 .media--square {
@@ -528,10 +558,15 @@ ol {
   aspect-ratio: 3 / 2;
 }
 
-/* A tall pill mask with a silver hairline, for hero and gallery media. */
+/* A tall pill mask edged in brushed silver: the gradient sits in the border
+   box, the fill in the padding box, so the metal follows the curve. */
 .media--pill {
   border-radius: 220px 220px 220px 220px / 180px 180px 180px 180px;
-  border: 1px solid var(--color-silver);
+  border: 1px solid transparent;
+  background-image: linear-gradient(var(--color-pearl), var(--color-pearl)), var(--silver-fill);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  box-shadow: var(--shadow-soft);
 }
 
 @media screen and (max-width: 749px) {
@@ -595,10 +630,22 @@ ol {
   justify-content: center;
   width: 54px;
   height: 54px;
-  border: 1px solid var(--color-silver);
+  border: 1px solid transparent;
   border-radius: 50%;
   color: var(--color-accent);
-  transition: border-color var(--duration) var(--ease), color var(--duration) var(--ease);
+  background-image: linear-gradient(var(--color-surface), var(--color-surface)), var(--silver-fill);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  transition: color var(--duration-hover) var(--ease-out),
+    transform var(--duration-hover) var(--ease-out),
+    box-shadow var(--duration-hover) var(--ease-out);
+}
+
+/* The ring warms and lifts when its row is hovered. */
+.hover-lift:hover .icon-ring,
+.icon-ring--active {
+  transform: scale(var(--lift-scale));
+  box-shadow: var(--shadow-press);
 }
 
 .icon-ring .icon {
@@ -680,9 +727,13 @@ ol {
 .tag {
   display: inline-block;
   padding: 6px 16px;
-  border: 1px solid var(--color-silver);
+  border: 1px solid transparent;
   border-radius: var(--radius-pill);
   background-color: var(--color-surface);
+  background-image: linear-gradient(var(--color-surface), var(--color-surface)), var(--silver-fill);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  box-shadow: var(--shadow-soft);
   color: var(--color-text);
   font-size: 0.6875rem;
   font-weight: 500;
@@ -745,25 +796,19 @@ ol {
 
 .reveal {
   opacity: 0;
-  transform: translateY(12px);
-  transition: opacity var(--duration-slow) var(--ease), transform var(--duration-slow) var(--ease);
+  transform: translateY(18px) scale(0.994);
+  transition: opacity var(--duration-slow) var(--ease-out),
+    transform var(--duration-slow) var(--ease-out);
+  /* Staggered by index, set by theme.js per group, so a row of three arrives
+     in sequence instead of together. */
+  transition-delay: calc(var(--reveal-index, 0) * 90ms);
+  will-change: opacity, transform;
 }
 
 .reveal.is-visible {
   opacity: 1;
   transform: none;
-}
-
-.reveal:nth-child(2) {
-  transition-delay: 70ms;
-}
-
-.reveal:nth-child(3) {
-  transition-delay: 140ms;
-}
-
-.reveal:nth-child(4) {
-  transition-delay: 210ms;
+  will-change: auto;
 }
 
 /* Hero copy rises in on load, staggered, without waiting for the observer. */
@@ -781,7 +826,20 @@ ol {
   }
 }
 
+/* The hero media drifts a little slower than the page scrolls. Set by JS,
+   clamped small enough that nothing detaches from its column. */
+.parallax {
+  transform: translate3d(0, var(--parallax-y, 0px), 0);
+  will-change: transform;
+}
+
 @media (prefers-reduced-motion: reduce) {
+  :root {
+    --lift-y: 0px;
+    --lift-y-sm: 0px;
+    --lift-scale: 1;
+  }
+
   html {
     scroll-behavior: auto;
   }
@@ -798,7 +856,12 @@ ol {
     animation: none;
   }
 
-  .button:hover {
+  .parallax {
+    transform: none;
+  }
+
+  .media--zoom:hover img,
+  .hover-lift:hover .media img {
     transform: none;
   }
 

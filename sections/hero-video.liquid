@@ -25,7 +25,7 @@
   {%- endunless -%}
 
   <div class="hero__grid">
-    <div class="hero__media">
+    <div class="hero__media parallax" data-parallax="0.06">
       <div class="media {% if is_overlay %}media--fill{% else %}media--tall media--pill{% endif %}">
         {% render 'video',
           shopify_video: section.settings.video,
@@ -203,7 +203,8 @@
     gap: 18px;
     margin: 36px 0 0;
     padding: 22px 0 0;
-    border-top: 1px solid var(--color-silver);
+    border-top: 1px solid transparent;
+    border-image: var(--silver-line) 1;
     list-style: none;
   }
 
@@ -217,7 +218,8 @@
      orphan a marker at the start of a line. */
   .hero__stat + .hero__stat {
     padding-left: 18px;
-    border-left: 1px solid var(--color-border);
+    border-left: 1px solid transparent;
+    border-image: var(--silver-line-v) 1;
   }
 
   .hero__stat-value {

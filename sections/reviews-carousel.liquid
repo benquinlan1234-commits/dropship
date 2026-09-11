@@ -166,7 +166,15 @@
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
     background-color: var(--color-surface);
-    box-shadow: var(--edge-light);
+    background-image: var(--sheen);
+    box-shadow: var(--edge-light), var(--shadow-soft);
+    transition: transform var(--duration-hover) var(--ease-out),
+      box-shadow var(--duration-hover) var(--ease-out);
+  }
+
+  .review:hover {
+    transform: translateY(var(--lift-y));
+    box-shadow: var(--edge-light), var(--shadow-lift);
   }
 
   .review__media {
@@ -196,7 +204,8 @@
     column-gap: 12px;
     row-gap: 2px;
     padding-top: 20px;
-    border-top: 1px solid var(--color-border);
+    border-top: 1px solid transparent;
+    border-image: var(--silver-line) 1;
   }
 
   /* A hairline ring with the initial, instead of a stock avatar. */
@@ -207,8 +216,11 @@
     justify-content: center;
     width: 38px;
     height: 38px;
-    border: 1px solid var(--color-silver);
+    border: 1px solid transparent;
     border-radius: 50%;
+    background-image: linear-gradient(var(--color-surface), var(--color-surface)), var(--silver-fill);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
     font-family: var(--font-display);
     font-optical-sizing: auto;
     font-size: 0.9375rem;
@@ -253,9 +265,12 @@
     align-items: center;
     justify-content: center;
     padding: 0;
-    border: 1px solid var(--color-silver);
+    border: 1px solid transparent;
     border-radius: 50%;
     background-color: var(--color-surface);
+    background-image: linear-gradient(var(--color-surface), var(--color-surface)), var(--silver-fill);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
     color: inherit;
     cursor: pointer;
     transition: background-color var(--duration) var(--ease), color var(--duration) var(--ease),
@@ -265,7 +280,7 @@
   .carousel-control:hover:not([disabled]) {
     background-color: var(--color-text);
     color: var(--color-surface);
-    transform: translateY(-1px);
+    transform: translateY(var(--lift-y-sm));
   }
 
   .carousel-control[disabled] {

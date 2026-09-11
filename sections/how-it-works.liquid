@@ -86,7 +86,19 @@
   .step {
     position: relative;
     padding-top: 34px;
-    border-top: 1px solid var(--color-border);
+    border-top: 1px solid transparent;
+    border-image: var(--silver-line) 1;
+  }
+
+  .step__folio {
+    transition: opacity var(--duration-hover) var(--ease-out),
+      transform var(--duration-hover) var(--ease-out);
+  }
+
+  /* The folio warms and drifts up a touch as you read the step. */
+  .step:hover .step__folio {
+    opacity: 0.3;
+    transform: translateY(var(--lift-y));
   }
 
   .step__folio {

@@ -216,7 +216,8 @@ Set in **Theme settings → Colors / Typography**; nothing is hard-coded.
 | Accent — text | `#635099` | Eyebrows, figures, unit prices — 4.94:1 worst case |
 | Accent — soft | `#E3D9F5` | Selected cards, tints |
 | Hairline | `#D6CEE4` | Borders |
-| Silver | `#C6C0D2` | Rules, icon rings, tags. Decorative only |
+| Silver | `#C6C0D2` | Brushed-silver rules, rings, tags. Decorative only |
+| Silver — highlight | `#EDEBF2` | The bright point along a silver line or ring |
 
 Two families, both from Google Fonts and both theme settings: **Fraunces** 400
 for display, numerals and prices (optical sizing on, SOFT axis at 30), and
@@ -225,13 +226,25 @@ tracking in accent ink.
 
 Materials rather than flat fills: a 3% generated grain over the whole page, a
 pearl-to-lilac radial wash behind the hero and the offer, a large blurred violet
-orb that drifts on a 60-second loop, and pearl surfaces with a silver-lilac
-hairline plus a 1px inner top highlight. **No drop shadows anywhere** — hairlines
-and tints do the work. Section padding 112px desktop / 64px mobile, content
-column 1180px.
+orb that drifts on a 60-second loop, and pearl surfaces carrying a sheen
+gradient, an inner top highlight and a soft violet halo.
 
-The orb and the grain are both settings (**Theme settings → Motion**), so the
-page can be taken fully flat in two clicks.
+**Silver is drawn as metal, not as grey.** Rules are gradients that fade at both
+ends and catch the light in the middle; rings, tags and frame edges are gradient
+borders that follow the curve.
+
+**Depth is a violet halo, never a grey drop shadow** — the accent colour, wide
+blur, low opacity, the way beauty packaging photographs. Section padding 112px
+desktop / 64px mobile, content column 1180px.
+
+Glow, surface sheen, the orb and the grain are all settings (**Theme settings →
+Motion & softness**), so the page can be taken completely flat.
+
+Motion: hero copy rises in on load, sections reveal on scroll with siblings
+staggered, the hero media parallaxes gently, and every card, button and ring
+lifts on hover with its halo widening. All of it is disabled under
+`prefers-reduced-motion` — every lift is a token so reduced motion zeroes them
+from one place.
 
 Before and after renders, with a per-section rationale, are in
 [`design/COMPARE.md`](design/COMPARE.md).

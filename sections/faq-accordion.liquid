@@ -59,11 +59,8 @@
   }
 
   .accordion {
-    border-top: 1px solid var(--color-border);
-  }
-
-  .accordion:last-child {
-    border-bottom: 1px solid var(--color-border);
+    border-top: 1px solid transparent;
+    border-image: var(--silver-line) 1;
   }
 
   .accordion__summary {
@@ -102,16 +99,36 @@
     justify-content: center;
     width: 34px;
     height: 34px;
-    border: 1px solid var(--color-silver);
+    border: 1px solid transparent;
     border-radius: 50%;
     color: var(--color-accent);
-    transition: border-color var(--duration) var(--ease), background-color var(--duration) var(--ease);
+    background-image: linear-gradient(var(--color-background), var(--color-background)), var(--silver-fill);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    transition: background-color var(--duration-hover) var(--ease-out),
+      transform var(--duration-hover) var(--ease-out),
+      box-shadow var(--duration-hover) var(--ease-out);
+  }
+
+  .accordion__summary:hover .accordion__marker {
+    transform: scale(var(--lift-scale));
+    box-shadow: var(--shadow-press);
+  }
+
+  .accordion__question {
+    transition: color var(--duration-hover) var(--ease-out);
+  }
+
+  .accordion__summary:hover .accordion__question {
+    color: var(--color-accent-ink);
   }
 
   .accordion__marker .icon {
     position: absolute;
     width: 15px;
     height: 15px;
+    transition: opacity var(--duration-hover) var(--ease-out),
+      transform var(--duration-hover) var(--ease-out);
   }
 
   .accordion__minus {
@@ -127,8 +144,25 @@
   }
 
   .accordion[open] .accordion__marker {
-    border-color: var(--color-accent);
-    background-color: var(--color-accent-soft);
+    background-image: linear-gradient(var(--color-accent-soft), var(--color-accent-soft)), var(--silver-fill);
+  }
+
+  /* The answer unrolls rather than appearing. */
+  .accordion[open] .accordion__panel {
+    animation: accordion-open 420ms var(--ease-out);
+  }
+
+  @keyframes accordion-open {
+    from {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .accordion[open] .accordion__panel {
+      animation: none;
+    }
   }
 
   .accordion__panel {

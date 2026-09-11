@@ -21,6 +21,8 @@
   assign tracking = settings.heading_tracking | default: -10 | divided_by: 1000.0
   assign grain = settings.grain_opacity | default: 3 | divided_by: 100.0
   assign softness = settings.display_softness | default: 30
+  assign shadow_scale = settings.shadow_strength | default: 60 | divided_by: 100.0
+  assign sheen_scale = settings.surface_sheen | default: 50 | divided_by: 100.0
 -%}
 <style>
   :root {
@@ -38,12 +40,14 @@
     --color-accent-soft: {{ settings.color_accent_soft }};
     --color-border: {{ settings.color_border }};
     --color-silver: {{ settings.color_silver }};
+    --color-silver-bright: {{ settings.color_silver_bright }};
 
     --color-background-rgb: {{ settings.color_background.red }}, {{ settings.color_background.green }}, {{ settings.color_background.blue }};
     --color-surface-rgb: {{ settings.color_surface.red }}, {{ settings.color_surface.green }}, {{ settings.color_surface.blue }};
     --color-text-rgb: {{ settings.color_text.red }}, {{ settings.color_text.green }}, {{ settings.color_text.blue }};
     --color-accent-rgb: {{ settings.color_accent.red }}, {{ settings.color_accent.green }}, {{ settings.color_accent.blue }};
     --color-deep-rgb: {{ settings.color_deep.red }}, {{ settings.color_deep.green }}, {{ settings.color_deep.blue }};
+    --color-silver-rgb: {{ settings.color_silver.red }}, {{ settings.color_silver.green }}, {{ settings.color_silver.blue }};
 
     --font-body: {{ body_stack }};
     --font-display: {{ display_stack }};
@@ -66,14 +70,60 @@
     --section-padding-desktop: 112px;
 
     --duration: 150ms;
-    --duration-slow: 700ms;
+    --duration-hover: 240ms;
+    --duration-slow: 900ms;
     --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+    /* A long, decelerating curve — things settle rather than stop. */
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+    /* Hover displacement, as tokens — so reduced motion can zero every lift on
+       the page from one place instead of per rule. */
+    --lift-y: -4px;
+    --lift-y-sm: -2px;
+    --lift-scale: 1.06;
 
     --grain-opacity: {{ grain }};
     --orb-opacity: {% if settings.show_orb_glow %}0.12{% else %}0{% endif %};
 
-    /* Glass: a 1px inner highlight along the top edge, never a drop shadow. */
+    /* Glass: a 1px inner highlight along the top edge. */
     --edge-light: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+
+    /* Depth is a violet halo, never a grey drop shadow — the difference
+       between skincare and software. Scaled by the Glow setting. */
+    --shadow-scale: {{ shadow_scale }};
+    --shadow-soft: 0 10px 30px rgba(var(--color-accent-rgb), calc(0.10 * var(--shadow-scale)));
+    --shadow-lift: 0 20px 46px rgba(var(--color-accent-rgb), calc(0.20 * var(--shadow-scale)));
+    --shadow-press: 0 6px 16px rgba(var(--color-accent-rgb), calc(0.12 * var(--shadow-scale)));
+
+    /* Brushed silver: a hairline that catches the light in the middle and
+       fades out at both ends, rather than a flat 1px of grey. */
+    --silver-line: linear-gradient(
+      90deg,
+      rgba(var(--color-silver-rgb), 0) 0%,
+      var(--color-silver) 16%,
+      var(--color-silver-bright) 50%,
+      var(--color-silver) 84%,
+      rgba(var(--color-silver-rgb), 0) 100%
+    );
+    --silver-line-v: linear-gradient(
+      180deg,
+      rgba(var(--color-silver-rgb), 0) 0%,
+      var(--color-silver) 20%,
+      var(--color-silver-bright) 50%,
+      var(--color-silver) 80%,
+      rgba(var(--color-silver-rgb), 0) 100%
+    );
+    /* The same metal as a fill, for rings, tags and frame edges. */
+    --silver-fill: linear-gradient(140deg, var(--color-silver-bright) 0%, var(--color-silver) 48%, var(--color-silver-bright) 100%);
+
+    /* A faint sheen across fills, so a card is not one flat colour. */
+    --sheen-alpha: calc(0.06 * {{ sheen_scale }});
+    --sheen: linear-gradient(
+      158deg,
+      rgba(255, 255, 255, calc(0.5 * {{ sheen_scale }})) 0%,
+      rgba(255, 255, 255, 0) 42%,
+      rgba(var(--color-accent-rgb), var(--sheen-alpha)) 100%
+    );
   }
 
   @media screen and (min-width: 750px) {

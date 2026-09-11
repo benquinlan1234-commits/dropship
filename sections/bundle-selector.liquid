@@ -227,7 +227,8 @@
     border: 1px solid var(--color-border);
     border-radius: var(--radius-pill);
     background-color: var(--color-surface);
-    box-shadow: var(--edge-light);
+    background-image: var(--sheen);
+    box-shadow: var(--edge-light), var(--shadow-soft);
   }
 
   .bundle__switch {
@@ -326,19 +327,35 @@
     border: 1px solid var(--color-border);
     border-radius: 150px;
     background-color: var(--color-surface);
-    box-shadow: var(--edge-light);
+    background-image: var(--sheen);
+    box-shadow: var(--edge-light), var(--shadow-soft);
     text-align: center;
     cursor: pointer;
-    transition: border-color var(--duration) var(--ease), background-color var(--duration) var(--ease);
+    transition: border-color var(--duration-hover) var(--ease-out),
+      background-color var(--duration-hover) var(--ease-out),
+      transform var(--duration-hover) var(--ease-out),
+      box-shadow var(--duration-hover) var(--ease-out);
   }
 
   .bundle__label:hover {
     border-color: var(--color-silver);
+    transform: translateY(var(--lift-y));
+    box-shadow: var(--edge-light), var(--shadow-lift);
   }
 
   .bundle__card.is-selected .bundle__label {
     border-color: var(--color-accent);
     background-color: var(--color-accent-soft);
+    box-shadow: var(--edge-light), var(--shadow-lift);
+  }
+
+  .bundle__card.is-selected .bundle__tag {
+    transform: translateX(-50%) translateY(var(--lift-y-sm));
+  }
+
+  .bundle__tag {
+    transition: transform var(--duration-hover) var(--ease-out),
+      border-color var(--duration-hover) var(--ease-out);
   }
 
   .bundle__radio {
@@ -356,8 +373,15 @@
     border: 1px solid var(--color-silver);
     border-radius: 50%;
     background-color: transparent;
-    transition: border-color var(--duration) var(--ease), background-color var(--duration) var(--ease),
-      box-shadow var(--duration) var(--ease);
+    transition: border-color var(--duration-hover) var(--ease-out),
+      background-color var(--duration-hover) var(--ease-out),
+      box-shadow var(--duration-hover) var(--ease-out),
+      transform var(--duration-hover) var(--ease-out);
+  }
+
+  .bundle__label:hover .bundle__marker {
+    border-color: var(--color-accent);
+    transform: scale(var(--lift-scale));
   }
 
   .bundle__card.is-selected .bundle__marker {

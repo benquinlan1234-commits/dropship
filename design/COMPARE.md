@@ -38,7 +38,7 @@ light, **plum** — the page has a spine, and the eye has somewhere to rest.
 | | Before | After |
 | --- | --- | --- |
 | Page | `#FAF8F6` — reads as white | `#F1ECF7` lilac-pearl + 3% generated grain |
-| Cards | `#FFFFFF` | `#FAF8FD` pearl, silver-lilac hairline, 1px inner top highlight |
+| Cards | `#FFFFFF` | `#FAF8FD` pearl, silver gradient edge, inner top highlight, soft violet halo |
 | Ink | `#2E2640` | `#2A2340` plum |
 | Accent | `#7561B0` | `#6E5AAB`, plus `#635099` for violet **text** |
 | Type | Manrope for everything | Fraunces 400 display + Manrope 400/500 body |
@@ -50,6 +50,22 @@ near-white ground with boxes on it. Three values of pearl, a grain texture and a
 drifting orb give the page material. And Manrope alone is too even — a page set
 in one humanist sans at three sizes reads as a default. The serif/sans pairing
 is what makes a headline look art-directed rather than styled.
+
+**Silver is a material now, not a pale grey.** Every rule on the page is a
+gradient that fades at both ends and catches the light in the middle
+(`--silver-line`), and every ring, tag and frame edge is a gradient border drawn
+in the border box with the fill in the padding box, so the metal follows the
+curve. That is the difference between "a 1px grey line" and brushed metal, and
+it is what lets silver hold its own against the purple instead of disappearing
+into it.
+
+**Depth is a violet halo, never a grey drop shadow.** This is the single change
+that moves the page from architectural to skincare. Reading the reference
+page's CSS, its depth is `0 16px 40px rgba(150,130,200,.22)` — coloured, wide,
+low-opacity — and its surfaces carry soft diagonal gradients rather than flat
+fills. Both are now tokens here: `--shadow-soft` / `--shadow-lift` scaled by a
+**Glow** setting, and a `--sheen` gradient across every card fill. Set Glow to
+0 and the page returns to completely flat.
 
 **Numbers are now editorial.** `30,000ppm`, `$34.50/bottle`, `28 days`, `01/02/03`
 are set in Fraunces, larger than the text beside them. Data is the most
@@ -88,6 +104,10 @@ ppm figure set large in violet at the end of the row.
 
 **Why it's better:** it reads as a specification, not a feature grid. And it
 puts 30,000ppm where the eye lands.
+
+On hover the row tints, its silver ring warms and scales, and the figure shifts
+2px — enough to confirm the row is a unit, not enough to make a static list feel
+like a menu.
 
 ### How it works
 
@@ -145,6 +165,9 @@ Per-bottle price in Fraunces violet.
 looks like the most designed one. Three vertical cards also make the price
 ladder comparable at a glance, which stacked rows do not.
 
+Hover lifts the card 4px and widens its halo; the marker ring scales and turns
+violet. Selecting is the same gesture, held.
+
 ### Reviews
 
 ![Reviews after](after-s7-reviews.png)
@@ -183,6 +206,27 @@ the clinic section, so the palette feels deliberate rather than decorative.
 
 ---
 
+## Motion
+
+Everything below is off entirely under `prefers-reduced-motion: reduce`,
+verified by rendering the page in that mode and reading the computed styles.
+
+| | What happens |
+| --- | --- |
+| On load | Hero eyebrow, headline, lede, price and stats rise 14px and fade in over 520ms, staggered 80ms apart |
+| On scroll | Sections fade and rise 18px with a slight scale, 900ms on an expo-out curve. Siblings inside one parent are staggered 90ms apart by index, set in JS, so a row of three cascades instead of popping |
+| Hero media | Drifts slower than the page — a rAF-throttled parallax clamped to ±48px so nothing detaches from its column |
+| Buttons | 2px lift, halo widens, 240ms; press returns it to 0 |
+| Cards (bundle, review, results) | 4px lift and a wider halo; results frames also straighten from their tilt |
+| Rings (ingredients, FAQ, guarantee) | Scale 1.06 with a soft halo |
+| Images | 1.2s drift to 1.03 inside their frame |
+| FAQ | Panel unrolls 6px over 420ms; the marker swaps plus for minus and fills violet |
+
+Every lift is a token (`--lift-y`, `--lift-y-sm`, `--lift-scale`) rather than a
+literal in each rule, so reduced motion zeroes all of them from one place. That
+was not cosmetic: the first pass patched hover resets rule by rule and the
+bundle card still lifted under reduced motion — the render caught it.
+
 ## Where I overrode the brief
 
 **1. A separate ink for violet text.** The brief set one accent, `#6E5AAB`. It
@@ -205,12 +249,20 @@ separators orphan a floating dot at the start of a line whenever the row wraps �
 which it does at 1440px with three stats. They are now grid cells with hairline
 left borders, which cannot orphan.
 
-**4. Grain sits under the header, not over it.** The grain overlay is fixed at
+**4. The "no drop shadows" rule is retired, deliberately.** The earlier brief
+banned them and the first pass honoured it — hairlines and tints only. That is
+what made the page read as architectural rather than dewy. Following the
+reference page's own depth language, cards and buttons now carry a soft violet
+halo. It is not a grey drop shadow: the colour is the accent, the blur is wide
+and the opacity is low. The **Glow** setting scales it, and 0 restores the
+previous flat look exactly.
+
+**5. Grain sits under the header, not over it.** The grain overlay is fixed at
 `z-index: 2`; the sticky header is at 20. Texturing a translucent blurred
 header over scrolling content produced visible banding, and the header already
 has its own material from the backdrop blur.
 
-**5. `.section--deep a` had to exclude buttons.** Not a brief override so much
+**6. `.section--deep a` had to exclude buttons.** Not a brief override so much
 as a bug the render caught: the dark-section link colour was winning over
 `.button--light`, painting "See the bundles" light violet on a pearl fill at
 roughly 2:1. Scoped to `a:not(.button)`.
@@ -230,13 +282,21 @@ than the old rows, the shape is one `border-radius` value away from changing.
 | `shopify theme check` | **52 files, 0 errors**, 2 warnings (both the Google Fonts `<link>`) |
 | Contrast, measured on the rendered page | **0 failures** across every distinct text/background pairing, AA thresholds (4.5 normal, 3.0 large) |
 | No `#FFFFFF` backgrounds | 0 elements |
-| No drop shadows | 0 non-inset `box-shadow`s |
+| Drop shadows | None grey; depth is violet halos derived from the accent, scaled by the Glow setting |
+| Hover states | Every interactive surface verified to move: bundle card, button, ingredient row, results frame, review card, FAQ marker, carousel arrow (the disabled arrow correctly stays put) |
+| Reduced motion | Reveals shown, orb still, parallax 0, every hover lift 0 — verified in `reducedMotion: 'reduce'` |
 | Horizontal overflow at 390px | none — document width 390 = viewport width |
 
 Contrast was measured from the DOM: every element with its own text node,
 sampling its computed colour against its nearest opaque ancestor background,
 classified large vs normal by rendered pixel size and weight. That is what
 caught the two violet-on-tint failures above — both looked fine.
+
+Hover was measured the same way: move the mouse to each element and diff its
+computed style against rest. Worth noting for anyone re-running it —
+`el.matches(':hover')` returns false in this headless build even when the hover
+styles are plainly applied, so the computed style is the only trustworthy
+signal. A control case confirmed that before I trusted any of the results.
 
 ## Not verified
 

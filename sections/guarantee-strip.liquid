@@ -62,6 +62,16 @@
     gap: 18px;
   }
 
+  .guarantee__icon {
+    transition: transform var(--duration-hover) var(--ease-out),
+      box-shadow var(--duration-hover) var(--ease-out);
+  }
+
+  .guarantee__item:hover .guarantee__icon {
+    transform: scale(var(--lift-scale));
+    box-shadow: var(--shadow-press);
+  }
+
   .guarantee__title {
     margin: 0 0 5px;
     font-size: 1.0625rem;

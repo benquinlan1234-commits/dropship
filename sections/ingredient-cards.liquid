@@ -96,7 +96,8 @@
     margin: 0;
     padding: 0;
     list-style: none;
-    border-top: 1px solid var(--color-border);
+    border-top: 1px solid transparent;
+    border-image: var(--silver-line) 1;
   }
 
   /* Rows separated by hairlines, not a row of boxes. */
@@ -107,8 +108,36 @@
     column-gap: 20px;
     row-gap: 10px;
     padding-block: 26px;
-    border-bottom: 1px solid var(--color-border);
-    transition: border-color var(--duration) var(--ease);
+    border-bottom: 1px solid transparent;
+    border-image: var(--silver-line) 1;
+    transition: background-color var(--duration-hover) var(--ease-out),
+      box-shadow var(--duration-hover) var(--ease-out);
+  }
+
+  /* The row tints and the ring warms — enough to confirm the hover, not
+     enough to make a static list feel like a menu. */
+  .ingredient:hover {
+    background-color: rgba(var(--color-accent-rgb), 0.04);
+    box-shadow: 0 0 0 10px rgba(var(--color-accent-rgb), 0.04);
+  }
+
+  .ingredient__icon {
+    transition: color var(--duration-hover) var(--ease-out),
+      transform var(--duration-hover) var(--ease-out),
+      box-shadow var(--duration-hover) var(--ease-out);
+  }
+
+  .ingredient:hover .ingredient__icon {
+    transform: scale(var(--lift-scale));
+    box-shadow: var(--shadow-press);
+  }
+
+  .ingredient__figure {
+    transition: transform var(--duration-hover) var(--ease-out);
+  }
+
+  .ingredient:hover .ingredient__figure {
+    transform: translateX(calc(var(--lift-y-sm) * 1));
   }
 
   .ingredient__icon img {
@@ -141,6 +170,8 @@
       grid-template-columns: 54px minmax(0, 1fr) auto;
       column-gap: 28px;
       padding-block: 32px;
+      padding-inline: 12px;
+      margin-inline: -12px;
     }
 
     .ingredient__figure {

@@ -12,7 +12,7 @@
     "use_google_font": true,
     "font_fallback_stack": "system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
     "font_size_base": 17,
-    "border_radius": 18,
+    "border_radius": 22,
     "currency_code_enabled": false,
     "rating_value": "",
     "review_count_text": "",
@@ -36,7 +36,10 @@
     "display_font_fallback": "Georgia, 'Times New Roman', serif",
     "display_softness": 30,
     "grain_opacity": 3,
-    "color_accent_ink": "#635099"
+    "color_accent_ink": "#635099",
+    "shadow_strength": 60,
+    "surface_sheen": 50,
+    "color_silver_bright": "#EDEBF2"
   },
   "presets": {
     "Default": {
@@ -62,11 +65,14 @@
       "heading_weight": "400",
       "heading_tracking": -10,
       "display_softness": 30,
-      "border_radius": 18,
+      "border_radius": 22,
       "enable_animations": true,
       "show_orb_glow": true,
       "grain_opacity": 3,
-      "color_accent_ink": "#635099"
+      "color_accent_ink": "#635099",
+      "shadow_strength": 60,
+      "surface_sheen": 50,
+      "color_silver_bright": "#EDEBF2"
     }
   }
 }

@@ -107,10 +107,13 @@
     flex: 0 0 auto;
     margin: 0;
     padding: 12px 24px;
-    border: 1px solid var(--color-silver);
+    border: 1px solid transparent;
     border-radius: var(--radius-pill);
     background-color: var(--color-surface);
-    box-shadow: var(--edge-light);
+    background-image: linear-gradient(var(--color-surface), var(--color-surface)), var(--silver-fill);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    box-shadow: var(--edge-light), var(--shadow-soft);
   }
 
   .results__timeframe .numeral {
@@ -156,9 +159,10 @@
     background-color: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
-    box-shadow: var(--edge-light);
+    background-image: var(--sheen);
+    box-shadow: var(--edge-light), var(--shadow-soft);
     transform: rotate(-1.1deg);
-    transition: transform var(--duration-slow) var(--ease);
+    transition: transform 520ms var(--ease-out), box-shadow 520ms var(--ease-out);
   }
 
   .results__item:nth-child(even) .results__figure {
@@ -169,8 +173,18 @@
     transform: rotate(-0.5deg);
   }
 
+  /* Straightens and lifts, like picking a print up off the table. */
   .results__figure:hover {
-    transform: rotate(0deg);
+    transform: rotate(0deg) translateY(var(--lift-y)) scale(1.015);
+    box-shadow: var(--edge-light), var(--shadow-lift);
+  }
+
+  .results__figure img {
+    transition: transform 1.2s var(--ease-out);
+  }
+
+  .results__figure:hover img {
+    transform: scale(1.04);
   }
 
   .results__caption {
@@ -214,7 +228,12 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .results__figure {
+    .results__figure,
+    .results__figure:hover {
+      transform: none;
+    }
+
+    .results__figure:hover img {
       transform: none;
     }
   }

@@ -160,7 +160,14 @@
         "id": "color_silver",
         "label": "Silver",
         "default": "#C6C0D2",
-        "info": "Rules, icon rings and tags. Decorative only."
+        "info": "Brushed-silver hairlines, rings and tags. Paired with the bright below to catch the light."
+      },
+      {
+        "type": "color",
+        "id": "color_silver_bright",
+        "label": "Silver — highlight",
+        "default": "#EDEBF2",
+        "info": "The bright point along a silver line or ring. Together these read as metal rather than as flat grey."
       }
     ]
   },
@@ -266,7 +273,7 @@
         "max": 32,
         "step": 2,
         "unit": "px",
-        "default": 18
+        "default": 22
       }
     ]
   },
@@ -356,8 +363,30 @@
     ]
   },
   {
-    "name": "Motion",
+    "name": "Motion & softness",
     "settings": [
+      {
+        "type": "range",
+        "id": "shadow_strength",
+        "label": "Glow",
+        "min": 0,
+        "max": 100,
+        "step": 5,
+        "unit": "%",
+        "default": 60,
+        "info": "A soft violet halo under cards and buttons — the dewy quality skincare sites get from tinted shadows rather than grey ones. 0 turns it off completely."
+      },
+      {
+        "type": "range",
+        "id": "surface_sheen",
+        "label": "Surface sheen",
+        "min": 0,
+        "max": 100,
+        "step": 5,
+        "unit": "%",
+        "default": 50,
+        "info": "A faint gradient across card fills so they are not flat colour."
+      },
       {
         "type": "checkbox",
         "id": "enable_animations",
