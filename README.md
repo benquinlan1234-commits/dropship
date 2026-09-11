@@ -25,11 +25,25 @@ shopify theme dev --store your-store.myshopify.com
 That serves the theme at `http://127.0.0.1:9292` with hot reload. The first run
 opens a browser to log in.
 
-Check it before you push:
+Check it before you push — **both** of these:
 
 ```bash
 shopify theme check
+python3 scripts/validate-theme.py
 ```
+
+`shopify theme check` does not enforce everything Shopify enforces at runtime, so
+a theme can pass it and then fail to render. `scripts/validate-theme.py` covers
+that gap: range step/bounds/unit limits on schema defaults *and* on every value
+stored in templates and section groups, strict duplicate-key JSON parsing,
+setting id charsets, default-vs-type agreement, select defaults present in their
+options, declared block types, `order`/`block_order` integrity, `settings_data`
+keys existing in `settings_schema`, and `render`/`section` targets resolving.
+
+It exits non-zero on failure, so it drops straight into CI or a pre-push hook.
+This is not hypothetical — a range value of `34` against `step: 5` passed theme
+check and made every page render the 404 template. See
+[`DECISIONS.md`](DECISIONS.md) for that one.
 
 ## Upload it
 
@@ -85,7 +99,8 @@ logo is uploaded), upload a logo and a favicon, and write the logo alt text.
 
 **Theme settings → Product → Free shipping threshold.** A plain number, no
 decimals, in your store currency. It drives the cart drawer progress bar and
-anywhere you type `[threshold]` in the guarantee strip.
+anywhere you type `[threshold]` in the guarantee strip (that section is not on
+the page by default — see [Sections built but not on the page](#sections-built-but-not-on-the-page)).
 
 ### 4. Header links
 
@@ -106,7 +121,8 @@ returns.
 The star rating and review count ship **empty**, and the star row stays hidden
 until you fill the count in — an empty five-star row reads as zero reviews.
 They are plain text settings in three places: the hero, the product hero and the
-reviews section. The manual review blocks are placeholders too.
+reviews section. The manual review blocks are placeholders too — replace them
+before you put that section back on the page.
 
 ---
 
@@ -174,21 +190,37 @@ templates/
 sample-content/      Default copy as plain text, for editing outside the Customizer
 ```
 
-### Home page section order
+### What is on the page
 
-1. Hero video
-2. Ingredient cards
-3. How it works
-4. Why encapsulated
-5. Results gallery
-6. Bundle selector *(the offer — `#bundle`)*
-7. Reviews
-8. FAQ *(`#faq`)*
-9. Guarantee strip
-10. Sticky add to cart *(fixed to the viewport; its position in the list does not matter)*
+One product does not need a browse-then-buy funnel, so the offer sits directly
+under the hero.
 
-Reorder or remove any of them in the Customizer. Every section has a preset, so
-you can also add them to other templates.
+| | Home | Product |
+| --- | --- | --- |
+| 1 | Hero video | Product hero (gallery) |
+| 2 | Bundle selector — the offer, `#bundle` | Bundle selector |
+| 3 | How it works, `#how` | How it works |
+| 4 | FAQ, `#faq` | Product details |
+| 5 | — | FAQ |
+
+Plus **Sticky add to cart**, which is fixed to the viewport — its position in
+the list does not matter.
+
+### Sections built but not on the page
+
+These ship with the theme and are not in either template. Each has a preset, so
+adding one back is **Customize → Add section**, no code:
+
+- **Ingredient cards** — the three actives as editorial hairline rows
+- **Why encapsulated** — the dark plum section with the pull quote
+- **Results gallery** — tilted pearl frames, horizontal scroll
+- **Reviews** — staggered pearl cards, plus the reviews-app slot
+- **Guarantee strip** — the three trust items
+
+If you add just one back, make it Reviews, directly under the bundle. It is the
+page's only social proof, and on a $39 serum that is usually the most expensive
+thing to leave out. The guarantee line still appears in the bundle footnote
+under the add-to-cart button.
 
 ### Adding a reviews app later
 

@@ -4,6 +4,13 @@ Before and after, rendered from the theme's own CSS in Chromium at 1440px and
 390px. Images are placeholder blocks in both captures, so what changes here is
 type, colour, material and composition — not photography.
 
+> **Read this first.** After this design pass the page was cut down to four
+> sections — hero, the three-option offer, how it works, FAQ. The `after-*.png`
+> full-page renders show that final structure. The per-section notes below still
+> cover every section the pass reworked, including the five no longer in the
+> templates; those sections remain in the theme with their presets and go back
+> from Customize in one click. Entries for them are marked **(not on the page).**
+
 ## The whole page
 
 <table>
@@ -16,8 +23,13 @@ type, colour, material and composition — not photography.
 
 Read them as two vertical rhythms. Before: nine sections on one near-white
 ground, eight of them a centred heading over evenly spaced content, every
-surface the same value. After: light, light, **dark**, light, wash, pearl,
-light, **plum** — the page has a spine, and the eye has somewhere to rest.
+surface the same value.
+
+The design pass gave that page a spine — light, light, **dark**, light, wash,
+pearl, light, **plum**. The later trim then cut it to four sections, so what the
+`after` renders show is hero, offer, how it works, FAQ, closing on the **plum**
+footer. Shorter, and the offer is now the second thing you see rather than the
+sixth: 7963px down to 4379px at 1440, 5251px at 390.
 
 ### Mobile
 
@@ -90,7 +102,7 @@ stat rule answers "is it strong enough, how long does it last, what if I hate
 it" before any scrolling. The bleed and the off-centre grid are what stop it
 reading as a stock hero block.
 
-### Ingredients
+### Ingredients *(not on the page)*
 
 ![Ingredients after](after-s2-ingredients.png)
 
@@ -122,7 +134,7 @@ header.
 **Why it's better:** the sequence is now felt rather than read, and the copy
 stays first in the reading order.
 
-### Why encapsulated
+### Why encapsulated *(not on the page)*
 
 ![Why after](after-s4-why.png)
 
@@ -136,7 +148,7 @@ in light violet, and a blurred orb bleeding in from the bottom-left.
 $39 rather than $12. Giving it the page's only inversion makes it land, and it
 breaks up what was an unrelieved run of pale sections.
 
-### Results gallery
+### Results gallery *(not on the page)*
 
 ![Results after](after-s5-results.png)
 
@@ -168,7 +180,7 @@ ladder comparable at a glance, which stacked rows do not.
 Hover lifts the card 4px and widens its halo; the marker ring scales and turns
 violet. Selecting is the same gesture, held.
 
-### Reviews
+### Reviews *(not on the page)*
 
 ![Reviews after](after-s7-reviews.png)
 

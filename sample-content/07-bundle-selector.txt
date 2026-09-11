@@ -2,14 +2,13 @@ BUNDLE SELECTOR
 Section: bundle-selector
 
 Eyebrow
-  Choose your supply
+  The serum
 
 Heading
-  One bottle lasts about 8 weeks
+  Choose your bundle
 
 Subhead
-  Most people start with two. Every order is covered by the 30-day money-back
-  guarantee.
+  Every order is covered by the 30-day money-back guarantee.
 
 Option 1
   Title     1 bottle
