@@ -48,7 +48,7 @@
             {%- else -%}
               <div class="product-hero__slide">
                 <div class="media media--square">
-                  <div class="placeholder-media">{{ 'product-1' | placeholder_svg_tag }}</div>
+                  <div class="placeholder-media"></div>
                 </div>
               </div>
             {%- endif -%}
@@ -82,7 +82,7 @@
 
         <div class="product-hero__info">
           {%- if section.settings.eyebrow != blank -%}
-            <p class="section__eyebrow">{{ section.settings.eyebrow }}</p>
+            <p class="eyebrow eyebrow--rule">{{ section.settings.eyebrow }}</p>
           {%- endif -%}
 
           <h1 class="product-hero__title">

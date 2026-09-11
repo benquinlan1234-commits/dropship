@@ -7,6 +7,9 @@ Eyebrow
 Heading
   Sealed until the second you use it
 
+Pull quote (display serif, one line)
+  Every orb is a first pump.
+
 Body
   PDRN is sensitive to air and light. In an open bottle it starts to lose its
   freshness from the first pump onward.

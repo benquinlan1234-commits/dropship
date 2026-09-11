@@ -5,7 +5,7 @@ frameworks and no build step. The home page *is* the product page: every
 section reads its price and variants from one product you pick in Theme
 settings.
 
-- **52 files, `shopify theme check` clean** (0 errors; 4 warnings, all from the
+- **52 files, `shopify theme check` clean** (0 errors; 2 warnings, both from the
   Google Fonts `<link>` — see [Known warnings](#known-warnings)).
 - Mobile-first, lazy-loaded imagery, `prefers-reduced-motion` respected.
 - Cart is a slide-out drawer using `/cart/add.js` and the Section Rendering API.
@@ -103,9 +103,10 @@ returns.
 
 ### 6. Review counts
 
-`4.8` and `2,431 reviews` are placeholders in three places: the hero, the
-product hero and the reviews section. They are plain text settings, so update
-them to whatever is true. The manual review blocks are placeholders too.
+The star rating and review count ship **empty**, and the star row stays hidden
+until you fill the count in — an empty five-star row reads as zero reviews.
+They are plain text settings in three places: the hero, the product hero and the
+reviews section. The manual review blocks are placeholders too.
 
 ---
 
@@ -203,31 +204,50 @@ Set in **Theme settings → Colors / Typography**; nothing is hard-coded.
 
 | Token | Default | Used for |
 | ----- | ------- | -------- |
-| Background | `#FAF8F6` | Page ground |
-| Surface | `#FFFFFF` | Cards, inputs |
-| Pearl | `#F4F1F7` | Media backgrounds, quiet panels |
-| Text | `#2E2640` | Primary — a plum ink, warmer than black |
-| Text secondary | `#6E6680` | Supporting copy |
-| Accent | `#7561B0` | Buttons, active states — 5.13:1 with white |
-| Accent soft | `#E8E1F5` | Selected cards, badges |
-| Hairline | `#E4E0EA` | Dividers and borders |
-| Silver | `#C8C3D7` | Rules, icon rings, small detail |
+| Page | `#F1ECF7` | Lilac-pearl ground. Deliberately not white |
+| Card | `#FAF8FD` | Pearl surfaces, drawer, inputs |
+| Media | `#E7DFF2` | Behind images and placeholder blocks |
+| Plum | `#2A2340` | The dark clinic section, footer, announcement bar |
+| Text on plum | `#EFE9F7` | 12.51:1 |
+| Accent on plum | `#BCA9EC` | Links inside dark sections — 7.10:1 |
+| Text | `#2A2340` | 12.80:1 on the page |
+| Text secondary | `#5C5470` | 6.11:1 |
+| Accent | `#6E5AAB` | Buttons, rings, fills — 5.66:1 with white |
+| Accent — text | `#635099` | Eyebrows, figures, unit prices — 4.94:1 worst case |
+| Accent — soft | `#E3D9F5` | Selected cards, tints |
+| Hairline | `#D6CEE4` | Borders |
+| Silver | `#C6C0D2` | Rules, icon rings, tags. Decorative only |
 
-Type is Manrope from Google Fonts, headings at 500 with −0.024em tracking, body
-at 400 / 1.7. Radius 12px on cards, pill buttons. No drop shadows. The only
-soft-edged element is an optional radial glow behind the hero and offer, which
-you can switch off in **Theme settings → Motion**.
+Two families, both from Google Fonts and both theme settings: **Fraunces** 400
+for display, numerals and prices (optical sizing on, SOFT axis at 30), and
+**Manrope** 400/500 for body and UI. Eyebrows are Manrope small caps at 0.14em
+tracking in accent ink.
+
+Materials rather than flat fills: a 3% generated grain over the whole page, a
+pearl-to-lilac radial wash behind the hero and the offer, a large blurred violet
+orb that drifts on a 60-second loop, and pearl surfaces with a silver-lilac
+hairline plus a 1px inner top highlight. **No drop shadows anywhere** — hairlines
+and tints do the work. Section padding 112px desktop / 64px mobile, content
+column 1180px.
+
+The orb and the grain are both settings (**Theme settings → Motion**), so the
+page can be taken fully flat in two clicks.
+
+Before and after renders, with a per-section rationale, are in
+[`design/COMPARE.md`](design/COMPARE.md).
 
 ## Known warnings
 
-`shopify theme check` reports four `RemoteAsset` warnings, all pointing at the
+`shopify theme check` reports two `RemoteAsset` warnings, both pointing at the
 Google Fonts `<link>` tags in `layout/theme.liquid`. That is theme check
 telling you a non-Shopify CDN is slower than Shopify's own. It is expected:
-Manrope is not in Shopify's font library. The links are loaded
-non-render-blocking with a `<noscript>` fallback.
+neither Fraunces nor Manrope is in Shopify's font library. One request carries
+both families, loaded non-render-blocking with a `<noscript>` fallback.
 
-To silence them, turn off **Theme settings → Typography → Load font from Google
-Fonts**. The theme falls back to the system sans stack and the warnings go away.
+To silence them, turn off **Theme settings → Typography → Load fonts from Google
+Fonts**. The theme falls back to the Georgia and system-sans stacks and the
+warnings go away — though the serif/sans contrast is most of the art direction,
+so expect it to look markedly plainer.
 
 ## Accessibility notes
 

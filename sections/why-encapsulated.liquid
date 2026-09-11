@@ -1,9 +1,11 @@
-<div class="section why{% if section.settings.show_divider %} section--bordered{% endif %}">
+<div class="section section--deep why">
+  <span class="orb why__orb" aria-hidden="true"></span>
+
   <div class="page-width">
     <div class="why__grid{% if section.settings.image_position == 'right' %} why__grid--reverse{% endif %}">
       <div class="why__media reveal">
-        {%- if section.settings.image != blank -%}
-          <div class="media media--portrait">
+        <div class="media media--portrait why__frame">
+          {%- if section.settings.image != blank -%}
             <img
               src="{{ section.settings.image | image_url: width: 1000 }}"
               srcset="
@@ -11,44 +13,49 @@
                 {{ section.settings.image | image_url: width: 750 }} 750w,
                 {{ section.settings.image | image_url: width: 1000 }} 1000w
               "
-              sizes="(min-width: 750px) 50vw, 100vw"
+              sizes="(min-width: 750px) 46vw, 100vw"
               width="{{ section.settings.image.width }}"
               height="{{ section.settings.image.height }}"
               alt="{{ section.settings.image_alt | escape }}"
               loading="lazy"
             >
-          </div>
-        {%- else -%}
-          <div class="media media--portrait">
-            <div class="placeholder-media">{{ 'product-1' | placeholder_svg_tag }}</div>
-          </div>
-        {%- endif -%}
+          {%- else -%}
+            <div class="placeholder-media"></div>
+          {%- endif -%}
+        </div>
       </div>
 
       <div class="why__text reveal">
         {%- if section.settings.eyebrow != blank -%}
-          <p class="section__eyebrow">{{ section.settings.eyebrow }}</p>
+          <p class="eyebrow eyebrow--rule">{{ section.settings.eyebrow }}</p>
         {%- endif -%}
         {%- if section.settings.heading != blank -%}
-          <h2>{{ section.settings.heading }}</h2>
+          <h2 class="why__heading">{{ section.settings.heading }}</h2>
         {%- endif -%}
+
+        {%- if section.settings.quote != blank -%}
+          <blockquote class="why__quote">
+            <p>{{ section.settings.quote }}</p>
+          </blockquote>
+        {%- endif -%}
+
         {%- if section.settings.text != blank -%}
-          <div class="rte text-secondary">{{ section.settings.text }}</div>
+          <div class="rte text-secondary why__body">{{ section.settings.text }}</div>
         {%- endif -%}
 
         {%- if section.blocks.size > 0 -%}
           <ul class="why__stats" role="list">
             {%- for block in section.blocks -%}
               <li class="why__stat" {{ block.shopify_attributes }}>
-                <span class="why__stat-value">{{ block.settings.value }}</span>
-                <span class="why__stat-label text-small text-secondary">{{ block.settings.label }}</span>
+                <span class="numeral why__stat-value">{{ block.settings.value }}</span>
+                <span class="why__stat-label text-small">{{ block.settings.label }}</span>
               </li>
             {%- endfor -%}
           </ul>
         {%- endif -%}
 
         {%- if section.settings.button_label != blank -%}
-          <a class="button button--secondary why__button" href="{{ section.settings.button_link | default: '#bundle' }}">
+          <a class="button button--light why__button" href="{{ section.settings.button_link | default: '#bundle' }}">
             {{- section.settings.button_label -}}
           </a>
         {%- endif -%}
@@ -58,45 +65,103 @@
 </div>
 
 {% style %}
+  .why {
+    overflow: hidden;
+  }
+
+  .why__orb {
+    --orb-size: min(680px, 80vw);
+    bottom: -26%;
+    left: -14%;
+    opacity: calc(var(--orb-opacity, 0.12) * 2.2);
+  }
+
   .why__grid {
+    position: relative;
+    z-index: 1;
     display: grid;
-    gap: 28px;
+    gap: 40px;
     align-items: center;
   }
 
-  .why__text > h2 {
-    margin-bottom: 16px;
+  /* A silver hairline grid over the media, so the dark section reads clinical. */
+  .why__frame {
+    border: 1px solid rgba(198, 192, 210, 0.45);
+    background-color: rgba(239, 233, 247, 0.04);
+  }
+
+  .why__frame::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: linear-gradient(to right, rgba(198, 192, 210, 0.22) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(198, 192, 210, 0.22) 1px, transparent 1px);
+    background-size: 25% 25%;
+  }
+
+  .why__frame .placeholder-media {
+    background: linear-gradient(155deg, rgba(188, 169, 236, 0.16) 0%, rgba(42, 35, 64, 0.4) 60%, rgba(188, 169, 236, 0.1) 100%);
+  }
+
+  .why__heading {
+    margin-bottom: 28px;
+    max-width: 14ch;
+  }
+
+  .why__quote {
+    margin: 0 0 28px;
+    padding-left: 22px;
+    border-left: 1px solid var(--color-accent-on-deep);
+  }
+
+  .why__quote p {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: var(--display-weight);
+    font-optical-sizing: auto;
+    font-size: clamp(1.25rem, 2.1vw, 1.625rem);
+    line-height: 1.35;
+    letter-spacing: var(--display-tracking);
+    color: var(--color-on-deep);
+  }
+
+  .why__body {
+    font-size: 0.9375rem;
   }
 
   .why__stats {
-    list-style: none;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 20px;
-    margin: 28px 0 0;
-    padding: 24px 0 0;
-    border-top: 1px solid var(--color-border);
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 22px;
+    margin: 36px 0 0;
+    padding: 26px 0 0;
+    border-top: 1px solid rgba(198, 192, 210, 0.35);
+    list-style: none;
   }
 
   .why__stat {
     display: grid;
-    gap: 2px;
+    gap: 4px;
   }
 
   .why__stat-value {
-    font-family: var(--font-heading);
-    font-weight: 600;
-    font-size: 1.125rem;
+    font-size: 1.5rem;
+    color: var(--color-accent-on-deep);
+  }
+
+  .why__stat-label {
+    color: rgba(239, 233, 247, 0.72);
   }
 
   .why__button {
-    margin-top: 28px;
+    margin-top: 34px;
   }
 
   @media screen and (min-width: 750px) {
     .why__grid {
-      grid-template-columns: 1fr 1fr;
-      gap: 56px;
+      grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+      gap: 64px;
     }
 
     .why__grid--reverse .why__media {
@@ -112,6 +177,10 @@
   "class": "why-section",
   "settings": [
     {
+      "type": "paragraph",
+      "content": "The one dark section on the page. It breaks the pearl run and gives the argument somewhere to land."
+    },
+    {
       "type": "select",
       "id": "image_position",
       "label": "Image position on desktop",
@@ -120,12 +189,6 @@
         { "value": "right", "label": "Right" }
       ],
       "default": "left"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_divider",
-      "label": "Show top divider",
-      "default": true
     },
     {
       "type": "image_picker",
@@ -151,10 +214,17 @@
       "default": "Sealed until the second you use it"
     },
     {
+      "type": "textarea",
+      "id": "quote",
+      "label": "Pull quote",
+      "default": "Every orb is a first pump.",
+      "info": "Set in the display face. Keep it to one line."
+    },
+    {
       "type": "richtext",
       "id": "text",
       "label": "Text",
-      "default": "<p>PDRN is sensitive to air and light. In an open bottle it starts to lose its freshness from the first pump onward.</p><p>So we hold it differently. Each orb is a sealed dose, kept whole in the bottle until you press it between your fingers. Nothing oxidises on a shelf, and nothing is exposed until it is already on its way to your skin.</p><p>It is designed to give every application the same fresh dose as the first.</p>"
+      "default": "<p>PDRN is sensitive to air and light. In an open bottle it starts to lose its freshness from the first pump onward.</p><p>So we hold it differently. Each orb is a sealed dose, kept whole until you press it between your fingers. Nothing oxidises on a shelf, and nothing is exposed until it is already on its way to your skin.</p>"
     },
     {
       "type": "text",
@@ -174,18 +244,8 @@
       "name": "Stat",
       "limit": 4,
       "settings": [
-        {
-          "type": "text",
-          "id": "value",
-          "label": "Value",
-          "default": "30,000ppm"
-        },
-        {
-          "type": "text",
-          "id": "label",
-          "label": "Label",
-          "default": "Hyaluronic PDRN"
-        }
+        { "type": "text", "id": "value", "label": "Value", "default": "30,000ppm" },
+        { "type": "text", "id": "label", "label": "Label", "default": "Hyaluronic PDRN" }
       ]
     }
   ],

@@ -131,7 +131,7 @@
 
     {%- if upsell != blank and upsell_in_cart == false and upsell.available -%}
       <div class="cart-drawer__upsell">
-        <h3 class="text-eyebrow text-secondary">{{ settings.cart_upsell_heading }}</h3>
+        <h3 class="eyebrow">{{ settings.cart_upsell_heading }}</h3>
         <div class="cart-upsell">
           {%- if upsell.featured_image -%}
             <img
@@ -202,7 +202,7 @@
   .cart-drawer__overlay {
     position: absolute;
     inset: 0;
-    background-color: rgba(var(--color-text-rgb), 0.35);
+    background-color: rgba(var(--color-deep-rgb), 0.42);
     opacity: 0;
     transition: opacity var(--duration) ease;
   }
@@ -219,7 +219,7 @@
     flex-direction: column;
     width: min(420px, 100%);
     height: 100%;
-    background-color: var(--color-background);
+    background-color: var(--color-surface);
     border-left: 1px solid var(--color-border);
     transform: translateX(100%);
     transition: transform 280ms ease;
@@ -244,7 +244,7 @@
 
   .cart-drawer__title {
     margin: 0;
-    font-size: 1.125rem;
+    font-size: 1.375rem;
   }
 
   .cart-drawer__close {
@@ -313,9 +313,9 @@
 
   .cart-item__media {
     display: block;
-    border-radius: var(--radius);
+    border-radius: var(--radius-sm);
     overflow: hidden;
-    background-color: var(--color-surface);
+    background-color: var(--color-pearl);
   }
 
   .cart-item__title {
@@ -343,7 +343,7 @@
     display: inline-flex;
     align-items: center;
     border: 1px solid var(--color-border);
-    border-radius: var(--radius);
+    border-radius: var(--radius-pill);
     overflow: hidden;
   }
 
@@ -408,7 +408,7 @@
     position: sticky;
     bottom: 0;
     padding: 20px;
-    background-color: var(--color-background);
+    background-color: var(--color-surface);
     border-top: 1px solid var(--color-border);
   }
 
@@ -418,7 +418,7 @@
     padding: 12px;
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
-    background-color: var(--color-surface);
+    background-color: var(--color-background);
     color: inherit;
     font: inherit;
     resize: vertical;
@@ -439,9 +439,6 @@
     overflow: hidden;
   }
 
-  .form-error {
-    color: #9b2c2c;
-  }
 {% endstyle %}
 
 {% schema %}

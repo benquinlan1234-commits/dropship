@@ -1,12 +1,12 @@
 {%- assign brand = settings.brand_name | default: shop.name -%}
 
-<footer class="footer" role="contentinfo">
+<footer class="footer section--deep" role="contentinfo">
   <div class="page-width">
     <div class="footer__top">
       <div class="footer__brand">
         <p class="footer__wordmark">{{ brand }}</p>
         {%- if section.settings.tagline != blank -%}
-          <p class="text-secondary text-small">{{ section.settings.tagline }}</p>
+          <p class="text-small footer__body footer__tagline">{{ section.settings.tagline }}</p>
         {%- endif -%}
       </div>
 
@@ -15,7 +15,7 @@
           {%- when 'menu' -%}
             <div class="footer__column" {{ block.shopify_attributes }}>
               {%- if block.settings.heading != blank -%}
-                <h2 class="footer__heading text-eyebrow text-secondary">{{ block.settings.heading }}</h2>
+                <h2 class="footer__heading">{{ block.settings.heading }}</h2>
               {%- endif -%}
               {%- if block.settings.menu != blank -%}
                 <ul class="footer__list" role="list">
@@ -28,16 +28,16 @@
           {%- when 'text' -%}
             <div class="footer__column" {{ block.shopify_attributes }}>
               {%- if block.settings.heading != blank -%}
-                <h2 class="footer__heading text-eyebrow text-secondary">{{ block.settings.heading }}</h2>
+                <h2 class="footer__heading">{{ block.settings.heading }}</h2>
               {%- endif -%}
-              <div class="rte text-small text-secondary">{{ block.settings.text }}</div>
+              <div class="rte text-small footer__body">{{ block.settings.text }}</div>
             </div>
         {%- endcase -%}
       {%- endfor -%}
     </div>
 
     <div class="footer__bottom">
-      <p class="text-small text-secondary">
+      <p class="text-small footer__body">
         {{ 'sections.footer.copyright_html' | t: year: 'now' | date: '%Y', brand: brand }}
       </p>
 
@@ -63,29 +63,45 @@
 
 {% style %}
   .footer {
-    border-top: 1px solid var(--color-border);
-    padding-block: 40px 24px;
-    margin-top: 24px;
+    margin-top: 0;
+    padding-block: 64px 28px;
   }
 
   .footer__top {
     display: grid;
-    gap: 28px;
-    padding-bottom: 32px;
+    gap: 32px;
+    padding-bottom: 40px;
   }
 
+  /* A letter-spaced serif logo, which is most of the brand's presence here. */
   .footer__wordmark {
-    font-family: var(--font-heading);
-    font-weight: 600;
-    letter-spacing: 0.04em;
+    margin: 0 0 12px;
+    font-family: var(--font-display);
+    font-weight: var(--display-weight);
+    font-optical-sizing: auto;
+    font-size: 1.5rem;
+    letter-spacing: 0.34em;
+    text-indent: 0.34em;
     text-transform: uppercase;
-    margin: 0 0 8px;
+    color: var(--color-on-deep);
+  }
+
+  .footer__body {
+    color: rgba(239, 233, 247, 0.72);
+  }
+
+  .footer__tagline {
+    max-width: 30ch;
   }
 
   .footer__heading {
-    margin: 0 0 12px;
-    font-size: 0.75rem;
-    font-weight: 400;
+    margin: 0 0 14px;
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    font-variant-caps: all-small-caps;
+    letter-spacing: 0.15em;
+    color: rgba(239, 233, 247, 0.6);
   }
 
   .footer__list,
@@ -94,17 +110,20 @@
     margin: 0;
     padding: 0;
     display: grid;
-    gap: 8px;
+    gap: 10px;
     font-size: 0.875rem;
   }
 
   .footer__list a,
   .footer__social a {
+    color: var(--color-accent-on-deep);
     text-decoration: none;
+    transition: color var(--duration) var(--ease);
   }
 
   .footer__list a:hover,
   .footer__social a:hover {
+    color: var(--color-on-deep);
     text-decoration: underline;
   }
 
@@ -114,8 +133,8 @@
     align-items: center;
     justify-content: space-between;
     gap: 16px;
-    padding-top: 24px;
-    border-top: 1px solid var(--color-border);
+    padding-top: 28px;
+    border-top: 1px solid rgba(198, 192, 210, 0.28);
   }
 
   .footer__bottom p {
@@ -124,17 +143,17 @@
 
   .footer__social {
     grid-auto-flow: column;
-    gap: 16px;
+    gap: 20px;
   }
 
   @media screen and (min-width: 750px) {
     .footer {
-      padding-block: 64px 24px;
+      padding-block: 96px 28px;
     }
 
     .footer__top {
-      grid-template-columns: 1.4fr repeat(auto-fit, minmax(140px, 1fr));
-      gap: 40px;
+      grid-template-columns: 1.5fr repeat(auto-fit, minmax(150px, 1fr));
+      gap: 48px;
     }
   }
 {% endstyle %}

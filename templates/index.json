@@ -7,18 +7,46 @@
         "eyebrow": "Hyaluronic PDRN orb serum",
         "heading": "PDRN in a capsule.",
         "subheading": "Salmon DNA serum, sealed in each orb until it touches your skin.",
-        "trust_line": "45g · For all skin types · 30-day money-back guarantee",
         "show_rating": true,
-        "rating_value": "4.8",
-        "review_count_text": "2,431 reviews",
+        "rating_value": "",
+        "review_count_text": "",
         "button_label": "Add to cart",
-        "layout": "overlay",
-        "height": 78,
-        "overlay_opacity": 30,
         "text_color": "#FFFFFF",
         "poster_alt": "A hand holding the serum bottle in soft daylight",
-        "button_variant": "light"
-      }
+        "layout": "editorial",
+        "height": 82,
+        "overlay_opacity": 34,
+        "link_label": "How it works",
+        "link_url": "#how"
+      },
+      "blocks": {
+        "s1": {
+          "type": "stat",
+          "settings": {
+            "value": "30,000ppm",
+            "label": "Hyaluronic PDRN"
+          }
+        },
+        "s2": {
+          "type": "stat",
+          "settings": {
+            "value": "45g",
+            "label": "About 8 weeks"
+          }
+        },
+        "s3": {
+          "type": "stat",
+          "settings": {
+            "value": "30 days",
+            "label": "Money-back guarantee"
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3"
+      ]
     },
     "ingredients": {
       "type": "ingredient-cards",
@@ -26,8 +54,9 @@
         "pdrn": {
           "type": "ingredient",
           "settings": {
-            "title": "Hyaluronic PDRN 30,000ppm",
+            "title": "Hyaluronic PDRN",
             "benefit": "Repair & renewal",
+            "figure": "30,000ppm",
             "icon": "drop"
           }
         },
@@ -36,6 +65,7 @@
           "settings": {
             "title": "Ectoin",
             "benefit": "Barrier protection",
+            "figure": "",
             "icon": "shield"
           }
         },
@@ -44,6 +74,7 @@
           "settings": {
             "title": "Glutathione",
             "benefit": "Brightening",
+            "figure": "",
             "icon": "sparkle"
           }
         }
@@ -55,9 +86,8 @@
       ],
       "settings": {
         "eyebrow": "What is inside",
-        "heading": "Three actives, nothing loud",
-        "subheading": "A short ingredient list designed to support hydration and a comfortable barrier.",
-        "columns": "3",
+        "heading": "Three actives. Nothing else.",
+        "subheading": "A short ingredient list, designed to support hydration and a comfortable barrier.",
         "show_divider": false,
         "image_alt": "Close-up of the ingredient list printed on the box",
         "image_caption": "Full ingredient list is printed on the box and in the product details below."
@@ -70,24 +100,21 @@
           "type": "step",
           "settings": {
             "title": "Tap 2–3 orbs onto your palm",
-            "text": "Tip the bottle gently. The orbs stay whole until you press them.",
-            "icon": "drop"
+            "text": "Tip the bottle gently. The orbs stay whole until you press them."
           }
         },
         "step-2": {
           "type": "step",
           "settings": {
             "title": "Press to burst them into serum",
-            "text": "A light press is enough. The orbs collapse into a clear, watery serum.",
-            "icon": "sparkle"
+            "text": "A light press is enough. The orbs collapse into a clear, watery serum."
           }
         },
         "step-3": {
           "type": "step",
           "settings": {
             "title": "Pat into clean skin, morning and night",
-            "text": "Press it in with your fingertips, then follow with moisturiser.",
-            "icon": "check"
+            "text": "Press it in with your fingertips, then follow with moisturiser."
           }
         }
       },
@@ -101,7 +128,8 @@
         "heading": "Three steps, morning and night",
         "subheading": "The orbs stay whole in the bottle. You break them open yourself.",
         "number_style": "padded",
-        "show_divider": true
+        "show_divider": false,
+        "anchor": "how"
       }
     },
     "why": {
@@ -136,13 +164,13 @@
       ],
       "settings": {
         "image_position": "left",
-        "show_divider": true,
         "image_alt": "Orbs of serum resting on a fingertip",
         "eyebrow": "Why orbs",
         "heading": "Sealed until the second you use it",
-        "text": "<p>PDRN is sensitive to air and light. In an open bottle it starts to lose its freshness from the first pump onward.</p><p>So we hold it differently. Each orb is a sealed dose, kept whole in the bottle until you press it between your fingers. Nothing oxidises on a shelf, and nothing is exposed until it is already on its way to your skin.</p><p>It is designed to give every application the same fresh dose as the first.</p>",
+        "text": "<p>PDRN is sensitive to air and light. In an open bottle it starts to lose its freshness from the first pump onward.</p><p>So we hold it differently. Each orb is a sealed dose, kept whole until you press it between your fingers. Nothing oxidises on a shelf, and nothing is exposed until it is already on its way to your skin.</p>",
         "button_label": "See the bundles",
-        "button_link": "#bundle"
+        "button_link": "#bundle",
+        "quote": "Every orb is a first pump."
       }
     },
     "results": {
@@ -189,7 +217,7 @@
         "subheading": "Real routines, photographed at home. Skin is individual, so results vary.",
         "timeframe": "28 days",
         "disclaimer": "Photos are from customers using the serum twice daily alongside their usual routine. Individual experience varies.",
-        "show_divider": true
+        "show_divider": false
       }
     },
     "bundle": {
@@ -239,7 +267,7 @@
         "subheading": "Most people start with two. Every order is covered by the 30-day money-back guarantee.",
         "button_label": "Add to cart",
         "footnote": "Ships in 7–11 days · 30-day money-back guarantee",
-        "show_divider": true,
+        "show_divider": false,
         "show_subscribe": true,
         "subscribe_default": false,
         "subscribe_label": "Subscribe and save 15%",
@@ -300,10 +328,10 @@
         "eyebrow": "Customer love",
         "heading": "What people say after a month",
         "show_summary": true,
-        "rating_value": "4.8",
-        "review_count_text": "2,431 reviews",
+        "rating_value": "",
+        "review_count_text": "",
         "verified_label": "Verified purchase",
-        "show_divider": true,
+        "show_divider": false,
         "show_app_slot": true
       }
     },
@@ -369,7 +397,7 @@
         "subheading": "Everything we get asked most often about the orbs, the formula and delivery.",
         "link_label": "",
         "one_at_a_time": true,
-        "show_divider": true
+        "show_divider": false
       }
     },
     "guarantee": {

@@ -8,7 +8,8 @@ Heading
   What people say after a month
 
 Summary
-  4.8 · 2,431 reviews
+  Star rating and review count both ship empty. The summary and star row stay
+  hidden until you enter a count.
 
 Review 1
   Name    Mina

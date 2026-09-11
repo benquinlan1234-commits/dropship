@@ -9,8 +9,8 @@
         "button_label": "Add to cart",
         "show_description": false,
         "show_rating": true,
-        "rating_value": "4.8",
-        "review_count_text": "2,431 reviews"
+        "rating_value": "",
+        "review_count_text": ""
       }
     },
     "bundle": {
@@ -48,7 +48,11 @@
           }
         }
       },
-      "block_order": ["one", "two", "three"],
+      "block_order": [
+        "one",
+        "two",
+        "three"
+      ],
       "settings": {
         "anchor": "bundle",
         "eyebrow": "Choose your supply",
@@ -88,7 +92,11 @@
           }
         }
       },
-      "block_order": ["ingredients", "how-to-use", "shipping"],
+      "block_order": [
+        "ingredients",
+        "how-to-use",
+        "shipping"
+      ],
       "settings": {
         "eyebrow": "Product details",
         "heading": "The full specification",
@@ -109,23 +117,41 @@
       "blocks": {
         "pdrn": {
           "type": "ingredient",
-          "settings": { "title": "Hyaluronic PDRN 30,000ppm", "benefit": "Repair & renewal", "icon": "drop" }
+          "settings": {
+            "title": "Hyaluronic PDRN",
+            "benefit": "Repair & renewal",
+            "figure": "30,000ppm",
+            "icon": "drop"
+          }
         },
         "ectoin": {
           "type": "ingredient",
-          "settings": { "title": "Ectoin", "benefit": "Barrier protection", "icon": "shield" }
+          "settings": {
+            "title": "Ectoin",
+            "benefit": "Barrier protection",
+            "figure": "",
+            "icon": "shield"
+          }
         },
         "glutathione": {
           "type": "ingredient",
-          "settings": { "title": "Glutathione", "benefit": "Brightening", "icon": "sparkle" }
+          "settings": {
+            "title": "Glutathione",
+            "benefit": "Brightening",
+            "figure": "",
+            "icon": "sparkle"
+          }
         }
       },
-      "block_order": ["pdrn", "ectoin", "glutathione"],
+      "block_order": [
+        "pdrn",
+        "ectoin",
+        "glutathione"
+      ],
       "settings": {
         "eyebrow": "What is inside",
-        "heading": "Three actives, nothing loud",
+        "heading": "Three actives. Nothing else.",
         "subheading": "A short ingredient list designed to support hydration and a comfortable barrier.",
-        "columns": "3",
         "show_divider": true
       }
     },
@@ -136,34 +162,36 @@
           "type": "step",
           "settings": {
             "title": "Tap 2–3 orbs onto your palm",
-            "text": "Tip the bottle gently. The orbs stay whole until you press them.",
-            "icon": "drop"
+            "text": "Tip the bottle gently. The orbs stay whole until you press them."
           }
         },
         "step-2": {
           "type": "step",
           "settings": {
             "title": "Press to burst them into serum",
-            "text": "A light press is enough. The orbs collapse into a clear, watery serum.",
-            "icon": "sparkle"
+            "text": "A light press is enough. The orbs collapse into a clear, watery serum."
           }
         },
         "step-3": {
           "type": "step",
           "settings": {
             "title": "Pat into clean skin, morning and night",
-            "text": "Press it in with your fingertips, then follow with moisturiser.",
-            "icon": "check"
+            "text": "Press it in with your fingertips, then follow with moisturiser."
           }
         }
       },
-      "block_order": ["step-1", "step-2", "step-3"],
+      "block_order": [
+        "step-1",
+        "step-2",
+        "step-3"
+      ],
       "settings": {
         "eyebrow": "How to use",
         "heading": "Three steps, morning and night",
         "subheading": "The orbs stay whole in the bottle. You break them open yourself.",
         "number_style": "padded",
-        "show_divider": true
+        "show_divider": true,
+        "anchor": "how"
       }
     },
     "results": {
@@ -191,7 +219,11 @@
           }
         }
       },
-      "block_order": ["shot-1", "shot-2", "shot-3"],
+      "block_order": [
+        "shot-1",
+        "shot-2",
+        "shot-3"
+      ],
       "settings": {
         "eyebrow": "In routine",
         "heading": "What people notice",
@@ -234,13 +266,19 @@
           }
         }
       },
-      "block_order": ["review-1", "review-2", "review-3"],
+      "block_order": [
+        "review-1",
+        "review-2",
+        "review-3"
+      ],
       "settings": {
         "eyebrow": "Customer love",
         "heading": "What people say after a month",
         "show_summary": true,
         "show_divider": true,
-        "show_app_slot": true
+        "show_app_slot": true,
+        "rating_value": "",
+        "review_count_text": ""
       }
     },
     "faq": {
@@ -290,7 +328,14 @@
           }
         }
       },
-      "block_order": ["q1", "q2", "q3", "q4", "q5", "q6"],
+      "block_order": [
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5",
+        "q6"
+      ],
       "settings": {
         "anchor": "faq",
         "eyebrow": "Questions",
@@ -329,12 +374,21 @@
           }
         }
       },
-      "block_order": ["g1", "g2", "g3"],
-      "settings": { "show_divider": true }
+      "block_order": [
+        "g1",
+        "g2",
+        "g3"
+      ],
+      "settings": {
+        "show_divider": true
+      }
     },
     "sticky-atc": {
       "type": "sticky-atc",
-      "settings": { "button_label": "Add to cart", "always_on_mobile": true }
+      "settings": {
+        "button_label": "Add to cart",
+        "always_on_mobile": true
+      }
     }
   },
   "order": [

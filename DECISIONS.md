@@ -178,6 +178,65 @@ not ship it by default on your behalf.
   normal text. This is what caught the accent: my first pick looked right and
   measured 3.76:1.
 
+---
+
+## Design pass — editorial purple / silver
+
+A second pass rebuilt the art direction on the same functionality. Full before
+and after renders with a per-section rationale are in
+[`design/COMPARE.md`](design/COMPARE.md); this records the defaults it changed.
+
+**Palette, again.** The first pass was pearl-and-plum but still sat on a
+near-white ground, which is the tell of a template. Now: page `#F1ECF7`
+lilac-pearl, cards `#FAF8FD`, media `#E7DFF2`, plum `#2A2340` for the one dark
+section and the footer, accent `#6E5AAB`. No `#FFFFFF` background anywhere in
+the theme — verified by querying computed styles on the rendered page, not by
+grepping.
+
+**Two typefaces.** Fraunces 400 for display, numerals and prices; Manrope
+400/500 for body and UI. One request loads both. Manrope alone was too even to
+carry a page at three sizes. Both families, both fallback stacks and the display
+weight, tracking and SOFT axis are theme settings.
+
+**Numbers are display type.** `30,000ppm`, `$34.50/bottle`, `28 days`, the step
+folios and every price render in Fraunces, larger than their surroundings. On a
+page selling an ingredient concentration, the figures are the argument.
+
+**Materials over flat colour.** A 3% grain generated from an inline SVG
+turbulence filter (no asset request), a pearl-to-lilac radial wash behind the
+hero and the offer, a blurred violet orb on a 60-second drift, and pearl
+surfaces with a hairline plus a 1px inner top highlight. Still no drop shadows
+— verified as zero non-inset box-shadows on the rendered page. The orb and the
+grain are settings, so the page can be taken completely flat.
+
+**A second accent token, and why.** `#6E5AAB` passes AA on the page ground and
+with white button text, but violet *text* on the tinted fills did not: the
+per-bottle price on a selected card measured 4.18:1 and the reviews eyebrow on
+the pearl band 4.37:1. Both looked fine. **Accent — text `#635099`** now carries
+eyebrows, figures and unit prices, worst case 4.94:1 across all four surfaces.
+
+**Review numbers ship empty, and the stars hide with them.** The brief asked for
+empty defaults; rendering an empty five-star row alongside no number reads as
+zero reviews, so the whole summary is suppressed until a count exists.
+
+**Compositions, not a grid of three.** Hero asymmetric with pill-masked media
+bleeding off the right edge; ingredients as hairline rows in a two-column
+spread; step numerals as folios behind the copy; a dark clinic section with a
+pull quote; tilted pearl frames in the gallery; three tall pill cards for the
+offer with the tag astride the top edge; staggered review cards on a pearl band;
+a single-column serif FAQ. The brief's rule — if a section could be dropped into
+another Shopify store unchanged, it isn't done — is the one I designed against.
+
+**Overrides are listed in COMPARE.md**, with measurements: the accent ink split,
+the hidden star row, hairline separators instead of the brief's `·` dots (which
+orphan a floating dot when the stat row wraps), and grain under the header
+rather than over it.
+
+**One bug the render caught.** `.section--deep a` was overriding `.button--light`,
+painting the dark section's button light violet on a pearl fill at roughly 2:1.
+Scoped to `a:not(.button)`. It is the second time rendering and measuring has
+caught something that reading the CSS did not.
+
 ## Not done
 
 - **Lighthouse ≥ 90 is not measured.** It needs a running store with real

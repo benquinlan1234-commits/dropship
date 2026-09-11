@@ -5,7 +5,7 @@
          {% render 'icon', icon: 'check', size: 'lg' %}
 
   Accepts: star, star-outline, check, shield, truck, lock, plus, minus, cart, close,
-           chevron, arrow-right, leaf, drop, sparkle, play, pause
+           chevron, arrow-right, arrow-down, leaf, drop, sparkle, play, pause
 {%- endcomment -%}
 {%- liquid
   assign classes = 'icon'
@@ -42,6 +42,8 @@
     <svg class="{{ classes }}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg>
   {%- when 'chevron' -%}
     <svg class="{{ classes }}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 9.5l6 6 6-6"/></svg>
+  {%- when 'arrow-down' -%}
+    <svg class="{{ classes }}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 4v16M6 14l6 6 6-6"/></svg>
   {%- when 'arrow-right' -%}
     <svg class="{{ classes }}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 12h16M14 6l6 6-6 6"/></svg>
   {%- when 'leaf' -%}

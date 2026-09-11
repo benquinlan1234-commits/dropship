@@ -1,57 +1,62 @@
-<div class="section how-it-works{% if section.settings.show_divider %} section--bordered{% endif %}">
+<div
+  class="section how{% if section.settings.show_divider %} section--bordered{% endif %}"
+  id="{{ section.settings.anchor | default: 'how' }}"
+>
   <div class="page-width">
-    {%- if section.settings.eyebrow != blank or section.settings.heading != blank or section.settings.subheading != blank -%}
-      <div class="section__header section__header--center">
+    <div class="how__header">
+      <div>
         {%- if section.settings.eyebrow != blank -%}
-          <p class="section__eyebrow">{{ section.settings.eyebrow }}</p>
+          <p class="eyebrow eyebrow--rule">{{ section.settings.eyebrow }}</p>
         {%- endif -%}
         {%- if section.settings.heading != blank -%}
-          <h2>{{ section.settings.heading }}</h2>
-        {%- endif -%}
-        {%- if section.settings.subheading != blank -%}
-          <p class="section__subheading">{{ section.settings.subheading }}</p>
+          <h2 class="how__heading">{{ section.settings.heading }}</h2>
         {%- endif -%}
       </div>
-    {%- endif -%}
+      {%- if section.settings.subheading != blank -%}
+        <p class="lede how__lede">{{ section.settings.subheading }}</p>
+      {%- endif -%}
+    </div>
 
-    <ol class="how-it-works__steps grid grid--3" role="list">
+    <ol class="how__steps" role="list">
       {%- for block in section.blocks -%}
-        <li class="how-it-works__step reveal" {{ block.shopify_attributes }}>
-          {%- if block.settings.image != blank -%}
-            <div class="media media--landscape how-it-works__media">
-              <img
-                src="{{ block.settings.image | image_url: width: 700 }}"
-                srcset="
-                  {{ block.settings.image | image_url: width: 350 }} 350w,
-                  {{ block.settings.image | image_url: width: 700 }} 700w
-                "
-                sizes="(min-width: 750px) 33vw, 100vw"
-                width="{{ block.settings.image.width }}"
-                height="{{ block.settings.image.height }}"
-                alt="{{ block.settings.image_alt | escape }}"
-                loading="lazy"
-              >
-            </div>
-          {%- endif -%}
-
-          <p class="how-it-works__number" aria-hidden="true">
+        <li class="step reveal" {{ block.shopify_attributes }}>
+          {%- comment -%}
+            The numeral sits behind the copy like a magazine folio, so the eye
+            reads the instruction first and the sequence second.
+          {%- endcomment -%}
+          <span class="numeral step__folio" aria-hidden="true">
             {%- if section.settings.number_style == 'number' -%}
               {{ forloop.index }}
             {%- else -%}
               {{ forloop.index | prepend: '0' }}
             {%- endif -%}
-          </p>
+          </span>
 
-          {%- if block.settings.icon != 'none' and block.settings.image == blank -%}
-            <span class="how-it-works__icon">{% render 'icon', icon: block.settings.icon, size: 'lg' %}</span>
-          {%- endif -%}
+          <div class="step__body">
+            {%- if block.settings.image != blank -%}
+              <div class="media media--landscape step__media">
+                <img
+                  src="{{ block.settings.image | image_url: width: 700 }}"
+                  srcset="
+                    {{ block.settings.image | image_url: width: 350 }} 350w,
+                    {{ block.settings.image | image_url: width: 700 }} 700w
+                  "
+                  sizes="(min-width: 750px) 33vw, 100vw"
+                  width="{{ block.settings.image.width }}"
+                  height="{{ block.settings.image.height }}"
+                  alt="{{ block.settings.image_alt | escape }}"
+                  loading="lazy"
+                >
+              </div>
+            {%- endif -%}
 
-          {%- if block.settings.title != blank -%}
-            <h3 class="how-it-works__title">{{ block.settings.title }}</h3>
-          {%- endif -%}
-          {%- if block.settings.text != blank -%}
-            <p class="text-secondary">{{ block.settings.text }}</p>
-          {%- endif -%}
+            {%- if block.settings.title != blank -%}
+              <h3 class="step__title">{{ block.settings.title }}</h3>
+            {%- endif -%}
+            {%- if block.settings.text != blank -%}
+              <p class="step__text">{{ block.settings.text }}</p>
+            {%- endif -%}
+          </div>
         </li>
       {%- endfor -%}
     </ol>
@@ -59,55 +64,89 @@
 </div>
 
 {% style %}
-  .how-it-works__steps {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+  .how__header {
+    display: grid;
+    gap: 20px;
+    margin-bottom: 56px;
   }
 
-  .how-it-works__step {
+  .how__heading {
+    margin-bottom: 0;
+    max-width: 16ch;
+  }
+
+  .how__steps {
+    display: grid;
+    gap: 44px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .step {
     position: relative;
-    padding-top: 26px;
+    padding-top: 34px;
     border-top: 1px solid var(--color-border);
   }
 
-  .how-it-works__media {
-    margin-bottom: 24px;
-    border-radius: var(--radius);
-  }
-
-  /* The step number sits in the hairline, the way a print caption would. */
-  .how-it-works__number {
+  .step__folio {
     position: absolute;
-    top: -0.7em;
-    left: 0;
-    margin: 0;
-    padding-right: 12px;
-    background-color: var(--color-background);
-    font-family: var(--font-heading);
-    font-size: 0.6875rem;
-    font-weight: 500;
-    font-variant-numeric: tabular-nums;
-    letter-spacing: 0.2em;
+    top: 2px;
+    left: -6px;
+    z-index: 0;
+    font-size: 5.5rem;
+    line-height: 0.9;
     color: var(--color-accent);
+    opacity: 0.18;
+    user-select: none;
   }
 
-  .how-it-works__icon {
-    display: inline-flex;
-    margin-bottom: 18px;
-    color: var(--color-silver);
+  .step__body {
+    position: relative;
+    z-index: 1;
   }
 
-  .how-it-works__title {
-    margin: 0 0 8px;
-    font-size: 1.0625rem;
-    max-width: 22ch;
+  .step__media {
+    margin-bottom: 22px;
   }
 
-  .how-it-works__step p:last-child {
-    margin-bottom: 0;
-    font-size: 0.9375rem;
+  .step__title {
+    margin: 0 0 10px;
+    font-size: 1.25rem;
+    max-width: 20ch;
+  }
+
+  .step__text {
+    margin: 0;
     max-width: 34ch;
+    color: var(--color-text-secondary);
+    font-size: 0.9375rem;
+  }
+
+  @media screen and (min-width: 750px) {
+    .how__header {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+      align-items: end;
+      gap: 48px;
+    }
+
+    .how__lede {
+      padding-bottom: 6px;
+    }
+
+    .how__steps {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--grid-gap);
+    }
+
+    .step {
+      padding-top: 44px;
+    }
+
+    .step__folio {
+      font-size: 7rem;
+      top: -8px;
+    }
   }
 {% endstyle %}
 
@@ -117,6 +156,13 @@
   "tag": "section",
   "class": "how-it-works-section",
   "settings": [
+    {
+      "type": "text",
+      "id": "anchor",
+      "label": "Anchor ID",
+      "default": "how",
+      "info": "Used by the hero's text link, /#how."
+    },
     {
       "type": "text",
       "id": "eyebrow",
@@ -149,7 +195,7 @@
       "type": "checkbox",
       "id": "show_divider",
       "label": "Show top divider",
-      "default": true
+      "default": false
     }
   ],
   "blocks": [
@@ -170,23 +216,9 @@
           "default": "Tip the bottle gently. The orbs stay whole until you press them."
         },
         {
-          "type": "select",
-          "id": "icon",
-          "label": "Icon",
-          "options": [
-            { "value": "none", "label": "None" },
-            { "value": "drop", "label": "Drop" },
-            { "value": "sparkle", "label": "Sparkle" },
-            { "value": "check", "label": "Check" },
-            { "value": "leaf", "label": "Leaf" }
-          ],
-          "default": "drop"
-        },
-        {
           "type": "image_picker",
           "id": "image",
-          "label": "Image",
-          "info": "Optional. Replaces the icon."
+          "label": "Image"
         },
         {
           "type": "text",
@@ -204,24 +236,21 @@
           "type": "step",
           "settings": {
             "title": "Tap 2–3 orbs onto your palm",
-            "text": "Tip the bottle gently. The orbs stay whole until you press them.",
-            "icon": "drop"
+            "text": "Tip the bottle gently. The orbs stay whole until you press them."
           }
         },
         {
           "type": "step",
           "settings": {
             "title": "Press to burst them into serum",
-            "text": "A light press is enough. The orbs collapse into a clear, watery serum.",
-            "icon": "sparkle"
+            "text": "A light press is enough. The orbs collapse into a clear, watery serum."
           }
         },
         {
           "type": "step",
           "settings": {
             "title": "Pat into clean skin, morning and night",
-            "text": "Press it in with your fingertips, then follow with moisturiser.",
-            "icon": "check"
+            "text": "Press it in with your fingertips, then follow with moisturiser."
           }
         }
       ]
