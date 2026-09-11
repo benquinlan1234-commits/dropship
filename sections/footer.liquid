@@ -37,8 +37,9 @@
     </div>
 
     <div class="footer__bottom">
+      {%- assign current_year = 'now' | date: '%Y' -%}
       <p class="text-small footer__body">
-        {{ 'sections.footer.copyright_html' | t: year: 'now' | date: '%Y', brand: brand }}
+        {{ 'sections.footer.copyright_html' | t: year: current_year, brand: brand }}
       </p>
 
       <ul class="footer__social" role="list">
