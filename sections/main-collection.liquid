@@ -1,0 +1,47 @@
+<div class="section main-collection">
+  <div class="page-width">
+    <header class="section__header section__header--center">
+      <h1>{{ collection.title }}</h1>
+      {%- if collection.description != blank -%}
+        <div class="rte section__subheading">{{ collection.description }}</div>
+      {%- endif -%}
+    </header>
+
+    {%- if collection.products.size > 0 -%}
+      {%- paginate collection.products by 24 -%}
+        <ul class="product-grid grid" role="list">
+          {%- for product in collection.products -%}
+            <li>{% render 'product-card', card_product: product %}</li>
+          {%- endfor -%}
+        </ul>
+
+        {% render 'pagination', paginate: paginate %}
+      {%- endpaginate -%}
+    {%- else -%}
+      <p class="text-center text-secondary">{{ 'sections.collection.empty' | t }}</p>
+    {%- endif -%}
+  </div>
+</div>
+
+{% style %}
+  .product-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media screen and (min-width: 750px) {
+    .product-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Collection",
+  "tag": "section",
+  "settings": []
+}
+{% endschema %}

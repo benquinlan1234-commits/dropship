@@ -1,0 +1,103 @@
+{%- comment -%}
+  Fallback cart page. The theme uses a drawer, so most visitors never land here —
+  this exists for no-JS visitors and direct links to /cart.
+{%- endcomment -%}
+<div class="section main-cart">
+  <div class="page-width page-width--narrow">
+    <h1>{{ 'sections.cart.title' | t }}</h1>
+
+    {%- if cart.item_count == 0 -%}
+      <p class="text-secondary">{{ 'sections.cart.empty' | t }}</p>
+      <a class="button" href="{{ routes.root_url }}">{{ 'sections.cart.continue_shopping' | t }}</a>
+    {%- else -%}
+      <form action="{{ routes.cart_url }}" method="post" novalidate>
+        <ul class="main-cart__items" role="list">
+          {%- for item in cart.items -%}
+            <li class="cart-item">
+              <a class="cart-item__media" href="{{ item.url }}" tabindex="-1" aria-hidden="true">
+                {%- if item.image -%}
+                  <img
+                    src="{{ item.image | image_url: width: 160 }}"
+                    width="80"
+                    height="80"
+                    alt="{{ item.image.alt | escape }}"
+                    loading="lazy"
+                  >
+                {%- endif -%}
+              </a>
+              <div class="cart-item__details">
+                <a class="cart-item__title" href="{{ item.url }}">{{ item.product.title }}</a>
+                {%- unless item.product.has_only_default_variant -%}
+                  <p class="cart-item__variant text-small text-secondary">{{ item.variant.title }}</p>
+                {%- endunless -%}
+                <div class="cart-item__row">
+                  <label class="visually-hidden" for="CartQuantity-{{ forloop.index }}">
+                    {{- 'products.product.quantity' | t -}}
+                  </label>
+                  <input
+                    class="main-cart__quantity"
+                    id="CartQuantity-{{ forloop.index }}"
+                    type="number"
+                    name="updates[]"
+                    value="{{ item.quantity }}"
+                    min="0"
+                    inputmode="numeric"
+                  >
+                  <span class="cart-item__price">{{ item.final_line_price | money }}</span>
+                </div>
+              </div>
+            </li>
+          {%- endfor -%}
+        </ul>
+
+        <div class="main-cart__footer">
+          <div class="cart-drawer__subtotal">
+            <span>{{ 'sections.cart.subtotal' | t }}</span>
+            <span>{{ cart.total_price | money }}</span>
+          </div>
+          <p class="text-small text-secondary">{{ 'sections.cart.taxes_and_shipping_at_checkout' | t }}</p>
+          <div class="main-cart__actions">
+            <button class="button button--secondary" type="submit" name="update">
+              {{- 'products.product.quantity' | t -}}
+            </button>
+            <button class="button" type="submit" name="checkout">{{ 'sections.cart.checkout' | t }}</button>
+          </div>
+        </div>
+      </form>
+    {%- endif -%}
+  </div>
+</div>
+
+{% style %}
+  .main-cart__items {
+    list-style: none;
+    margin: 32px 0;
+    padding: 0;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .main-cart__quantity {
+    width: 72px;
+    padding: 10px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-surface);
+    color: inherit;
+    font: inherit;
+  }
+
+  .main-cart__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 24px;
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Cart",
+  "tag": "section",
+  "settings": []
+}
+{% endschema %}
