@@ -59,11 +59,11 @@ than copied:
   "PDRN SPHERICAL WATER-BLASTING ESSENCE". Mine is a drop icon and "Hyaluronic
   PDRN orb serum".
 - **A trust line under the CTA** — their "30ml · Dermatologist Tested · For All
-  Skin Types". Mine drops the dermatologist claim (see below) and reads "45g ·
+  Skin Types". Mine drops the dermatologist claim (see below) and reads "30ml ·
   For all skin types · 30-day money-back guarantee".
 - **A stat row** — their "Instant / Absorption", "PDRN / Salmon DNA". Mine sits
   in the Why encapsulated section as "30,000ppm / Hyaluronic PDRN", "One dose /
-  Sealed per orb", "45g / About 8 weeks".
+  Sealed per orb", "30ml / Net content".
 - **A specifications table** — their Net Content / Size / Applicable People /
   Packing List. Mine is in Product details as Net content / Texture / Skin types
   / In the box.

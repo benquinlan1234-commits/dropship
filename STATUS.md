@@ -69,6 +69,55 @@ README.
 
 ---
 
+## The live product
+
+Read from the store on 11 September 2026 via the Shopify connector, not from
+memory. This is what the theme is now wired to.
+
+| | Live listing |
+| --- | --- |
+| Title | Salmon facial essence |
+| Handle | `salmon-facial-essence` — this is what `hero_product` points at |
+| Vendor | HAUA · status ACTIVE · type skincare |
+| Variants | **1** — "Pdrn spherical water-blasting essence", SKU `SU00075859-…` |
+| Price | **44.70 AUD**, inventory 1000 |
+| Images | 6, all with **empty alt text** |
+| Description | Supplier boilerplate. States **Net Content: 30ml**, and hotlinks six images from `oss.teemdrop.com` |
+
+### What this changed in the theme
+
+- **Linked.** `hero_product: "salmon-facial-essence"`. The hero poster now falls
+  back to `product.featured_media`, so the listing's own photography carries it.
+- **Alt text.** Every image on the product has none. The theme falls back to the
+  product title wherever an image is content rather than decoration — the
+  product-page gallery was the last place still emitting a bare `alt=""`, and
+  now does not. Real alt text on the six images in admin is still better.
+- **Net content.** The page said `45g`, read off the carton photos. The listing
+  says `30ml`. A storefront must not contradict its own product description, so
+  the theme now says **30ml** everywhere: hero stat, trust line, Product details
+  spec, FAQ. **One of the two figures is wrong and I cannot tell which** — check
+  the physical carton and correct whichever is off. It is four settings.
+- **Longevity.** "About 8 weeks" and "one bottle lasts about eight weeks" are
+  gone. At 30ml that figure was no longer supportable, and you had asked for the
+  heading removed anyway. Nothing replaced it with a different number.
+
+### Still contradictory or unverified
+
+- **`30,000ppm` hyaluronic PDRN** — the first hero stat. Nothing on the listing
+  substantiates it. Unlike the net content it contradicts nothing, so it was
+  left alone rather than swapped for another invented figure. Get it from the
+  supplier in writing or change the stat.
+- **Currency is AUD.** Pricing copy elsewhere assumed dollars generically and
+  reads fine, but the free-shipping threshold is **$35** — below the price of a
+  single bottle, so the cart progress bar is satisfied by every possible order.
+  Either raise it or turn it off.
+- **The description is supplier boilerplate** and hotlinks six images from
+  `oss.teemdrop.com`. Those are third-party URLs on someone else's CDN: they can
+  change or disappear without warning. The theme does not read the description,
+  so this is a listing cleanup, not a theme one.
+
+---
+
 ## How it got here
 
 | Commit | What it did |
@@ -130,22 +179,29 @@ straight into CI or a pre-push hook.
    as a constraint violation unique to this branch, but I could not execute
    Shopify to watch the 404 disappear. `v2-broken.zip` and `v1.zip` are in
    `dist/` if you want to see the break and the control first.
-2. **Set the featured product** — Theme settings → Product. Every section falls
-   back to it. Currently unset.
-3. **Create the three variants**, in this order:
+2. ~~**Set the featured product.**~~ **Done** — `hero_product` is linked to
+   `salmon-facial-essence` in `config/settings_data.json`, so every section
+   resolves against the live listing with no Customizer step.
+3. **Add the 2- and 3-bottle variants.** The live product has **one** variant.
+   The bundle cards are keyed to variant positions 1/2/3, and a card whose
+   variant does not exist is skipped rather than duplicated — so today the
+   offer section renders a single card at $44.70. Functional, but it is not the
+   three-choice section you asked for. Suggested shape, prices yours to set:
 
-   | Position | Title | Price | Compare at |
+   | Position | Title | Price (AUD) | Compare at |
    | --- | --- | --- | --- |
-   | 1 | 1 bottle | $39 | — |
-   | 2 | 2 bottles | $69 | $78 |
-   | 3 | 3 bottles | $99 | $117 |
+   | 1 | 1 bottle | 44.70 | — |
+   | 2 | 2 bottles | ~79.00 | 89.40 |
+   | 3 | 3 bottles | ~110.00 | 134.10 |
 
    Per-bottle prices are computed from the "Bottles in this option" setting, so
-   they stay correct if prices change. If your variants land in a different
+   they stay correct if prices change. If the variants land in a different
    order, fix **Variant position** on each bundle card or paste the numeric
    **Variant ID**.
-4. **Imagery.** Every image and the hero video are placeholders. Where each
-   asset goes:
+
+4. **Imagery.** The product already carries six supplier photos, so the hero
+   and the gallery light up from the listing with no theme setting. What is
+   still missing is the brand's own art. Where each asset goes:
 
    | Asset | Where it belongs | Why |
    | --- | --- | --- |

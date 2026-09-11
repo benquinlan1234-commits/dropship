@@ -32,8 +32,8 @@
         "s2": {
           "type": "stat",
           "settings": {
-            "value": "45g",
-            "label": "About 8 weeks"
+            "value": "30ml",
+            "label": "Net content"
           }
         },
         "s3": {
@@ -57,7 +57,7 @@
           "type": "option",
           "settings": {
             "title": "1 bottle",
-            "subtitle": "Try it for 8 weeks",
+            "subtitle": "Start here",
             "bottles": 1,
             "variant_position": 1,
             "selected": false
@@ -187,7 +187,7 @@
           "type": "question",
           "settings": {
             "question": "How long does one bottle last?",
-            "answer": "<p>The 45g bottle holds about eight weeks of use at 2–3 orbs, morning and night. Most people order two bottles so they do not run out mid-routine.</p>"
+            "answer": "<p>The 30ml bottle is designed for daily use at 2–3 orbs, morning and night.</p>"
           }
         },
         "q6": {

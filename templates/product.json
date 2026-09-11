@@ -5,7 +5,7 @@
       "settings": {
         "eyebrow": "Hyaluronic PDRN orb serum",
         "subheading": "Salmon DNA serum, sealed in each orb until it touches your skin.",
-        "trust_line": "45g · Ships in 7–11 days · 30-day money-back guarantee",
+        "trust_line": "30ml · Ships in 7–11 days · 30-day money-back guarantee",
         "button_label": "Choose your bundle",
         "show_description": false,
         "show_rating": true,
@@ -23,7 +23,7 @@
           "type": "option",
           "settings": {
             "title": "1 bottle",
-            "subtitle": "Try it for 8 weeks",
+            "subtitle": "Start here",
             "bottles": 1,
             "variant_position": 1,
             "selected": false
@@ -145,7 +145,7 @@
         "one_at_a_time": true,
         "show_divider": true,
         "spec_one_label": "Net content",
-        "spec_one_value": "45 g / 1.58 oz",
+        "spec_one_value": "30 ml",
         "spec_two_label": "Texture",
         "spec_two_value": "Encapsulated orbs, water-light once burst",
         "spec_three_label": "Skin types",
@@ -198,7 +198,7 @@
           "type": "question",
           "settings": {
             "question": "How long does one bottle last?",
-            "answer": "<p>The 45g bottle holds about eight weeks of use at 2–3 orbs, morning and night.</p>"
+            "answer": "<p>The 30ml bottle is designed for daily use at 2–3 orbs, morning and night.</p>"
           }
         },
         "q6": {

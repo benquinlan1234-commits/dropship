@@ -39,7 +39,8 @@
     "color_accent_ink": "#635099",
     "shadow_strength": 60,
     "surface_sheen": 50,
-    "color_silver_bright": "#EDEBF2"
+    "color_silver_bright": "#EDEBF2",
+    "hero_product": "salmon-facial-essence"
   },
   "presets": {
     "Default": {

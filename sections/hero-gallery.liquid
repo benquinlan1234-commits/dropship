@@ -33,7 +33,7 @@
                         sizes="(min-width: 990px) 52vw, 100vw"
                         width="{{ media.preview_image.width }}"
                         height="{{ media.preview_image.height }}"
-                        alt="{{ media.alt | escape }}"
+                        alt="{{ media.alt | default: gallery_product.title | escape }}"
                         {% if forloop.first %}
                           loading="eager"
                           fetchpriority="high"
@@ -288,7 +288,7 @@
       "type": "text",
       "id": "trust_line",
       "label": "Trust line",
-      "default": "45g · Ships in 7–11 days · 30-day money-back guarantee"
+      "default": "30ml · Ships in 7–11 days · 30-day money-back guarantee"
     },
     {
       "type": "paragraph",
