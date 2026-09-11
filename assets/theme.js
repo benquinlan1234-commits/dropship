@@ -524,16 +524,30 @@
     var videos = document.querySelectorAll('[data-theme-video]');
     if (!videos.length) return;
 
+    var poster = function (video) {
+      var wrapper = video.closest('.video-wrapper');
+      return wrapper ? wrapper.querySelector('.video-wrapper__poster--overlay') : null;
+    };
+
     var play = function (video) {
       if (prefersReducedMotion.matches) {
         video.pause();
         video.removeAttribute('autoplay');
+        var fallback = poster(video);
+        if (fallback) fallback.hidden = false;
         return;
       }
       if (video.preload === 'none') video.preload = 'auto';
       var attempt = video.play();
       if (attempt && typeof attempt.catch === 'function') attempt.catch(function () {});
     };
+
+    videos.forEach(function (video) {
+      video.addEventListener('playing', function () {
+        var fallback = poster(video);
+        if (fallback) fallback.hidden = true;
+      });
+    });
 
     if ('IntersectionObserver' in window) {
       var observer = new IntersectionObserver(
