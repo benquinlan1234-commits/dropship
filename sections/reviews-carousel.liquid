@@ -122,10 +122,12 @@
     display: flex;
     gap: 16px;
     margin: 0;
-    padding: 0 var(--gutter);
+    padding-inline: var(--content-inset);
     list-style: none;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
+    /* Without this, snapping pulls the first card flush to the viewport edge. */
+    scroll-padding-inline: var(--content-inset);
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
   }

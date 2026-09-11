@@ -68,7 +68,7 @@
             <input type="hidden" name="id" value="{{ chosen_variant.id }}" data-variant-input>
             <input type="hidden" name="quantity" value="1">
             <button
-              class="button hero__button"
+              class="button hero__button{% if section.settings.button_variant != 'accent' %} button--{{ section.settings.button_variant }}{% endif %}"
               type="submit"
               {% unless chosen_variant.available %}
                 disabled
@@ -249,6 +249,7 @@
   }
 
   .hero__trust {
+    max-width: 46ch;
     margin: 18px 0 0;
     font-size: 0.75rem;
     letter-spacing: 0.06em;
@@ -272,6 +273,10 @@
 
     .hero__inner > * {
       max-width: 40ch;
+    }
+
+    .hero__inner > .hero__trust {
+      max-width: 52ch;
     }
 
     .hero__heading {
@@ -408,6 +413,17 @@
       "id": "button_label",
       "label": "Button label",
       "default": "Add to cart"
+    },
+    {
+      "type": "select",
+      "id": "button_variant",
+      "label": "Button colour",
+      "options": [
+        { "value": "light", "label": "Light — best over video" },
+        { "value": "accent", "label": "Accent" },
+        { "value": "dark", "label": "Dark" }
+      ],
+      "default": "light"
     },
     {
       "type": "header",

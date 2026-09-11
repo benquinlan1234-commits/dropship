@@ -16,7 +16,8 @@
         "height": 78,
         "overlay_opacity": 30,
         "text_color": "#FFFFFF",
-        "poster_alt": "A hand holding the serum bottle in soft daylight"
+        "poster_alt": "A hand holding the serum bottle in soft daylight",
+        "button_variant": "light"
       }
     },
     "ingredients": {
@@ -24,18 +25,34 @@
       "blocks": {
         "pdrn": {
           "type": "ingredient",
-          "settings": { "title": "Hyaluronic PDRN 30,000ppm", "benefit": "Repair & renewal", "icon": "drop" }
+          "settings": {
+            "title": "Hyaluronic PDRN 30,000ppm",
+            "benefit": "Repair & renewal",
+            "icon": "drop"
+          }
         },
         "ectoin": {
           "type": "ingredient",
-          "settings": { "title": "Ectoin", "benefit": "Barrier protection", "icon": "shield" }
+          "settings": {
+            "title": "Ectoin",
+            "benefit": "Barrier protection",
+            "icon": "shield"
+          }
         },
         "glutathione": {
           "type": "ingredient",
-          "settings": { "title": "Glutathione", "benefit": "Brightening", "icon": "sparkle" }
+          "settings": {
+            "title": "Glutathione",
+            "benefit": "Brightening",
+            "icon": "sparkle"
+          }
         }
       },
-      "block_order": ["pdrn", "ectoin", "glutathione"],
+      "block_order": [
+        "pdrn",
+        "ectoin",
+        "glutathione"
+      ],
       "settings": {
         "eyebrow": "What is inside",
         "heading": "Three actives, nothing loud",
@@ -74,7 +91,11 @@
           }
         }
       },
-      "block_order": ["step-1", "step-2", "step-3"],
+      "block_order": [
+        "step-1",
+        "step-2",
+        "step-3"
+      ],
       "settings": {
         "eyebrow": "How to use",
         "heading": "Three steps, morning and night",
@@ -86,11 +107,33 @@
     "why": {
       "type": "why-encapsulated",
       "blocks": {
-        "stat-1": { "type": "stat", "settings": { "value": "30,000ppm", "label": "Hyaluronic PDRN" } },
-        "stat-2": { "type": "stat", "settings": { "value": "One dose", "label": "Sealed per orb" } },
-        "stat-3": { "type": "stat", "settings": { "value": "45g", "label": "About 8 weeks" } }
+        "stat-1": {
+          "type": "stat",
+          "settings": {
+            "value": "30,000ppm",
+            "label": "Hyaluronic PDRN"
+          }
+        },
+        "stat-2": {
+          "type": "stat",
+          "settings": {
+            "value": "One dose",
+            "label": "Sealed per orb"
+          }
+        },
+        "stat-3": {
+          "type": "stat",
+          "settings": {
+            "value": "45g",
+            "label": "About 8 weeks"
+          }
+        }
       },
-      "block_order": ["stat-1", "stat-2", "stat-3"],
+      "block_order": [
+        "stat-1",
+        "stat-2",
+        "stat-3"
+      ],
       "settings": {
         "image_position": "left",
         "show_divider": true,
@@ -134,7 +177,12 @@
           }
         }
       },
-      "block_order": ["shot-1", "shot-2", "shot-3", "shot-4"],
+      "block_order": [
+        "shot-1",
+        "shot-2",
+        "shot-3",
+        "shot-4"
+      ],
       "settings": {
         "eyebrow": "In routine",
         "heading": "What people notice",
@@ -179,7 +227,11 @@
           }
         }
       },
-      "block_order": ["one", "two", "three"],
+      "block_order": [
+        "one",
+        "two",
+        "three"
+      ],
       "settings": {
         "anchor": "bundle",
         "eyebrow": "Choose your supply",
@@ -238,7 +290,12 @@
           }
         }
       },
-      "block_order": ["review-1", "review-2", "review-3", "review-4"],
+      "block_order": [
+        "review-1",
+        "review-2",
+        "review-3",
+        "review-4"
+      ],
       "settings": {
         "eyebrow": "Customer love",
         "heading": "What people say after a month",
@@ -297,7 +354,14 @@
           }
         }
       },
-      "block_order": ["q1", "q2", "q3", "q4", "q5", "q6"],
+      "block_order": [
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5",
+        "q6"
+      ],
       "settings": {
         "anchor": "faq",
         "eyebrow": "Questions",
@@ -336,8 +400,15 @@
           }
         }
       },
-      "block_order": ["g1", "g2", "g3"],
-      "settings": { "heading": "", "show_divider": true }
+      "block_order": [
+        "g1",
+        "g2",
+        "g3"
+      ],
+      "settings": {
+        "heading": "",
+        "show_divider": true
+      }
     },
     "sticky-atc": {
       "type": "sticky-atc",

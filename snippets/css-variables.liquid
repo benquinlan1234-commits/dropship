@@ -46,6 +46,9 @@
 
     --page-width: 1240px;
     --gutter: 22px;
+    /* Distance from the viewport edge to the content column, for full-bleed rows
+       that must still line up with the headings above them. */
+    --content-inset: max(var(--gutter), calc((100vw - var(--page-width)) / 2 + var(--gutter)));
     --grid-gap: 20px;
     --section-padding-mobile: 56px;
     --section-padding-desktop: 96px;

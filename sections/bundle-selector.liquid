@@ -223,8 +223,8 @@
     width: 44px;
     height: 26px;
     border-radius: 999px;
-    background-color: var(--color-border);
-    transition: background-color var(--duration) ease;
+    background-color: var(--color-silver);
+    transition: background-color var(--duration) var(--ease);
   }
 
   .bundle__switch-thumb {
@@ -270,14 +270,17 @@
   }
 
   .bundle__card--badged {
-    padding-top: 10px;
+    padding-top: 12px;
   }
 
+  /* Sits on the card's top edge as a deliberate tab rather than notching it. */
   .bundle__badge {
     position: absolute;
     top: 0;
-    left: 20px;
+    left: 24px;
     z-index: 1;
+    background-color: var(--color-accent);
+    color: var(--color-accent-text);
   }
 
   .bundle__label {
