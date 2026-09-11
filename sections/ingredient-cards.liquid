@@ -40,8 +40,8 @@
 
       <div class="ingredients__cards grid grid--{{ section.settings.columns }}">
         {%- for block in section.blocks -%}
-          <div class="card ingredient-card reveal" {{ block.shopify_attributes }}>
-            <div class="ingredient-card__icon">
+          <div class="ingredient-card reveal" {{ block.shopify_attributes }}>
+            <div class="ingredient-card__icon icon-ring">
               {%- if block.settings.image != blank -%}
                 <img
                   src="{{ block.settings.image | image_url: width: 96 }}"
@@ -81,27 +81,32 @@
   }
 
   .ingredients__figure figcaption {
-    margin-top: 12px;
+    margin-top: 14px;
+    max-width: 34ch;
+  }
+
+  /* Hairline-separated entries read more like a spec sheet than a row of cards. */
+  .ingredient-card {
+    padding-top: 28px;
+    border-top: 1px solid var(--color-border);
   }
 
   .ingredient-card__icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 48px;
-    height: 48px;
-    margin-bottom: 16px;
-    border-radius: 999px;
-    background-color: var(--color-accent);
-    color: var(--color-accent-text);
+    margin-bottom: 22px;
   }
 
   .ingredient-card__icon:empty {
     display: none;
   }
 
+  .ingredient-card__icon img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+  }
+
   .ingredient-card__title {
-    margin: 0 0 6px;
+    margin: 0 0 8px;
     font-size: 1.0625rem;
   }
 
@@ -112,12 +117,29 @@
 
   @media screen and (min-width: 990px) {
     .ingredients__layout--with-image {
-      grid-template-columns: 0.8fr 1.2fr;
-      gap: 48px;
+      grid-template-columns: 0.85fr 1.15fr;
+      gap: 64px;
     }
 
     .ingredients__layout--with-image .ingredients__cards {
       grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    .ingredients__layout--with-image .ingredient-card {
+      display: grid;
+      grid-template-columns: 52px 1fr;
+      align-items: start;
+      column-gap: 24px;
+      padding-block: 28px;
+    }
+
+    .ingredients__layout--with-image .ingredient-card__icon {
+      margin-bottom: 0;
+    }
+
+    .ingredients__layout--with-image .ingredient-card > :not(.ingredient-card__icon) {
+      grid-column: 2;
     }
   }
 {% endstyle %}

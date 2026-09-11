@@ -5,7 +5,7 @@
   >
     <div class="page-width announcement-bar__inner">
       {%- for block in section.blocks -%}
-        <p class="announcement-bar__item text-eyebrow" {{ block.shopify_attributes }}>
+        <p class="announcement-bar__item" {{ block.shopify_attributes }}>
           {%- if block.settings.link != blank -%}
             <a href="{{ block.settings.link }}">{{ block.settings.text }}</a>
           {%- else -%}
@@ -20,16 +20,18 @@
     .announcement-bar {
       background-color: var(--announcement-bg);
       color: var(--announcement-color);
-      font-size: 0.75rem;
-      letter-spacing: 0.08em;
+      font-size: 0.6875rem;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
     }
 
     .announcement-bar__inner {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 32px;
-      min-height: 38px;
+      gap: 48px;
+      min-height: 40px;
       text-align: center;
     }
 
@@ -58,13 +60,13 @@
       "type": "color",
       "id": "background",
       "label": "Background",
-      "default": "#2B2B2B"
+      "default": "#2E2640"
     },
     {
       "type": "color",
       "id": "text_color",
       "label": "Text",
-      "default": "#FAF8F5"
+      "default": "#FAF8F6"
     }
   ],
   "blocks": [

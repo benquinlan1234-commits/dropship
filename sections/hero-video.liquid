@@ -30,6 +30,7 @@
   </div>
 
   <div class="hero__content">
+    <span class="glow hero__glow" aria-hidden="true"></span>
     <div class="page-width hero__inner">
       {%- if section.settings.eyebrow != blank -%}
         <p class="hero__eyebrow text-eyebrow">
@@ -114,6 +115,10 @@
     inset: auto;
   }
 
+  .hero__media .video-wrapper {
+    border-radius: 0;
+  }
+
   .hero__media .video-wrapper,
   .hero__media .video-wrapper__video,
   .hero__media .video-wrapper__poster,
@@ -131,7 +136,11 @@
   .hero__scrim {
     position: absolute;
     inset: 0;
-    background-color: rgba(var(--color-text-rgb), var(--hero-overlay, 0.25));
+    background-color: rgba(var(--color-text-rgb), var(--hero-overlay, 0.3));
+  }
+
+  .hero__glow {
+    display: none;
   }
 
   .hero--split .hero__scrim {
@@ -143,7 +152,7 @@
     display: flex;
     align-items: flex-end;
     min-height: var(--hero-height, 78vh);
-    padding-block: 48px;
+    padding-block: 56px;
   }
 
   .hero--split {
@@ -156,52 +165,83 @@
     padding-block: var(--section-padding-mobile);
   }
 
+  .hero--split .hero__glow {
+    display: block;
+    top: -18%;
+    right: -14%;
+  }
+
   .hero__inner {
-    max-width: 620px;
+    position: relative;
+    z-index: 1;
+    max-width: 34ch;
     margin-inline: 0;
   }
 
   .hero__eyebrow {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    margin: 0 0 16px;
-    opacity: 0.9;
+    gap: 10px;
+    margin: 0 0 22px;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: 0.92;
   }
 
   .hero__eyebrow .icon {
-    width: 16px;
-    height: 16px;
+    width: 15px;
+    height: 15px;
+    stroke-width: 1.25;
   }
 
   .hero__heading {
-    margin: 0 0 16px;
+    margin: 0 0 20px;
   }
 
   .hero__subheading {
-    max-width: 46ch;
-    margin: 0 0 20px;
+    max-width: 42ch;
+    margin: 0 0 26px;
     font-size: 1.0625rem;
-    opacity: 0.9;
+    line-height: 1.65;
+    opacity: 0.88;
   }
 
   .hero__rating {
-    margin-bottom: 20px;
+    margin-bottom: 26px;
   }
 
-  .hero__rating .rating,
+  .hero__rating .rating {
+    color: inherit;
+  }
+
   .hero__rating .rating__stars {
     color: inherit;
   }
 
+  .hero--split .hero__rating .rating {
+    color: var(--color-text-secondary);
+  }
+
+  .hero--split .hero__rating .rating__stars {
+    color: var(--color-accent);
+  }
+
   .hero__price {
-    margin-bottom: 20px;
+    margin-bottom: 24px;
   }
 
   .hero__price .price__compare,
   .hero__price .price__unit {
     color: inherit;
-    opacity: 0.75;
+    opacity: 0.7;
+  }
+
+  .hero--split .hero__price .price__compare,
+  .hero--split .hero__price .price__unit {
+    color: var(--color-text-secondary);
+    opacity: 1;
   }
 
   .hero__button {
@@ -209,14 +249,16 @@
   }
 
   .hero__trust {
-    margin: 16px 0 0;
-    opacity: 0.8;
+    margin: 18px 0 0;
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    opacity: 0.78;
   }
 
   @media screen and (min-width: 750px) {
     .hero__content {
       align-items: center;
-      padding-block: 80px;
+      padding-block: 96px;
     }
 
     .hero--split .hero__content {
@@ -225,11 +267,20 @@
 
     .hero__inner {
       margin-inline: auto;
+      max-width: var(--page-width);
+    }
+
+    .hero__inner > * {
+      max-width: 40ch;
+    }
+
+    .hero__heading {
+      max-width: 16ch;
     }
 
     .hero__button {
       width: auto;
-      min-width: 260px;
+      min-width: 280px;
     }
   }
 {% endstyle %}
