@@ -2,7 +2,7 @@
 
 Where the theme stands, what was done to get here, and what is left.
 
-- **Branch:** `claude/pdrn-orb-serum-theme-iqu86p` — [PR #2](https://github.com/benquinlan1234-commits/dropship/pull/2), 5 commits ahead of `main`
+- **Branch:** `claude/pdrn-orb-serum-theme-iqu86p` — [PR #2](https://github.com/benquinlan1234-commits/dropship/pull/2), 7 commits ahead of `main`
 - **`main`** is v1, merged as PR #1. It renders, but it is the pre-design-pass theme
 - **To upload:** `dist/v2-fixed.zip`
 - **Checks:** `shopify theme check` 0 errors / 2 warnings · `scripts/validate-theme.py` 0 failures · both run in CI on every PR
@@ -79,6 +79,8 @@ README.
 | `8b9ab30` | **404 fix** — `overlay_opacity: 34` was off-step for its range. Added `scripts/validate-theme.py` |
 | `14a1d3c` | **Page trim** — cut to hero → offer → how it works → FAQ on both templates |
 | `b0c3b28` | **Docs** — brought README, DECISIONS, COMPARE and sample-content in line |
+| `71947a2` | **Handover** — added this file |
+| `88cc856` | **CI** — theme check and the runtime rules on every PR |
 
 ### The 404, briefly
 
