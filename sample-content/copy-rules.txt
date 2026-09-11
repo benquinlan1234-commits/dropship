@@ -1,0 +1,27 @@
+COPY RULES
+
+Never use, anywhere in customer-facing copy:
+  patented
+  stem cell
+  cure
+  clinically proven
+  treats
+  any other medical or treatment claim
+
+Use instead:
+  may help
+  supports
+  designed to
+  people notice / customers report
+
+Why: these are cosmetic claims, not drug claims. Words like "treats" or
+"clinically proven" change what regulators consider the product to be, and
+they need substantiation you probably do not have on file.
+
+Other conventions used throughout:
+  - "Orbs", not "capsules" or "beads", for the product itself.
+  - PDRN is described as salmon-derived. The product is not vegan, and the FAQ
+    says so plainly rather than avoiding the question.
+  - Results copy is hedged and paired with a visible disclaimer.
+  - Prices, shipping windows and the guarantee are stated the same way every
+    time: $39 / $69 / $99, 7-11 days, 30-day money-back guarantee.

@@ -1,0 +1,98 @@
+{
+  "general": {
+    "meta": {
+      "tags": "Tagged \"{{ tags }}\"",
+      "page": "Page {{ page }}"
+    },
+    "accessibility": {
+      "skip_to_content": "Skip to content",
+      "close": "Close",
+      "previous": "Previous",
+      "next": "Next",
+      "star_rating": "Rated {{ rating }} out of 5 stars"
+    },
+    "search": {
+      "search": "Search",
+      "placeholder": "Search",
+      "results_count": {
+        "one": "{{ count }} result",
+        "other": "{{ count }} results"
+      },
+      "no_results": "No results found."
+    },
+    "pagination": {
+      "label": "Pagination",
+      "previous": "Previous page",
+      "next": "Next page"
+    },
+    "404": {
+      "title": "Page not found",
+      "subtext": "The page you were looking for does not exist.",
+      "link": "Back to the shop"
+    },
+    "password": {
+      "title": "Opening soon",
+      "login_form_heading": "Enter using password",
+      "login_password_button": "Enter",
+      "login_form_password_label": "Password",
+      "login_form_error": "Wrong password. Try again.",
+      "admin_link_html": "Are you the store owner? <a href=\"/admin\">Log in here</a>"
+    }
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Add to cart",
+      "sold_out": "Sold out",
+      "unavailable": "Unavailable",
+      "on_sale": "Sale",
+      "regular_price": "Regular price",
+      "sale_price": "Sale price",
+      "quantity": "Quantity",
+      "increase_quantity": "Increase quantity",
+      "decrease_quantity": "Decrease quantity",
+      "per_bottle": "{{ price }}/bottle",
+      "media_gallery": "Product images",
+      "view_details": "View details",
+      "adding": "Adding…",
+      "added": "Added"
+    }
+  },
+  "sections": {
+    "header": {
+      "menu": "Menu",
+      "cart": "Cart",
+      "cart_count": {
+        "one": "{{ count }} item",
+        "other": "{{ count }} items"
+      },
+      "announcement": "Announcement"
+    },
+    "cart": {
+      "title": "Your cart",
+      "empty": "Your cart is empty.",
+      "continue_shopping": "Continue shopping",
+      "subtotal": "Subtotal",
+      "taxes_and_shipping_at_checkout": "Taxes and shipping calculated at checkout.",
+      "checkout": "Checkout",
+      "remove": "Remove",
+      "note": "Order note",
+      "free_shipping_progress_html": "You are {{ amount }} away from free shipping.",
+      "free_shipping_reached": "You have earned free shipping.",
+      "update_error": "We could not update your cart. Please try again.",
+      "add_error": "We could not add that to your cart. Please try again."
+    },
+    "footer": {
+      "social_instagram": "Instagram",
+      "social_tiktok": "TikTok",
+      "social_youtube": "YouTube",
+      "social_facebook": "Facebook",
+      "copyright_html": "© {{ year }} {{ brand }}. All rights reserved."
+    },
+    "collection": {
+      "empty": "No products found."
+    },
+    "blog": {
+      "read_more": "Read more"
+    }
+  }
+}

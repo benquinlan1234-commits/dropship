@@ -1,0 +1,89 @@
+{%- comment -%}
+  Responsive background/hero video with a poster fallback.
+
+  Autoplay is applied by JS only when the visitor has not asked for reduced motion.
+  Without JS, or with reduced motion, the poster image is what people see.
+
+  Usage:
+    {% render 'video', shopify_video: section.settings.video, poster: section.settings.poster,
+       mp4_url: section.settings.video_mp4_url, webm_url: section.settings.video_webm_url,
+       alt: section.settings.poster_alt, ratio: '16 / 9' %}
+
+  Accepts:
+    shopify_video - a video object from a `video` theme/section setting (preferred)
+    mp4_url       - URL of an .mp4 uploaded to Settings > Files
+    webm_url      - URL of a .webm uploaded to Settings > Files
+    poster        - an image object used as the poster and reduced-motion fallback
+    alt           - alt text for the poster image
+    ratio         - CSS aspect-ratio value, e.g. '16 / 9'. Defaults to '16 / 9'
+    controls      - boolean, show native controls (default false)
+    loading_eager - boolean, load the poster eagerly (use for above-the-fold video)
+{%- endcomment -%}
+{%- liquid
+  assign video_ratio = ratio | default: '16 / 9'
+  assign poster_alt = alt | default: ''
+  assign has_sources = false
+  if shopify_video != blank or mp4_url != blank or webm_url != blank
+    assign has_sources = true
+  endif
+  assign poster_url = ''
+  if poster != blank
+    assign poster_url = poster | image_url: width: 1600
+  endif
+-%}
+<div class="video-wrapper" style="--video-ratio: {{ video_ratio }};">
+  {%- if has_sources -%}
+    <video
+      class="video-wrapper__video"
+      data-theme-video
+      playsinline
+      muted
+      loop
+      preload="none"
+      {% if controls %}controls{% endif %}
+      {% if poster_url != blank %}poster="{{ poster_url }}"{% endif %}
+      {% if poster_alt != blank %}aria-label="{{ poster_alt | escape }}"{% endif %}
+    >
+      {%- if webm_url != blank -%}
+        <source src="{{ webm_url }}" type="video/webm">
+      {%- endif -%}
+      {%- if mp4_url != blank -%}
+        <source src="{{ mp4_url }}" type="video/mp4">
+      {%- endif -%}
+      {%- if shopify_video != blank -%}
+        {%- for source in shopify_video.sources -%}
+          {%- if source.format == 'mp4' -%}
+            <source src="{{ source.url }}" type="{{ source.mime_type }}">
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+    </video>
+  {%- endif -%}
+
+  {%- if poster != blank -%}
+    <img
+      class="video-wrapper__poster{% if has_sources %} video-wrapper__poster--overlay{% endif %}"
+      src="{{ poster | image_url: width: 1600 }}"
+      srcset="
+        {{ poster | image_url: width: 600 }} 600w,
+        {{ poster | image_url: width: 900 }} 900w,
+        {{ poster | image_url: width: 1200 }} 1200w,
+        {{ poster | image_url: width: 1600 }} 1600w
+      "
+      sizes="100vw"
+      width="{{ poster.width }}"
+      height="{{ poster.height }}"
+      alt="{{ poster_alt | escape }}"
+      {% if loading_eager %}
+        loading="eager"
+        fetchpriority="high"
+      {% else %}
+        loading="lazy"
+      {% endif %}
+    >
+  {%- elsif has_sources == false -%}
+    <div class="placeholder-media">
+      {{ 'hero-apparel-1' | placeholder_svg_tag }}
+    </div>
+  {%- endif -%}
+</div>

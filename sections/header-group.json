@@ -1,0 +1,27 @@
+{
+  "type": "header",
+  "name": "Header group",
+  "sections": {
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "blocks": {
+        "one": { "type": "announcement", "settings": { "text": "Free shipping over $35" } },
+        "two": { "type": "announcement", "settings": { "text": "30-day money-back guarantee" } },
+        "three": { "type": "announcement", "settings": { "text": "Ships in 7–11 days" } }
+      },
+      "block_order": ["one", "two", "three"],
+      "settings": {}
+    },
+    "header": {
+      "type": "header",
+      "settings": {
+        "link_one_label": "Shop",
+        "link_one_url": "/#bundle",
+        "link_two_label": "FAQ",
+        "link_two_url": "/#faq",
+        "sticky": true
+      }
+    }
+  },
+  "order": ["announcement-bar", "header"]
+}

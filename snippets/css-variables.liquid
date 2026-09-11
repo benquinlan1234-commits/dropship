@@ -1,0 +1,67 @@
+{%- comment -%}
+  Renders the design tokens as CSS custom properties from theme settings.
+  Usage: {% render 'css-variables' %}
+{%- endcomment -%}
+{%- liquid
+  assign fallback_stack = settings.font_fallback_stack | default: 'system-ui, -apple-system, sans-serif'
+  if settings.use_google_font and settings.google_font_family != blank
+    assign font_stack = settings.google_font_family | append: ', ' | append: fallback_stack
+  else
+    assign font_stack = fallback_stack
+  endif
+
+  assign tracking = settings.heading_tracking | default: -24 | divided_by: 1000.0
+
+  assign button_radius = settings.border_radius | default: 12
+  if settings.button_style == 'pill'
+    assign button_radius = 999
+  endif
+-%}
+<style>
+  :root {
+    --color-background: {{ settings.color_background }};
+    --color-surface: {{ settings.color_surface }};
+    --color-pearl: {{ settings.color_pearl }};
+    --color-accent: {{ settings.color_accent }};
+    --color-accent-text: {{ settings.color_accent_text }};
+    --color-accent-soft: {{ settings.color_accent_soft }};
+    --color-text: {{ settings.color_text }};
+    --color-text-secondary: {{ settings.color_text_secondary }};
+    --color-border: {{ settings.color_border }};
+    --color-silver: {{ settings.color_silver }};
+
+    --color-background-rgb: {{ settings.color_background.red }}, {{ settings.color_background.green }}, {{ settings.color_background.blue }};
+    --color-text-rgb: {{ settings.color_text.red }}, {{ settings.color_text.green }}, {{ settings.color_text.blue }};
+    --color-accent-rgb: {{ settings.color_accent.red }}, {{ settings.color_accent.green }}, {{ settings.color_accent.blue }};
+
+    --font-body: {{ font_stack }};
+    --font-heading: {{ font_stack }};
+    --font-size-base: {{ settings.font_size_base | default: 16 }}px;
+    --heading-weight: {{ settings.heading_weight | default: '500' }};
+    --heading-tracking: {{ tracking }}em;
+
+    --radius: {{ settings.border_radius | default: 12 }}px;
+    --radius-sm: 8px;
+    --radius-button: {{ button_radius }}px;
+
+    --page-width: 1240px;
+    --gutter: 22px;
+    /* Distance from the viewport edge to the content column, for full-bleed rows
+       that must still line up with the headings above them. */
+    --content-inset: max(var(--gutter), calc((100vw - var(--page-width)) / 2 + var(--gutter)));
+    --grid-gap: 20px;
+    --section-padding-mobile: 56px;
+    --section-padding-desktop: 96px;
+    --duration: 240ms;
+    --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+    --glow-opacity: {% if settings.show_orb_glow %}1{% else %}0{% endif %};
+  }
+
+  @media screen and (min-width: 750px) {
+    :root {
+      --gutter: 40px;
+      --grid-gap: 32px;
+    }
+  }
+</style>

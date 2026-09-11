@@ -1,0 +1,312 @@
+<div class="section results{% if section.settings.show_divider %} section--bordered{% endif %}">
+  <div class="page-width">
+    <div class="results__header">
+      <div>
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="section__eyebrow">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2>{{ section.settings.heading }}</h2>
+        {%- endif -%}
+        {%- if section.settings.subheading != blank -%}
+          <p class="section__subheading">{{ section.settings.subheading }}</p>
+        {%- endif -%}
+      </div>
+
+      {%- if section.settings.timeframe != blank -%}
+        <p class="results__timeframe badge badge--outline">{{ section.settings.timeframe }}</p>
+      {%- endif -%}
+    </div>
+  </div>
+
+  <scroll-carousel class="results__carousel">
+    <div class="page-width results__track-wrap">
+      <ul class="results__track" data-carousel-track role="list" tabindex="0" aria-label="{{ section.settings.heading | default: 'Gallery' | escape }}">
+        {%- for block in section.blocks -%}
+          <li class="results__item" data-carousel-item {{ block.shopify_attributes }}>
+            <figure class="results__figure">
+              {%- if block.settings.video != blank or block.settings.video_mp4_url != blank -%}
+                {% render 'video',
+                  shopify_video: block.settings.video,
+                  mp4_url: block.settings.video_mp4_url,
+                  poster: block.settings.image,
+                  alt: block.settings.image_alt,
+                  ratio: '4 / 5'
+                %}
+              {%- elsif block.settings.image != blank -%}
+                <div class="media media--portrait">
+                  <img
+                    src="{{ block.settings.image | image_url: width: 800 }}"
+                    srcset="
+                      {{ block.settings.image | image_url: width: 400 }} 400w,
+                      {{ block.settings.image | image_url: width: 600 }} 600w,
+                      {{ block.settings.image | image_url: width: 800 }} 800w
+                    "
+                    sizes="(min-width: 750px) 300px, 72vw"
+                    width="{{ block.settings.image.width }}"
+                    height="{{ block.settings.image.height }}"
+                    alt="{{ block.settings.image_alt | escape }}"
+                    loading="lazy"
+                  >
+                </div>
+              {%- else -%}
+                <div class="media media--portrait">
+                  <div class="placeholder-media">{{ 'lifestyle-1' | placeholder_svg_tag }}</div>
+                </div>
+              {%- endif -%}
+
+              {%- if block.settings.caption != blank -%}
+                <figcaption class="results__caption text-small text-secondary">
+                  {{ block.settings.caption }}
+                </figcaption>
+              {%- endif -%}
+            </figure>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+
+    <div class="page-width results__controls">
+      <button class="results__control" type="button" data-carousel-prev aria-label="{{ 'general.accessibility.previous' | t }}">
+        {% render 'icon', icon: 'chevron' %}
+      </button>
+      <button class="results__control" type="button" data-carousel-next aria-label="{{ 'general.accessibility.next' | t }}">
+        {% render 'icon', icon: 'chevron' %}
+      </button>
+    </div>
+  </scroll-carousel>
+
+  {%- if section.settings.disclaimer != blank -%}
+    <div class="page-width">
+      <p class="results__disclaimer text-small text-secondary">{{ section.settings.disclaimer }}</p>
+    </div>
+  {%- endif -%}
+</div>
+
+{% style %}
+  .results__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 28px;
+  }
+
+  .results__header > div {
+    max-width: 640px;
+  }
+
+  .results__header h2 {
+    margin-bottom: 8px;
+  }
+
+  .results__timeframe {
+    flex: 0 0 auto;
+    margin: 0;
+  }
+
+  .results__track-wrap {
+    padding-inline: 0;
+    max-width: none;
+    overflow: hidden;
+  }
+
+  .results__track {
+    display: flex;
+    gap: 16px;
+    margin: 0;
+    padding-inline: var(--content-inset);
+    list-style: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    /* Without this, snapping pulls the first card flush to the viewport edge. */
+    scroll-padding-inline: var(--content-inset);
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .results__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .results__item {
+    flex: 0 0 auto;
+    width: min(72vw, 300px);
+    scroll-snap-align: start;
+  }
+
+  .results__figure {
+    margin: 0;
+  }
+
+  .results__caption {
+    margin-top: 12px;
+  }
+
+  .results__controls {
+    display: none;
+    gap: 8px;
+    justify-content: flex-end;
+    margin-top: 20px;
+  }
+
+  .results__control {
+    display: inline-flex;
+    width: 40px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    background: none;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .results__control[disabled] {
+    opacity: 0.35;
+    cursor: default;
+  }
+
+  .results__control:first-child .icon {
+    transform: rotate(90deg);
+  }
+
+  .results__control:last-child .icon {
+    transform: rotate(-90deg);
+  }
+
+  .results__disclaimer {
+    margin-top: 20px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .results__controls {
+      display: flex;
+    }
+
+    .results__track {
+      gap: 20px;
+    }
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Results gallery",
+  "tag": "section",
+  "class": "results-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "In routine"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "What people notice"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subhead",
+      "default": "Real routines, photographed at home. Skin is individual, so results vary."
+    },
+    {
+      "type": "text",
+      "id": "timeframe",
+      "label": "Timeframe badge",
+      "default": "28 days"
+    },
+    {
+      "type": "textarea",
+      "id": "disclaimer",
+      "label": "Disclaimer",
+      "default": "Photos are from customers using the serum twice daily alongside their usual routine. Individual experience varies."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_divider",
+      "label": "Show top divider",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Image or video",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "Also used as the video poster."
+        },
+        {
+          "type": "text",
+          "id": "image_alt",
+          "label": "Image alt text",
+          "default": "Serum orbs bursting on a fingertip"
+        },
+        {
+          "type": "video",
+          "id": "video",
+          "label": "Video",
+          "info": "Optional. Replaces the image."
+        },
+        {
+          "type": "url",
+          "id": "video_mp4_url",
+          "label": "MP4 URL",
+          "info": "Optional. Upload an .mp4 under Content > Files and paste its URL."
+        },
+        {
+          "type": "textarea",
+          "id": "caption",
+          "label": "Caption",
+          "default": "Day 28 — skin looks more even and comfortable."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Results gallery",
+      "blocks": [
+        {
+          "type": "item",
+          "settings": {
+            "caption": "Day 1 — the orbs burst into a clear, watery serum.",
+            "image_alt": "Orbs bursting between two fingertips"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "caption": "Day 14 — may help skin feel more cushioned by the afternoon.",
+            "image_alt": "Close-up of skin after applying the serum"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "caption": "Day 28 — supports a smoother, more even-looking finish.",
+            "image_alt": "Portrait in daylight after four weeks of use"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "caption": "Layered under moisturiser, morning and night.",
+            "image_alt": "The serum bottle beside a moisturiser on a bathroom shelf"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

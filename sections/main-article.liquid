@@ -1,0 +1,36 @@
+<article class="section main-article">
+  <div class="page-width page-width--narrow">
+    <header class="main-page__header">
+      <p class="section__eyebrow">{{ article.published_at | date: '%B %-d, %Y' }}</p>
+      <h1>{{ article.title }}</h1>
+    </header>
+
+    {%- if article.image -%}
+      <div class="media media--landscape main-article__image">
+        <img
+          src="{{ article.image | image_url: width: 1200 }}"
+          width="{{ article.image.width }}"
+          height="{{ article.image.height }}"
+          alt="{{ article.image.alt | escape }}"
+          loading="lazy"
+        >
+      </div>
+    {%- endif -%}
+
+    <div class="rte main-page__content">{{ article.content }}</div>
+  </div>
+</article>
+
+{% style %}
+  .main-article__image {
+    margin-bottom: 40px;
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Article",
+  "tag": "section",
+  "settings": []
+}
+{% endschema %}

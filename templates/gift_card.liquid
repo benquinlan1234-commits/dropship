@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ shop.name }}</title>
+    {% render 'css-variables' %}
+    <link rel="stylesheet" href="{{ 'theme.css' | asset_url }}">
+    {{ content_for_header }}
+  </head>
+  <body class="template-gift-card">
+    <main class="section" role="main">
+      <div class="page-width page-width--narrow text-center">
+        <p class="section__eyebrow">{{ shop.name }}</p>
+        <h1>{{ gift_card.initial_value | money }}</h1>
+        <p class="text-secondary">{{ gift_card.code | format_code }}</p>
+        {{ gift_card.qr_identifier }}
+        <p class="text-small text-secondary">{{ gift_card.balance | money }}</p>
+      </div>
+    </main>
+  </body>
+</html>

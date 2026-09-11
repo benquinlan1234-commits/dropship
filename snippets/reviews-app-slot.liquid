@@ -1,0 +1,21 @@
+{%- comment -%}
+  Drop-in slot for a reviews app.
+
+  Paste the app's embed code between the markers below, or add an app block to the
+  Reviews section in the Customizer. The product handle is exposed as a data
+  attribute so most review apps can target it without further edits.
+
+  Usage: {% render 'reviews-app-slot' %}
+          {% render 'reviews-app-slot', product: product %}
+{%- endcomment -%}
+{%- assign slot_product = product | default: settings.hero_product -%}
+<div
+  class="reviews-app-slot"
+  data-reviews-app-slot
+  {% if slot_product %}
+    data-product-id="{{ slot_product.id }}"
+    data-product-handle="{{ slot_product.handle }}"
+  {% endif %}
+>
+  {%- comment -%} reviews app embed code goes here {%- endcomment -%}
+</div>

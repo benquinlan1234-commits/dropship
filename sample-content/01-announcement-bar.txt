@@ -1,0 +1,13 @@
+ANNOUNCEMENT BAR
+Section: announcement-bar (header group)
+
+Item 1
+  Free shipping over $35
+
+Item 2
+  30-day money-back guarantee
+
+Item 3
+  Ships in 7-11 days
+
+Note: only the first item shows below 990px. Put the strongest one first.

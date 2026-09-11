@@ -1,0 +1,29 @@
+{%- comment -%}
+  Renders a star rating with an optional review count.
+
+  Usage: {% render 'star-rating', rating: '4.8', count_text: '2,431 reviews' %}
+{%- endcomment -%}
+{%- liquid
+  assign rating_value = rating | default: settings.rating_value | default: '5'
+  assign rounded = rating_value | times: 1.0 | round
+  if rounded < 1
+    assign rounded = 1
+  endif
+  if rounded > 5
+    assign rounded = 5
+  endif
+-%}
+<span class="rating">
+  <span class="rating__stars" role="img" aria-label="{{ 'general.accessibility.star_rating' | t: rating: rating_value }}">
+    {%- for i in (1..5) -%}
+      {%- if i <= rounded -%}
+        {% render 'icon', icon: 'star' %}
+      {%- else -%}
+        {% render 'icon', icon: 'star-outline' %}
+      {%- endif -%}
+    {%- endfor -%}
+  </span>
+  {%- if count_text != blank -%}
+    <span class="rating__text">{{ count_text }}</span>
+  {%- endif -%}
+</span>

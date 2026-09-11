@@ -1,0 +1,322 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "PDRN Orb Serum",
+    "theme_version": "1.0.0",
+    "theme_author": "Custom",
+    "theme_documentation_url": "https://shopify.dev/docs/themes",
+    "theme_support_url": "https://shopify.dev/docs/themes"
+  },
+  {
+    "name": "Brand",
+    "settings": [
+      {
+        "type": "text",
+        "id": "brand_name",
+        "label": "Brand name",
+        "default": "Orb",
+        "info": "Used in the header when no logo is uploaded, and in the page title."
+      },
+      {
+        "type": "image_picker",
+        "id": "logo",
+        "label": "Logo"
+      },
+      {
+        "type": "range",
+        "id": "logo_width",
+        "label": "Logo width",
+        "min": 60,
+        "max": 240,
+        "step": 10,
+        "unit": "px",
+        "default": 110
+      },
+      {
+        "type": "text",
+        "id": "logo_alt",
+        "label": "Logo alt text",
+        "default": "Orb"
+      },
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon",
+        "info": "Square image, at least 96 x 96 px."
+      }
+    ]
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "A plum ink, a violet accent and a silver hairline. Keep the accent as the only saturated colour on the page."
+      },
+      {
+        "type": "color",
+        "id": "color_background",
+        "label": "Background",
+        "default": "#FAF8F6"
+      },
+      {
+        "type": "color",
+        "id": "color_surface",
+        "label": "Surface",
+        "default": "#FFFFFF",
+        "info": "Cards, inputs and media backgrounds."
+      },
+      {
+        "type": "color",
+        "id": "color_pearl",
+        "label": "Pearl",
+        "default": "#F4F1F7",
+        "info": "A cooler tint used behind media and quiet panels."
+      },
+      {
+        "type": "color",
+        "id": "color_text",
+        "label": "Text — primary",
+        "default": "#2E2640",
+        "info": "A deep plum reads warmer than black against the off-white."
+      },
+      {
+        "type": "color",
+        "id": "color_text_secondary",
+        "label": "Text — secondary",
+        "default": "#6E6680"
+      },
+      {
+        "type": "color",
+        "id": "color_accent",
+        "label": "Accent",
+        "default": "#7561B0",
+        "info": "Buttons, active states and highlights. Keep it dark enough for white button text to stay legible (at least 4.5:1)."
+      },
+      {
+        "type": "color",
+        "id": "color_accent_text",
+        "label": "Text on accent",
+        "default": "#FFFFFF"
+      },
+      {
+        "type": "color",
+        "id": "color_accent_soft",
+        "label": "Accent — soft",
+        "default": "#E8E1F5",
+        "info": "Selected cards, badges and quiet fills."
+      },
+      {
+        "type": "color",
+        "id": "color_border",
+        "label": "Hairline",
+        "default": "#E4E0EA"
+      },
+      {
+        "type": "color",
+        "id": "color_silver",
+        "label": "Silver",
+        "default": "#C8C3D7",
+        "info": "Rules, icon outlines and small metallic detail."
+      }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "use_google_font",
+        "label": "Load font from Google Fonts",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "google_font_family",
+        "label": "Google font family",
+        "default": "Manrope",
+        "info": "Loaded at weights 300, 400, 500 and 600. Clear the checkbox above to use the system sans stack only."
+      },
+      {
+        "type": "text",
+        "id": "font_fallback_stack",
+        "label": "Fallback font stack",
+        "default": "system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+      },
+      {
+        "type": "range",
+        "id": "font_size_base",
+        "label": "Base font size",
+        "min": 14,
+        "max": 20,
+        "step": 1,
+        "unit": "px",
+        "default": 16
+      },
+      {
+        "type": "select",
+        "id": "heading_weight",
+        "label": "Heading weight",
+        "options": [
+          {
+            "value": "300",
+            "label": "Light"
+          },
+          {
+            "value": "400",
+            "label": "Regular"
+          },
+          {
+            "value": "500",
+            "label": "Medium"
+          },
+          {
+            "value": "600",
+            "label": "Semibold"
+          }
+        ],
+        "default": "500"
+      },
+      {
+        "type": "range",
+        "id": "heading_tracking",
+        "label": "Heading letter spacing",
+        "min": -40,
+        "max": 0,
+        "step": 2,
+        "unit": "/1000em",
+        "default": -24
+      },
+      {
+        "type": "range",
+        "id": "border_radius",
+        "label": "Corner radius",
+        "min": 0,
+        "max": 24,
+        "step": 2,
+        "unit": "px",
+        "default": 12
+      },
+      {
+        "type": "select",
+        "id": "button_style",
+        "label": "Button shape",
+        "options": [
+          {
+            "value": "pill",
+            "label": "Pill"
+          },
+          {
+            "value": "rounded",
+            "label": "Rounded"
+          }
+        ],
+        "default": "pill"
+      }
+    ]
+  },
+  {
+    "name": "Product",
+    "settings": [
+      {
+        "type": "product",
+        "id": "hero_product",
+        "label": "Featured product",
+        "info": "Every section on the home page reads its price and variants from this product."
+      },
+      {
+        "type": "checkbox",
+        "id": "currency_code_enabled",
+        "label": "Show currency code with prices",
+        "default": false,
+        "info": "For example $39.00 USD instead of $39.00."
+      },
+      {
+        "type": "text",
+        "id": "rating_value",
+        "label": "Star rating",
+        "default": "4.8",
+        "info": "Shown next to the review count. Use a number between 0 and 5."
+      },
+      {
+        "type": "text",
+        "id": "review_count_text",
+        "label": "Review count text",
+        "default": "2,431 reviews"
+      },
+      {
+        "type": "number",
+        "id": "free_shipping_threshold",
+        "label": "Free shipping threshold",
+        "default": 35,
+        "info": "In your store currency, without decimals. Used in the guarantee strip and cart drawer."
+      }
+    ]
+  },
+  {
+    "name": "Cart",
+    "settings": [
+      {
+        "type": "product",
+        "id": "cart_upsell_product",
+        "label": "Cart drawer upsell product"
+      },
+      {
+        "type": "text",
+        "id": "cart_upsell_heading",
+        "label": "Upsell heading",
+        "default": "Add to your order"
+      },
+      {
+        "type": "checkbox",
+        "id": "cart_show_note",
+        "label": "Show order note field",
+        "default": false
+      }
+    ]
+  },
+  {
+    "name": "Social",
+    "settings": [
+      {
+        "type": "url",
+        "id": "social_instagram_link",
+        "label": "Instagram"
+      },
+      {
+        "type": "url",
+        "id": "social_tiktok_link",
+        "label": "TikTok"
+      },
+      {
+        "type": "url",
+        "id": "social_youtube_link",
+        "label": "YouTube"
+      },
+      {
+        "type": "url",
+        "id": "social_facebook_link",
+        "label": "Facebook"
+      }
+    ]
+  },
+  {
+    "name": "Motion",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "enable_animations",
+        "label": "Fade sections in on scroll",
+        "default": true,
+        "info": "Always disabled for visitors who ask for reduced motion."
+      },
+      {
+        "type": "checkbox",
+        "id": "show_orb_glow",
+        "label": "Soft violet glow behind key sections",
+        "default": true,
+        "info": "A faint radial tint that echoes the orbs. Turn it off for a completely flat look."
+      }
+    ]
+  }
+]

@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="canonical" href="{{ canonical_url }}">
+
+    {%- if settings.favicon != blank -%}
+      <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 48, height: 48 }}">
+    {%- endif -%}
+
+    {%- assign brand = settings.brand_name | default: shop.name -%}
+    <title>
+      {{ page_title }}
+      {%- if current_tags %} &ndash; {{ 'general.meta.tags' | t: tags: current_tags | join: ', ' }}{% endif -%}
+      {%- if current_page != 1 %} &ndash; {{ 'general.meta.page' | t: page: current_page }}{% endif -%}
+      {%- unless page_title contains brand %} &ndash; {{ brand }}{% endunless -%}
+    </title>
+
+    {%- if page_description -%}
+      <meta name="description" content="{{ page_description | escape }}">
+    {%- endif -%}
+
+    {%- if settings.use_google_font and settings.google_font_family != blank -%}
+      {%- assign google_font = settings.google_font_family | strip | replace: ' ', '+' -%}
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family={{ google_font }}:wght@300;400;500;600&display=swap"
+        media="print"
+        onload="this.media='all'"
+      >
+      <noscript>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family={{ google_font }}:wght@300;400;500;600&display=swap">
+      </noscript>
+    {%- endif -%}
+
+    {% render 'css-variables' %}
+
+    <link rel="stylesheet" href="{{ 'theme.css' | asset_url }}">
+
+    <script src="{{ 'theme.js' | asset_url }}" defer="defer"></script>
+
+    {{ content_for_header }}
+  </head>
+
+  <body class="template-{{ template.name | handle }}">
+    <a class="skip-to-content button button--secondary" href="#MainContent">
+      {{ 'general.accessibility.skip_to_content' | t }}
+    </a>
+
+    {% sections 'header-group' %}
+
+    <main id="MainContent" role="main" tabindex="-1">
+      {{ content_for_layout }}
+    </main>
+
+    {% sections 'footer-group' %}
+
+    {% section 'cart-drawer' %}
+
+    <script>
+      window.themeStrings = {
+        addError: {{ 'sections.cart.add_error' | t | json }},
+        updateError: {{ 'sections.cart.update_error' | t | json }},
+        adding: {{ 'products.product.adding' | t | json }},
+        added: {{ 'products.product.added' | t | json }}
+      };
+      window.themeSettings = {
+        cartDrawerEnabled: true,
+        animationsEnabled: {{ settings.enable_animations | json }},
+        moneyFormat: {{ shop.money_format | json }}
+      };
+    </script>
+  </body>
+</html>

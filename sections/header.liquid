@@ -1,0 +1,228 @@
+{%- liquid
+  assign brand = settings.brand_name | default: shop.name
+  assign use_menu = false
+  if section.settings.menu != blank and section.settings.menu.links.size > 0
+    assign use_menu = true
+  endif
+-%}
+
+<header class="header{% if section.settings.sticky %} header--sticky{% endif %}" role="banner">
+  <div class="page-width header__inner">
+    <nav class="header__nav header__nav--start" aria-label="{{ 'sections.header.menu' | t }}">
+      {%- if use_menu -%}
+        {%- for link in section.settings.menu.links -%}
+          <a class="header__link" href="{{ link.url }}">{{ link.title }}</a>
+        {%- endfor -%}
+      {%- else -%}
+        {%- if section.settings.link_one_label != blank -%}
+          <a class="header__link" href="{{ section.settings.link_one_url | default: '/' }}">
+            {{- section.settings.link_one_label -}}
+          </a>
+        {%- endif -%}
+        {%- if section.settings.link_two_label != blank -%}
+          <a class="header__link" href="{{ section.settings.link_two_url | default: '/' }}">
+            {{- section.settings.link_two_label -}}
+          </a>
+        {%- endif -%}
+      {%- endif -%}
+    </nav>
+
+    <div class="header__brand">
+      {%- if request.page_type == 'index' -%}
+        <h1 class="header__heading">
+      {%- else -%}
+        <div class="header__heading">
+      {%- endif -%}
+      <a class="header__logo-link" href="{{ routes.root_url }}">
+        {%- if settings.logo != blank -%}
+          {%- assign logo_width = settings.logo_width | default: 110 -%}
+          {%- assign logo_height = logo_width | times: settings.logo.aspect_ratio | ceil -%}
+          <img
+            src="{{ settings.logo | image_url: width: 400 }}"
+            srcset="{{ settings.logo | image_url: width: 200 }} 1x, {{ settings.logo | image_url: width: 400 }} 2x"
+            width="{{ logo_width }}"
+            height="{{ logo_height }}"
+            alt="{{ settings.logo_alt | default: brand | escape }}"
+            loading="eager"
+            style="width: {{ logo_width }}px;"
+          >
+        {%- else -%}
+          <span class="header__wordmark">{{ brand }}</span>
+        {%- endif -%}
+      </a>
+      {%- if request.page_type == 'index' -%}
+        </h1>
+      {%- else -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="header__nav header__nav--end">
+      <button
+        class="header__cart"
+        type="button"
+        data-cart-open
+        aria-label="{{ 'sections.header.cart' | t }}"
+      >
+        {% render 'icon', icon: 'cart' %}
+        <span class="header__cart-count" data-cart-count {% if cart.item_count == 0 %}hidden{% endif %}>
+          {{- cart.item_count -}}
+        </span>
+      </button>
+    </div>
+  </div>
+</header>
+
+{% style %}
+  .header {
+    position: relative;
+    z-index: 20;
+    background-color: rgba(var(--color-background-rgb), 0.88);
+    backdrop-filter: saturate(140%) blur(12px);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .header--sticky {
+    position: sticky;
+    top: 0;
+  }
+
+  .header__inner {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 12px;
+    min-height: 60px;
+  }
+
+  .header__nav {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .header__nav--end {
+    justify-content: flex-end;
+  }
+
+  .header__link {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--color-text-secondary);
+    transition: color var(--duration) var(--ease);
+  }
+
+  .header__link:hover {
+    color: var(--color-text);
+  }
+
+  .header__heading {
+    margin: 0;
+    font-size: 1.125rem;
+    line-height: 1;
+    text-align: center;
+  }
+
+  .header__logo-link {
+    display: inline-block;
+    text-decoration: none;
+  }
+
+  .header__wordmark {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: 1rem;
+    letter-spacing: 0.32em;
+    text-indent: 0.32em;
+    text-transform: uppercase;
+  }
+
+  .header__cart {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    background: none;
+    border: 0;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .header__cart-count {
+    position: absolute;
+    top: 4px;
+    right: 2px;
+    min-width: 18px;
+    padding: 0 4px;
+    border-radius: 999px;
+    background-color: var(--color-accent);
+    color: var(--color-accent-text);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    line-height: 18px;
+    text-align: center;
+  }
+
+  @media screen and (min-width: 750px) {
+    .header__inner {
+      min-height: 72px;
+    }
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Navigation menu",
+      "info": "Leave empty to use the two links below instead."
+    },
+    {
+      "type": "header",
+      "content": "Fallback links"
+    },
+    {
+      "type": "text",
+      "id": "link_one_label",
+      "label": "First link label",
+      "default": "Shop"
+    },
+    {
+      "type": "url",
+      "id": "link_one_url",
+      "label": "First link URL"
+    },
+    {
+      "type": "text",
+      "id": "link_two_label",
+      "label": "Second link label",
+      "default": "FAQ"
+    },
+    {
+      "type": "url",
+      "id": "link_two_url",
+      "label": "Second link URL"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky",
+      "label": "Stick to the top on scroll",
+      "default": true
+    }
+  ],
+  "enabled_on": { "groups": ["header"] }
+}
+{% endschema %}

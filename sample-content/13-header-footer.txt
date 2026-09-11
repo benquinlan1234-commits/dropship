@@ -1,0 +1,27 @@
+HEADER AND FOOTER
+
+Header
+  Brand name   Orb            (Theme settings > Brand)
+  Link 1       Shop   ->  /#bundle
+  Link 2       FAQ    ->  /#faq
+  Cart icon    always shown, opens the drawer
+
+  If you set a navigation menu in the header section, it replaces both links.
+
+Footer
+  Tagline      Minimal skincare, made for sensitive routines.
+  Column 1     Help    (a Shopify navigation menu)
+  Column 2     Contact
+               Questions? Email us and we will reply within one business day.
+  Copyright    © {year} {brand}. All rights reserved.   (generated)
+
+Cart drawer
+  Title                 Your cart
+  Empty                 Your cart is empty.
+  Free shipping         You are {amount} away from free shipping.
+  Free shipping reached You have earned free shipping.
+  Upsell heading        Add to your order
+  Checkout              Checkout
+
+  Cart drawer strings live in locales/en.default.json, not in section settings,
+  so they translate with the rest of the storefront.

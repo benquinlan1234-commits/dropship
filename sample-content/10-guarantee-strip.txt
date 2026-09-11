@@ -1,0 +1,20 @@
+GUARANTEE STRIP
+Section: guarantee-strip
+
+Item 1
+  Icon   shield
+  Title  30-day money-back guarantee
+  Text   Not right for your skin? Email us within 30 days for a refund.
+
+Item 2
+  Icon   lock
+  Title  Secure checkout
+  Text   Payments are handled by Shopify. We never see your card details.
+
+Item 3
+  Icon   truck
+  Title  Free shipping over [threshold]
+  Text   Tracked delivery in 7-11 days, wherever you are.
+
+[threshold] is replaced at render time with the free shipping threshold from
+Theme settings > Product. Type it literally, including the square brackets.

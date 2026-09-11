@@ -1,0 +1,37 @@
+<div class="section main-blog">
+  <div class="page-width">
+    <header class="section__header section__header--center">
+      <h1>{{ blog.title }}</h1>
+    </header>
+
+    <ul class="product-grid grid" role="list">
+      {%- for article in blog.articles -%}
+        <li>
+          <a class="product-card__link" href="{{ article.url }}">
+            {%- if article.image -%}
+              <div class="media media--landscape">
+                <img
+                  src="{{ article.image | image_url: width: 700 }}"
+                  width="{{ article.image.width }}"
+                  height="{{ article.image.height }}"
+                  alt="{{ article.image.alt | escape }}"
+                  loading="lazy"
+                >
+              </div>
+            {%- endif -%}
+            <h2 class="product-card__title">{{ article.title }}</h2>
+          </a>
+          <p class="text-small text-secondary">{{ article.published_at | date: '%B %-d, %Y' }}</p>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Blog",
+  "tag": "section",
+  "settings": []
+}
+{% endschema %}

@@ -1,0 +1,253 @@
+<div class="section product-details{% if section.settings.show_divider %} section--bordered{% endif %}">
+  <div class="page-width">
+    <div class="product-details__layout">
+      <div class="product-details__intro">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="section__eyebrow">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2>{{ section.settings.heading }}</h2>
+        {%- endif -%}
+
+        {%- if section.settings.spec_one_label != blank or section.settings.spec_two_label != blank -%}
+          <dl class="product-details__specs">
+            {%- if section.settings.spec_one_label != blank -%}
+              <div>
+                <dt>{{ section.settings.spec_one_label }}</dt>
+                <dd>{{ section.settings.spec_one_value }}</dd>
+              </div>
+            {%- endif -%}
+            {%- if section.settings.spec_two_label != blank -%}
+              <div>
+                <dt>{{ section.settings.spec_two_label }}</dt>
+                <dd>{{ section.settings.spec_two_value }}</dd>
+              </div>
+            {%- endif -%}
+            {%- if section.settings.spec_three_label != blank -%}
+              <div>
+                <dt>{{ section.settings.spec_three_label }}</dt>
+                <dd>{{ section.settings.spec_three_value }}</dd>
+              </div>
+            {%- endif -%}
+            {%- if section.settings.spec_four_label != blank -%}
+              <div>
+                <dt>{{ section.settings.spec_four_label }}</dt>
+                <dd>{{ section.settings.spec_four_value }}</dd>
+              </div>
+            {%- endif -%}
+          </dl>
+        {%- endif -%}
+      </div>
+
+      <accordion-group class="product-details__tabs" data-exclusive="{{ section.settings.one_at_a_time }}">
+        {%- for block in section.blocks -%}
+          <details class="accordion" {{ block.shopify_attributes }} {% if block.settings.open %}open{% endif %}>
+            <summary class="accordion__summary">
+              <span class="accordion__question">{{ block.settings.title }}</span>
+              <span class="accordion__marker" aria-hidden="true">
+                {% render 'icon', icon: 'chevron' %}
+              </span>
+            </summary>
+            <div class="accordion__panel">
+              <div class="rte text-secondary">{{ block.settings.content }}</div>
+            </div>
+          </details>
+        {%- endfor -%}
+      </accordion-group>
+    </div>
+  </div>
+</div>
+
+{% style %}
+  .product-details__layout {
+    display: grid;
+    gap: 36px;
+    align-items: start;
+  }
+
+  .product-details__specs {
+    margin: 28px 0 0;
+    padding: 0;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .product-details__specs > div {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .product-details__specs dt {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+  }
+
+  .product-details__specs dd {
+    margin: 0;
+    font-size: 0.9375rem;
+    text-align: right;
+  }
+
+  .product-details__tabs .accordion__panel .rte {
+    font-size: 0.9375rem;
+  }
+
+  /* The INCI list is long and dense — give it a quieter, tighter setting. */
+  .product-details__tabs .accordion__panel .rte p {
+    max-width: 72ch;
+  }
+
+  @media screen and (min-width: 990px) {
+    .product-details__layout {
+      grid-template-columns: 0.8fr 1.2fr;
+      gap: 72px;
+    }
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Product details",
+  "tag": "section",
+  "class": "product-details-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Product details"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "The full specification"
+    },
+    {
+      "type": "checkbox",
+      "id": "one_at_a_time",
+      "label": "Open one tab at a time",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_divider",
+      "label": "Show top divider",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Specifications"
+    },
+    {
+      "type": "text",
+      "id": "spec_one_label",
+      "label": "Spec 1 label",
+      "default": "Net content"
+    },
+    {
+      "type": "text",
+      "id": "spec_one_value",
+      "label": "Spec 1 value",
+      "default": "45g"
+    },
+    {
+      "type": "text",
+      "id": "spec_two_label",
+      "label": "Spec 2 label",
+      "default": "Texture"
+    },
+    {
+      "type": "text",
+      "id": "spec_two_value",
+      "label": "Spec 2 value",
+      "default": "Encapsulated orbs, water-light once burst"
+    },
+    {
+      "type": "text",
+      "id": "spec_three_label",
+      "label": "Spec 3 label",
+      "default": "Skin types"
+    },
+    {
+      "type": "text",
+      "id": "spec_three_value",
+      "label": "Spec 3 value",
+      "default": "All, including sensitive"
+    },
+    {
+      "type": "text",
+      "id": "spec_four_label",
+      "label": "Spec 4 label",
+      "default": "In the box"
+    },
+    {
+      "type": "text",
+      "id": "spec_four_value",
+      "label": "Spec 4 value",
+      "default": "Serum bottle x1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tab",
+      "name": "Tab",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Ingredients"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Content",
+          "default": "<p>Paste the full INCI list here.</p>"
+        },
+        {
+          "type": "checkbox",
+          "id": "open",
+          "label": "Open by default",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product details",
+      "blocks": [
+        {
+          "type": "tab",
+          "settings": {
+            "title": "Ingredients",
+            "open": true,
+            "content": "<p>Key actives: Hyaluronic PDRN 30,000ppm, Ectoin, Glutathione.</p><p>Full INCI: Water, Glycerin, Butylene Glycol, Sodium DNA, Sodium Hyaluronate, Ectoin, Glutathione, 1,2-Hexanediol, Betaine, Panthenol, Allantoin, Trehalose, Sodium Polyacrylate, Carbomer, Tromethamine, Xanthan Gum, Disodium EDTA, Ethylhexylglycerin.</p><p>Replace this list with the exact INCI printed on your box before you publish.</p>"
+          }
+        },
+        {
+          "type": "tab",
+          "settings": {
+            "title": "How to use",
+            "content": "<p>Tap 2–3 orbs onto your palm. Press to burst them into serum, then pat into clean skin morning and night. Follow with moisturiser.</p><p>If your skin reacts easily, patch test on your inner arm for 24 hours first.</p>"
+          }
+        },
+        {
+          "type": "tab",
+          "settings": {
+            "title": "Shipping & returns",
+            "content": "<p>Orders arrive in 7–11 days with tracked delivery. You will get a tracking link by email once your parcel leaves the warehouse.</p><p>If the serum is not right for your skin, email us within 30 days of delivery for a refund — even if the bottle is open.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

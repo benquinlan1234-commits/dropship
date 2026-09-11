@@ -1,0 +1,32 @@
+INGREDIENT CARDS
+Section: ingredient-cards
+
+Eyebrow
+  What is inside
+
+Heading
+  Three actives, nothing loud
+
+Subhead
+  A short ingredient list designed to support hydration and a comfortable
+  barrier.
+
+Card 1
+  Title    Hyaluronic PDRN 30,000ppm
+  Benefit  Repair & renewal
+  Icon     drop
+
+Card 2
+  Title    Ectoin
+  Benefit  Barrier protection
+  Icon     shield
+
+Card 3
+  Title    Glutathione
+  Benefit  Brightening
+  Icon     sparkle
+
+Optional side image
+  Alt      Close-up of the ingredient list printed on the box
+  Caption  Full ingredient list is printed on the box and in the product
+           details below.

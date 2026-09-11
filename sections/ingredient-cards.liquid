@@ -1,0 +1,275 @@
+<div class="section ingredients{% if section.settings.show_divider %} section--bordered{% endif %}">
+  <div class="page-width">
+    {%- if section.settings.eyebrow != blank or section.settings.heading != blank or section.settings.subheading != blank -%}
+      <div class="section__header{% if section.settings.image == blank %} section__header--center{% endif %}">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="section__eyebrow">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2>{{ section.settings.heading }}</h2>
+        {%- endif -%}
+        {%- if section.settings.subheading != blank -%}
+          <p class="section__subheading">{{ section.settings.subheading }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="ingredients__layout{% if section.settings.image != blank %} ingredients__layout--with-image{% endif %}">
+      {%- if section.settings.image != blank -%}
+        <figure class="ingredients__figure reveal">
+          <div class="media media--portrait">
+            <img
+              src="{{ section.settings.image | image_url: width: 900 }}"
+              srcset="
+                {{ section.settings.image | image_url: width: 450 }} 450w,
+                {{ section.settings.image | image_url: width: 700 }} 700w,
+                {{ section.settings.image | image_url: width: 900 }} 900w
+              "
+              sizes="(min-width: 990px) 40vw, 100vw"
+              width="{{ section.settings.image.width }}"
+              height="{{ section.settings.image.height }}"
+              alt="{{ section.settings.image_alt | escape }}"
+              loading="lazy"
+            >
+          </div>
+          {%- if section.settings.image_caption != blank -%}
+            <figcaption class="text-small text-secondary">{{ section.settings.image_caption }}</figcaption>
+          {%- endif -%}
+        </figure>
+      {%- endif -%}
+
+      <div class="ingredients__cards grid grid--{{ section.settings.columns }}">
+        {%- for block in section.blocks -%}
+          <div class="ingredient-card reveal" {{ block.shopify_attributes }}>
+            <div class="ingredient-card__icon icon-ring">
+              {%- if block.settings.image != blank -%}
+                <img
+                  src="{{ block.settings.image | image_url: width: 96 }}"
+                  srcset="{{ block.settings.image | image_url: width: 48 }} 1x, {{ block.settings.image | image_url: width: 96 }} 2x"
+                  width="40"
+                  height="40"
+                  alt="{{ block.settings.image_alt | escape }}"
+                  loading="lazy"
+                >
+              {%- elsif block.settings.icon != 'none' -%}
+                {% render 'icon', icon: block.settings.icon, size: 'lg' %}
+              {%- endif -%}
+            </div>
+
+            {%- if block.settings.title != blank -%}
+              <h3 class="ingredient-card__title">{{ block.settings.title }}</h3>
+            {%- endif -%}
+            {%- if block.settings.benefit != blank -%}
+              <p class="ingredient-card__benefit text-secondary">{{ block.settings.benefit }}</p>
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% style %}
+  .ingredients__layout--with-image {
+    display: grid;
+    gap: var(--grid-gap);
+    align-items: start;
+  }
+
+  .ingredients__figure {
+    margin: 0;
+  }
+
+  .ingredients__figure figcaption {
+    margin-top: 14px;
+    max-width: 34ch;
+  }
+
+  /* Hairline-separated entries read more like a spec sheet than a row of cards. */
+  .ingredient-card {
+    padding-top: 28px;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .ingredient-card__icon {
+    margin-bottom: 22px;
+  }
+
+  .ingredient-card__icon:empty {
+    display: none;
+  }
+
+  .ingredient-card__icon img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+  }
+
+  .ingredient-card__title {
+    margin: 0 0 8px;
+    font-size: 1.0625rem;
+  }
+
+  .ingredient-card__benefit {
+    margin: 0;
+    font-size: 0.9375rem;
+  }
+
+  @media screen and (min-width: 990px) {
+    .ingredients__layout--with-image {
+      grid-template-columns: 0.85fr 1.15fr;
+      gap: 64px;
+    }
+
+    .ingredients__layout--with-image .ingredients__cards {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    .ingredients__layout--with-image .ingredient-card {
+      display: grid;
+      grid-template-columns: 52px 1fr;
+      align-items: start;
+      column-gap: 24px;
+      padding-block: 28px;
+    }
+
+    .ingredients__layout--with-image .ingredient-card__icon {
+      margin-bottom: 0;
+    }
+
+    .ingredients__layout--with-image .ingredient-card > :not(.ingredient-card__icon) {
+      grid-column: 2;
+    }
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Ingredient cards",
+  "tag": "section",
+  "class": "ingredients-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "What is inside"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Three actives, nothing loud"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subhead",
+      "default": "A short ingredient list designed to support hydration and a comfortable barrier."
+    },
+    {
+      "type": "select",
+      "id": "columns",
+      "label": "Columns on desktop",
+      "options": [
+        { "value": "2", "label": "2" },
+        { "value": "3", "label": "3" }
+      ],
+      "default": "3"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_divider",
+      "label": "Show top divider",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Side image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "Optional. A close-up of the ingredient list on the box works well here."
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Image alt text",
+      "default": "Close-up of the ingredient list printed on the box"
+    },
+    {
+      "type": "text",
+      "id": "image_caption",
+      "label": "Image caption",
+      "default": "Full ingredient list is printed on the box and in the product details below."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "ingredient",
+      "name": "Ingredient",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "PDRN 30,000ppm"
+        },
+        {
+          "type": "text",
+          "id": "benefit",
+          "label": "One-line benefit",
+          "default": "Repair & renewal"
+        },
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "none", "label": "None" },
+            { "value": "drop", "label": "Drop" },
+            { "value": "sparkle", "label": "Sparkle" },
+            { "value": "leaf", "label": "Leaf" },
+            { "value": "shield", "label": "Shield" },
+            { "value": "check", "label": "Check" }
+          ],
+          "default": "drop"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "Optional. Replaces the icon."
+        },
+        {
+          "type": "text",
+          "id": "image_alt",
+          "label": "Image alt text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Ingredient cards",
+      "blocks": [
+        {
+          "type": "ingredient",
+          "settings": { "title": "Hyaluronic PDRN 30,000ppm", "benefit": "Repair & renewal", "icon": "drop" }
+        },
+        {
+          "type": "ingredient",
+          "settings": { "title": "Ectoin", "benefit": "Barrier protection", "icon": "shield" }
+        },
+        {
+          "type": "ingredient",
+          "settings": { "title": "Glutathione", "benefit": "Brightening", "icon": "sparkle" }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
