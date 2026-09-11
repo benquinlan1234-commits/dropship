@@ -13,6 +13,20 @@
   if section.settings.layout == 'overlay'
     assign is_overlay = true
   endif
+
+  comment
+    The product already carries its photography. Fall back to it so linking the
+    featured product is the only step needed to light the hero up.
+  endcomment
+  assign hero_poster = section.settings.poster
+  if hero_poster == blank
+    assign hero_poster = hero_product.featured_media.preview_image
+  endif
+
+  assign hero_poster_alt = section.settings.poster_alt
+  if hero_poster_alt == blank
+    assign hero_poster_alt = hero_product.featured_media.alt | default: hero_product.title
+  endif
 -%}
 
 <section
@@ -31,8 +45,8 @@
           shopify_video: section.settings.video,
           mp4_url: section.settings.video_mp4_url,
           webm_url: section.settings.video_webm_url,
-          poster: section.settings.poster,
-          alt: section.settings.poster_alt,
+          poster: hero_poster,
+          alt: hero_poster_alt,
           ratio: '3 / 4.4',
           loading_eager: true
         %}
@@ -361,13 +375,13 @@
       "type": "image_picker",
       "id": "poster",
       "label": "Poster image",
-      "info": "Shown before the video loads, and instead of it for reduced-motion visitors."
+      "info": "Shown before the video loads, and instead of it for reduced-motion visitors. Leave empty to use the featured product's own first photo."
     },
     {
       "type": "text",
       "id": "poster_alt",
       "label": "Poster alt text",
-      "default": "A hand holding the serum bottle in soft daylight"
+      "info": "Leave empty to use the product photo's own alt text."
     },
     {
       "type": "header",

@@ -290,6 +290,16 @@
 
       if (this.subscribeToggle) this.subscribeToggle.addEventListener('change', this.onSelect.bind(this));
 
+      /* A card whose variant is missing is not rendered, so the one marked
+         selected in the theme editor may be gone. Fall back to the first
+         option that can actually be bought. */
+      if (!this.selected && this.inputs.length) {
+        var usable = this.inputs.filter(function (input) {
+          return !input.disabled;
+        })[0];
+        (usable || this.inputs[0]).checked = true;
+      }
+
       this.onSelect();
     }
 

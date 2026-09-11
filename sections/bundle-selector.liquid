@@ -56,7 +56,12 @@
         <div class="bundle__options" role="radiogroup" aria-label="{{ section.settings.heading | default: 'Choose a bundle' | escape }}">
           {%- for block in section.blocks -%}
             {%- liquid
-              assign block_variant = bundle_product.selected_or_first_available_variant
+              comment
+                Resolve to nothing rather than to the first variant when the
+                target does not exist. A product with one variant would
+                otherwise render three identical cards at the same price.
+              endcomment
+              assign block_variant = blank
               if block.settings.variant_id != blank
                 assign wanted_id = block.settings.variant_id | plus: 0
                 for variant in bundle_product.variants
@@ -66,10 +71,9 @@
                 endfor
               elsif block.settings.variant_position > 0
                 assign index = block.settings.variant_position | minus: 1
-                assign positioned = bundle_product.variants[index]
-                if positioned != blank
-                  assign block_variant = positioned
-                endif
+                assign block_variant = bundle_product.variants[index]
+              else
+                assign block_variant = bundle_product.selected_or_first_available_variant
               endif
 
               assign bottles = block.settings.bottles | default: 1
@@ -78,6 +82,10 @@
                 assign allocation = block_variant.selling_plan_allocations | first
               endif
             -%}
+
+            {%- if block_variant == blank -%}
+              {%- continue -%}
+            {%- endif -%}
 
             <div
               class="bundle__card{% if block.settings.badge != blank %} bundle__card--badged{% endif %}"
@@ -601,7 +609,7 @@
           "id": "variant_position",
           "label": "Variant position",
           "default": 1,
-          "info": "1 is the first variant on the product, 2 the second, and so on."
+          "info": "1 is the first variant on the product, 2 the second, and so on. If the product has no variant in this position the card is hidden, so a single-variant product shows one option rather than three identical ones."
         },
         {
           "type": "checkbox",
