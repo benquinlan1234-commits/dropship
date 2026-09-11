@@ -1,0 +1,17 @@
+STICKY ADD TO CART
+Section: sticky-atc
+
+Title
+  (empty - falls back to the product title)
+
+Variant selector label
+  Choose a size
+
+Button label
+  Add to cart
+
+Accessible region label
+  Add to cart
+
+Behaviour: hidden until the hero scrolls out of view on desktop. On mobile it
+is always visible, which is what "Always show on mobile" controls.

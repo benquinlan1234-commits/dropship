@@ -4,7 +4,7 @@
     "logo_width": 110,
     "logo_alt": "Orb",
     "color_background": "#FAF8F6",
-    "color_accent": "#8C78C3",
+    "color_accent": "#7561B0",
     "color_accent_text": "#FFFFFF",
     "color_text": "#2E2640",
     "color_text_secondary": "#6E6680",
@@ -35,7 +35,7 @@
     "Default": {
       "brand_name": "Orb",
       "color_background": "#FAF8F6",
-      "color_accent": "#8C78C3",
+      "color_accent": "#7561B0",
       "color_accent_text": "#FFFFFF",
       "color_text": "#2E2640",
       "color_text_secondary": "#6E6680",

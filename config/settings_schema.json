@@ -90,8 +90,8 @@
         "type": "color",
         "id": "color_accent",
         "label": "Accent",
-        "default": "#8C78C3",
-        "info": "Buttons, active states and highlights."
+        "default": "#7561B0",
+        "info": "Buttons, active states and highlights. Keep it dark enough for white button text to stay legible (at least 4.5:1)."
       },
       {
         "type": "color",

@@ -1,0 +1,26 @@
+HERO VIDEO
+Section: hero-video
+
+Eyebrow
+  Hyaluronic PDRN orb serum
+
+Headline
+  PDRN in a capsule.
+
+Subhead
+  Salmon DNA serum, sealed in each orb until it touches your skin.
+
+Star rating
+  4.8
+
+Review count text
+  2,431 reviews
+
+Button label
+  Add to cart
+
+Trust line
+  45g · For all skin types · 30-day money-back guarantee
+
+Poster alt text
+  A hand holding the serum bottle in soft daylight

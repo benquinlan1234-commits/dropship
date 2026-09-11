@@ -1,0 +1,38 @@
+PRODUCT DETAILS
+Section: product-details (product template)
+
+Eyebrow
+  Product details
+
+Heading
+  The full specification
+
+Specifications
+  Net content   45g
+  Texture       Encapsulated orbs, water-light once burst
+  Skin types    All, including sensitive
+  In the box    Serum bottle x1
+
+Tab 1 - Ingredients
+  Key actives: Hyaluronic PDRN 30,000ppm, Ectoin, Glutathione.
+
+  Full INCI: Water, Glycerin, Butylene Glycol, Sodium DNA, Sodium Hyaluronate,
+  Ectoin, Glutathione, 1,2-Hexanediol, Betaine, Panthenol, Allantoin,
+  Trehalose, Sodium Polyacrylate, Carbomer, Tromethamine, Xanthan Gum,
+  Disodium EDTA, Ethylhexylglycerin.
+
+  REPLACE THIS LIST with the exact INCI printed on your box before you publish.
+  The list above is a plausible placeholder, not your formula.
+
+Tab 2 - How to use
+  Tap 2-3 orbs onto your palm. Press to burst them into serum, then pat into
+  clean skin morning and night. Follow with moisturiser.
+
+  If your skin reacts easily, patch test on your inner arm for 24 hours first.
+
+Tab 3 - Shipping & returns
+  Orders arrive in 7-11 days with tracked delivery. You will get a tracking
+  link by email once your parcel leaves the warehouse.
+
+  If the serum is not right for your skin, email us within 30 days of delivery
+  for a refund - even if the bottle is open.
