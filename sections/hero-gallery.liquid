@@ -102,34 +102,24 @@
             </div>
           {%- endif -%}
 
-          <div class="product-hero__price">
-            {% render 'product-price', variant: chosen_variant, large: true %}
-          </div>
+          {%- comment -%}
+            Display only. The offer section below is the single place to buy.
+          {%- endcomment -%}
+          {%- if section.settings.show_price -%}
+            <p class="product-hero__price">
+              {%- if gallery_product.price_varies -%}
+                <span class="product-hero__price-prefix">{{ section.settings.price_prefix }}</span>
+              {%- endif -%}
+              {% render 'product-price', variant: chosen_variant, large: true, show_compare: false %}
+            </p>
+          {%- endif -%}
 
-          <product-form class="product-hero__form">
-            {%- form 'product', gallery_product, id: 'ProductHeroForm', novalidate: 'novalidate' -%}
-              <input type="hidden" name="id" value="{{ chosen_variant.id }}" data-variant-input>
-              <input type="hidden" name="selling_plan" value="" data-selling-plan-input>
-              <input type="hidden" name="quantity" value="1">
-
-              <button
-                class="button button--full"
-                type="submit"
-                {% unless chosen_variant.available %}
-                  disabled
-                {% endunless %}
-              >
-                <span data-button-label>
-                  {%- if chosen_variant.available -%}
-                    {{ section.settings.button_label | default: 'Add to cart' }}
-                  {%- else -%}
-                    {{ 'products.product.sold_out' | t }}
-                  {%- endif -%}
-                </span>
-              </button>
-              <p class="form-error text-small" data-form-error role="alert" hidden></p>
-            {%- endform -%}
-          </product-form>
+          <a
+            class="button button--full product-hero__button"
+            href="{{ section.settings.button_link | default: '#bundle' }}"
+          >
+            {{- section.settings.button_label | default: 'Choose your bundle' -}}
+          </a>
 
           {%- if section.settings.trust_line != blank -%}
             <p class="product-hero__trust text-small text-secondary">{{ section.settings.trust_line }}</p>
@@ -224,7 +214,16 @@
   }
 
   .product-hero__price {
-    margin-bottom: 24px;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin: 0 0 24px;
+  }
+
+  .product-hero__price-prefix {
+    font-size: 0.8125rem;
+    letter-spacing: 0.04em;
+    color: var(--color-text-secondary);
   }
 
   .product-hero__trust {
@@ -292,10 +291,33 @@
       "default": "45g · Ships in 7–11 days · 30-day money-back guarantee"
     },
     {
+      "type": "paragraph",
+      "content": "The hero displays the product. Buying happens once, in the offer section below, so this button scrolls there rather than adding to cart."
+    },
+    {
       "type": "text",
       "id": "button_label",
       "label": "Button label",
-      "default": "Add to cart"
+      "default": "Choose your bundle"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+      "info": "Defaults to the offer section on this page."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_price",
+      "label": "Show the price",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "price_prefix",
+      "label": "Price prefix",
+      "default": "From",
+      "info": "Shown only when the product has more than one price."
     },
     {
       "type": "checkbox",

@@ -1,7 +1,7 @@
 [
   {
     "name": "theme_info",
-    "theme_name": "PDRN Orb Serum",
+    "theme_name": "HAUA — PDRN Orb Serum",
     "theme_version": "1.0.0",
     "theme_author": "Custom",
     "theme_documentation_url": "https://shopify.dev/docs/themes",
@@ -14,8 +14,8 @@
         "type": "text",
         "id": "brand_name",
         "label": "Brand name",
-        "default": "Orb",
-        "info": "Used in the header when no logo is uploaded, and in the page title."
+        "default": "HAUA",
+        "info": "Used in the header when no logo is uploaded, and in the page title. Taken from the packaging."
       },
       {
         "type": "image_picker",
@@ -36,7 +36,7 @@
         "type": "text",
         "id": "logo_alt",
         "label": "Logo alt text",
-        "default": "Orb"
+        "default": "HAUA"
       },
       {
         "type": "image_picker",

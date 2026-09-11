@@ -6,11 +6,14 @@
         "eyebrow": "Hyaluronic PDRN orb serum",
         "subheading": "Salmon DNA serum, sealed in each orb until it touches your skin.",
         "trust_line": "45g · Ships in 7–11 days · 30-day money-back guarantee",
-        "button_label": "Add to cart",
+        "button_label": "Choose your bundle",
         "show_description": false,
         "show_rating": true,
         "rating_value": "",
-        "review_count_text": ""
+        "review_count_text": "",
+        "button_link": "#bundle",
+        "show_price": true,
+        "price_prefix": "From"
       }
     },
     "bundle": {
@@ -113,14 +116,14 @@
           "settings": {
             "title": "Ingredients",
             "open": true,
-            "content": "<p>Key actives: Hyaluronic PDRN 30,000ppm, Ectoin, Glutathione.</p><p>Full INCI: Water, Glycerin, Butylene Glycol, Sodium DNA, Sodium Hyaluronate, Ectoin, Glutathione, 1,2-Hexanediol, Betaine, Panthenol, Allantoin, Trehalose, Sodium Polyacrylate, Carbomer, Tromethamine, Xanthan Gum, Disodium EDTA, Ethylhexylglycerin.</p><p>Replace this list with the exact INCI printed on your box before you publish.</p>"
+            "content": "<p>Key ingredients, as printed on the box: Hyaluronic PDRN 30,000ppm, Ectoin, Glutathione, Sodium Hyaluronate Crosspolymer, Sodium DNA.</p><p><strong>The full INCI list still needs adding.</strong> Copy it from the back of the carton exactly as printed and replace this paragraph. Do not paraphrase it — an ingredient list is a regulated declaration.</p>"
           }
         },
         "how-to-use": {
           "type": "tab",
           "settings": {
             "title": "How to use",
-            "content": "<p>Tap 2–3 orbs onto your palm. Press to burst them into serum, then pat into clean skin morning and night. Follow with moisturiser.</p><p>If your skin reacts easily, patch test on your inner arm for 24 hours first.</p>"
+            "content": "<p>Push the cap down and turn to open. Tap 2–3 orbs onto your palm, press to burst them into serum, then pat into clean skin morning and night and follow with moisturiser.</p><p>Close the cap tightly after use — the orbs are sealed doses and the cap keeps the rest of the bottle that way.</p><p>If your skin reacts easily, patch test on your inner arm for 24 hours first.</p>"
           }
         },
         "shipping": {
@@ -142,7 +145,7 @@
         "one_at_a_time": true,
         "show_divider": true,
         "spec_one_label": "Net content",
-        "spec_one_value": "45g",
+        "spec_one_value": "45 g / 1.58 oz",
         "spec_two_label": "Texture",
         "spec_two_value": "Encapsulated orbs, water-light once burst",
         "spec_three_label": "Skin types",

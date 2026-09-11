@@ -144,9 +144,29 @@ straight into CI or a pre-push hook.
    they stay correct if prices change. If your variants land in a different
    order, fix **Variant position** on each bundle card or paste the numeric
    **Variant ID**.
-4. **Imagery.** Every image and the hero video are placeholders. Hero video
-   (mp4/webm + poster with alt text), product gallery images, logo and favicon.
-   The README has both routes for the video.
+4. **Imagery.** Every image and the hero video are placeholders. Where each
+   asset goes:
+
+   | Asset | Where it belongs | Why |
+   | --- | --- | --- |
+   | Packshot — bottle + box on white | **Product → Media** in admin, first position | The product hero gallery reads `product.media`; it needs no theme setting |
+   | Same packshot, or a lifestyle crop | **Hero video → Poster image** + alt text | The hero is display-only, so the poster carries it. No video needed to launch |
+   | Orbs close-up, texture, in-use shots | Product → Media, after the packshot | Also feeds the Results gallery if you restore it |
+   | Logo, favicon | Theme settings → Brand | Until then the wordmark renders as text |
+
+   The hero works with a still image alone — the video is optional. If you do add
+   one, the README has both routes.
+
+   **Not for the storefront:** the warehouse photo. It is useful for supplier or
+   stock verification, not for a page positioning a $39 serum.
+
+   **Think hard before using the supplier before/after infographic.** Before-and-
+   after imagery is an efficacy claim in visual form. It is the most heavily
+   policed asset class in cosmetics — Meta and TikTok both restrict it for skin,
+   and in most markets it needs substantiation you would have to hold yourself,
+   not inherit from a supplier. The whole copy system here is deliberately built
+   on "may help" and "supports" for the same reason. If you want it, get the
+   study behind it from the supplier in writing first.
 5. **Replace the INCI list** in Product details. What ships is a plausible
    placeholder and says so in the copy — but it is not your formula.
 

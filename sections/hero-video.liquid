@@ -71,33 +71,27 @@
 
       {%- if hero_product != blank -%}
         <div class="hero__buy rise" style="--rise-index: 4;">
-          <div class="hero__price">
-            {% render 'product-price', variant: chosen_variant, large: true %}
-          </div>
+          {%- comment -%}
+            Display only. The offer section below is the single place to buy —
+            a second add-to-cart here would mean two prices and two checkout
+            paths for one product.
+          {%- endcomment -%}
+          {%- if section.settings.show_price -%}
+            <p class="hero__price">
+              {%- if hero_product.price_varies -%}
+                <span class="hero__price-prefix">{{ section.settings.price_prefix }}</span>
+              {%- endif -%}
+              {% render 'product-price', variant: chosen_variant, large: true, show_compare: false %}
+            </p>
+          {%- endif -%}
 
           <div class="hero__actions">
-            <product-form class="hero__form">
-              {%- form 'product', hero_product, id: 'HeroProductForm', novalidate: 'novalidate' -%}
-                <input type="hidden" name="id" value="{{ chosen_variant.id }}" data-variant-input>
-                <input type="hidden" name="quantity" value="1">
-                <button
-                  class="button hero__button{% if is_overlay %} button--light{% endif %}"
-                  type="submit"
-                  {% unless chosen_variant.available %}
-                    disabled
-                  {% endunless %}
-                >
-                  <span data-button-label>
-                    {%- if chosen_variant.available -%}
-                      {{ section.settings.button_label | default: 'Add to cart' }}
-                    {%- else -%}
-                      {{ 'products.product.sold_out' | t }}
-                    {%- endif -%}
-                  </span>
-                </button>
-                <p class="form-error text-small" data-form-error role="alert" hidden></p>
-              {%- endform -%}
-            </product-form>
+            <a
+              class="button hero__button{% if is_overlay %} button--light{% endif %}"
+              href="{{ section.settings.button_link | default: '#bundle' }}"
+            >
+              {{- section.settings.button_label | default: 'Choose your bundle' -}}
+            </a>
 
             {%- if section.settings.link_label != blank -%}
               <a class="link-quiet hero__link" href="{{ section.settings.link_url | default: '#how' }}">
@@ -109,7 +103,7 @@
         </div>
       {%- else -%}
         <p class="lede">
-          Choose a featured product in Theme settings &rarr; Product to show the price and add to cart button.
+          Choose a featured product in Theme settings &rarr; Product to show the price here.
         </p>
       {%- endif -%}
 
@@ -182,7 +176,21 @@
   }
 
   .hero__price {
-    margin-bottom: 24px;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin: 0 0 24px;
+  }
+
+  .hero__price-prefix {
+    font-size: 0.8125rem;
+    letter-spacing: 0.04em;
+    color: var(--color-text-secondary);
+  }
+
+  .hero--overlay .hero__price-prefix {
+    color: inherit;
+    opacity: 0.8;
   }
 
   .hero__actions {
@@ -400,10 +408,33 @@
       "content": "Actions"
     },
     {
+      "type": "paragraph",
+      "content": "The hero displays the product. Buying happens once, in the offer section below, so this button scrolls there rather than adding to cart."
+    },
+    {
       "type": "text",
       "id": "button_label",
       "label": "Button label",
-      "default": "Add to cart"
+      "default": "Choose your bundle"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+      "info": "Defaults to the offer section on this page."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_price",
+      "label": "Show the price",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "price_prefix",
+      "label": "Price prefix",
+      "default": "From",
+      "info": "Shown only when the product has more than one price."
     },
     {
       "type": "text",
