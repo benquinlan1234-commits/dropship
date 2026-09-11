@@ -1,0 +1,68 @@
+{%- comment -%}
+  Renders a price with optional compare-at price and per-bottle unit price.
+
+  Usage:
+    {% render 'product-price', variant: variant %}
+    {% render 'product-price', variant: variant, unit_count: 3, large: true %}
+
+  Accepts:
+    variant      - a variant object (falls back to `product` when omitted)
+    product      - a product object, used when no variant is given
+    unit_count   - integer, number of bottles in this variant. Shows "$23/bottle" when > 1
+    large        - boolean, larger current price
+    show_compare - boolean, default true
+{%- endcomment -%}
+{%- liquid
+  if variant
+    assign price = variant.price
+    assign compare_at = variant.compare_at_price
+    assign available = variant.available
+  elsif product
+    assign price = product.price
+    assign compare_at = product.compare_at_price
+    assign available = product.available
+  else
+    assign price = 0
+    assign available = false
+  endif
+
+  assign show_compare_at = true
+  if show_compare == false
+    assign show_compare_at = false
+  endif
+
+  assign price_classes = 'price'
+  if large
+    assign price_classes = price_classes | append: ' price--large'
+  endif
+-%}
+<span class="{{ price_classes }}">
+  <span class="price__current">
+    {%- if settings.currency_code_enabled -%}
+      {{ price | money_with_currency }}
+    {%- else -%}
+      {{ price | money }}
+    {%- endif -%}
+  </span>
+
+  {%- if show_compare_at and compare_at > price -%}
+    <s class="price__compare">
+      {%- if settings.currency_code_enabled -%}
+        {{ compare_at | money_with_currency }}
+      {%- else -%}
+        {{ compare_at | money }}
+      {%- endif -%}
+    </s>
+  {%- endif -%}
+
+  {%- if unit_count and unit_count > 1 and price > 0 -%}
+    {%- assign unit_price = price | divided_by: unit_count -%}
+    <span class="price__unit">
+      {{- 'products.product.per_bottle' | t: price: unit_price | money -}}
+    </span>
+  {%- endif -%}
+
+  {%- unless available -%}
+    <span class="visually-hidden">{{ 'products.product.sold_out' | t }}</span>
+  {%- endunless -%}
+</span>

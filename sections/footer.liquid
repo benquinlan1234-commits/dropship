@@ -1,0 +1,198 @@
+{%- assign brand = settings.brand_name | default: shop.name -%}
+
+<footer class="footer" role="contentinfo">
+  <div class="page-width">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <p class="footer__wordmark">{{ brand }}</p>
+        {%- if section.settings.tagline != blank -%}
+          <p class="text-secondary text-small">{{ section.settings.tagline }}</p>
+        {%- endif -%}
+      </div>
+
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when 'menu' -%}
+            <div class="footer__column" {{ block.shopify_attributes }}>
+              {%- if block.settings.heading != blank -%}
+                <h2 class="footer__heading text-eyebrow text-secondary">{{ block.settings.heading }}</h2>
+              {%- endif -%}
+              {%- if block.settings.menu != blank -%}
+                <ul class="footer__list" role="list">
+                  {%- for link in block.settings.menu.links -%}
+                    <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                  {%- endfor -%}
+                </ul>
+              {%- endif -%}
+            </div>
+          {%- when 'text' -%}
+            <div class="footer__column" {{ block.shopify_attributes }}>
+              {%- if block.settings.heading != blank -%}
+                <h2 class="footer__heading text-eyebrow text-secondary">{{ block.settings.heading }}</h2>
+              {%- endif -%}
+              <div class="rte text-small text-secondary">{{ block.settings.text }}</div>
+            </div>
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
+
+    <div class="footer__bottom">
+      <p class="text-small text-secondary">
+        {{ 'sections.footer.copyright_html' | t: year: 'now' | date: '%Y', brand: brand }}
+      </p>
+
+      <ul class="footer__social" role="list">
+        {%- if settings.social_instagram_link != blank -%}
+          <li>
+            <a href="{{ settings.social_instagram_link }}">{{ 'sections.footer.social_instagram' | t }}</a>
+          </li>
+        {%- endif -%}
+        {%- if settings.social_tiktok_link != blank -%}
+          <li><a href="{{ settings.social_tiktok_link }}">{{ 'sections.footer.social_tiktok' | t }}</a></li>
+        {%- endif -%}
+        {%- if settings.social_youtube_link != blank -%}
+          <li><a href="{{ settings.social_youtube_link }}">{{ 'sections.footer.social_youtube' | t }}</a></li>
+        {%- endif -%}
+        {%- if settings.social_facebook_link != blank -%}
+          <li><a href="{{ settings.social_facebook_link }}">{{ 'sections.footer.social_facebook' | t }}</a></li>
+        {%- endif -%}
+      </ul>
+    </div>
+  </div>
+</footer>
+
+{% style %}
+  .footer {
+    border-top: 1px solid var(--color-border);
+    padding-block: 40px 24px;
+    margin-top: 24px;
+  }
+
+  .footer__top {
+    display: grid;
+    gap: 28px;
+    padding-bottom: 32px;
+  }
+
+  .footer__wordmark {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin: 0 0 8px;
+  }
+
+  .footer__heading {
+    margin: 0 0 12px;
+    font-size: 0.75rem;
+    font-weight: 400;
+  }
+
+  .footer__list,
+  .footer__social {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 8px;
+    font-size: 0.875rem;
+  }
+
+  .footer__list a,
+  .footer__social a {
+    text-decoration: none;
+  }
+
+  .footer__list a:hover,
+  .footer__social a:hover {
+    text-decoration: underline;
+  }
+
+  .footer__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding-top: 24px;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .footer__bottom p {
+    margin: 0;
+  }
+
+  .footer__social {
+    grid-auto-flow: column;
+    gap: 16px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .footer {
+      padding-block: 64px 24px;
+    }
+
+    .footer__top {
+      grid-template-columns: 1.4fr repeat(auto-fit, minmax(140px, 1fr));
+      gap: 40px;
+    }
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    {
+      "type": "text",
+      "id": "tagline",
+      "label": "Tagline",
+      "default": "Minimal skincare, made for sensitive routines."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "menu",
+      "name": "Menu",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Help"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Menu"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Contact"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Questions? Email us and we will reply within one business day.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Footer",
+      "blocks": [{ "type": "menu" }, { "type": "text" }]
+    }
+  ],
+  "enabled_on": { "groups": ["footer"] }
+}
+{% endschema %}

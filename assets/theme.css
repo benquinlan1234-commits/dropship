@@ -1,0 +1,435 @@
+/* ==========================================================================
+   PDRN Orb Serum — base styles
+   Colour and type tokens are injected from theme settings in layout/theme.liquid
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-background);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  font-weight: 400;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+video,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+img,
+video {
+  height: auto;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  margin: 0 0 0.5em;
+  text-wrap: balance;
+}
+
+h1 { font-size: clamp(2rem, 6vw, 3.25rem); }
+h2 { font-size: clamp(1.5rem, 4vw, 2.25rem); }
+h3 { font-size: clamp(1.125rem, 2.4vw, 1.375rem); }
+
+p {
+  margin: 0 0 1em;
+}
+
+p:last-child {
+  margin-bottom: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+ul,
+ol {
+  margin: 0 0 1em;
+  padding-left: 1.2em;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--color-border);
+  margin: 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-text);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-to-content:not(:focus) {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.skip-to-content:focus {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 100;
+  padding: 0.75rem 1rem;
+  background: var(--color-surface);
+  border-radius: var(--radius);
+  z-index: 1000;
+}
+
+/* Layout -------------------------------------------------------------- */
+
+.page-width {
+  width: 100%;
+  max-width: var(--page-width);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.page-width--narrow {
+  max-width: 760px;
+}
+
+.section {
+  padding-block: var(--section-padding-mobile);
+}
+
+@media screen and (min-width: 750px) {
+  .section {
+    padding-block: var(--section-padding-desktop);
+  }
+}
+
+.section--tight {
+  padding-block: calc(var(--section-padding-mobile) / 2);
+}
+
+@media screen and (min-width: 750px) {
+  .section--tight {
+    padding-block: calc(var(--section-padding-desktop) / 2);
+  }
+}
+
+.section__header {
+  max-width: 640px;
+  margin-bottom: 32px;
+}
+
+.section__header--center {
+  margin-inline: auto;
+  text-align: center;
+}
+
+.section__eyebrow {
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  margin: 0 0 12px;
+}
+
+.section__subheading {
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.section--bordered {
+  border-top: 1px solid var(--color-border);
+}
+
+.grid {
+  display: grid;
+  gap: var(--grid-gap);
+}
+
+@media screen and (min-width: 750px) {
+  .grid--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+/* Type helpers -------------------------------------------------------- */
+
+.text-secondary { color: var(--color-text-secondary); }
+.text-center { text-align: center; }
+.text-small { font-size: 0.875rem; }
+.text-eyebrow {
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.rte > :last-child { margin-bottom: 0; }
+
+/* Buttons ------------------------------------------------------------- */
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 52px;
+  padding: 14px 28px;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  background-color: var(--color-accent);
+  color: var(--color-accent-text);
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity var(--duration) ease, background-color var(--duration) ease;
+}
+
+.button:hover {
+  opacity: 0.85;
+}
+
+.button[disabled],
+.button[aria-disabled='true'] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.button--full {
+  width: 100%;
+}
+
+.button--secondary {
+  background-color: transparent;
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+.button--secondary:hover {
+  background-color: var(--color-surface);
+  opacity: 1;
+}
+
+.button--dark {
+  background-color: var(--color-text);
+  color: var(--color-background);
+}
+
+.button--small {
+  min-height: 40px;
+  padding: 8px 16px;
+  font-size: 0.875rem;
+}
+
+.link-underline {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* Cards --------------------------------------------------------------- */
+
+.card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+
+.media {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius);
+  background-color: var(--color-surface);
+}
+
+.media img,
+.media video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.media--square { aspect-ratio: 1 / 1; }
+.media--portrait { aspect-ratio: 4 / 5; }
+.media--landscape { aspect-ratio: 3 / 2; }
+
+.placeholder-media {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-border);
+  color: var(--color-text-secondary);
+}
+
+.placeholder-media svg {
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+  opacity: 0.35;
+}
+
+/* Icons --------------------------------------------------------------- */
+
+.icon {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.icon--filled {
+  fill: currentColor;
+  stroke: none;
+}
+
+.icon--lg { width: 28px; height: 28px; }
+
+/* Rating -------------------------------------------------------------- */
+
+.rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+}
+
+.rating__stars {
+  display: inline-flex;
+  gap: 2px;
+  color: var(--color-text);
+}
+
+.rating__stars .icon {
+  width: 16px;
+  height: 16px;
+}
+
+/* Price --------------------------------------------------------------- */
+
+.price {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.price__current {
+  font-weight: 600;
+}
+
+.price__compare {
+  color: var(--color-text-secondary);
+  text-decoration: line-through;
+  font-weight: 400;
+}
+
+.price__unit {
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+}
+
+.price--large .price__current {
+  font-size: 1.5rem;
+}
+
+/* Badge --------------------------------------------------------------- */
+
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background-color: var(--color-accent);
+  color: var(--color-accent-text);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+.badge--outline {
+  background-color: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+}
+
+/* Scroll reveal ------------------------------------------------------- */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 500ms ease, transform 500ms ease;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

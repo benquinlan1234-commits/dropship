@@ -1,0 +1,45 @@
+{%- comment -%}
+  Renders the design tokens as CSS custom properties from theme settings.
+  Usage: {% render 'css-variables' %}
+{%- endcomment -%}
+{%- liquid
+  assign fallback_stack = settings.font_fallback_stack | default: 'system-ui, -apple-system, sans-serif'
+  if settings.use_google_font and settings.google_font_family != blank
+    assign font_stack = settings.google_font_family | append: ', ' | append: fallback_stack
+  else
+    assign font_stack = fallback_stack
+  endif
+-%}
+<style>
+  :root {
+    --color-background: {{ settings.color_background }};
+    --color-surface: {{ settings.color_surface }};
+    --color-accent: {{ settings.color_accent }};
+    --color-accent-text: {{ settings.color_accent_text }};
+    --color-text: {{ settings.color_text }};
+    --color-text-secondary: {{ settings.color_text_secondary }};
+    --color-border: {{ settings.color_border }};
+
+    --color-background-rgb: {{ settings.color_background.red }}, {{ settings.color_background.green }}, {{ settings.color_background.blue }};
+    --color-text-rgb: {{ settings.color_text.red }}, {{ settings.color_text.green }}, {{ settings.color_text.blue }};
+
+    --font-body: {{ font_stack }};
+    --font-heading: {{ font_stack }};
+    --font-size-base: {{ settings.font_size_base | default: 16 }}px;
+
+    --radius: {{ settings.border_radius | default: 12 }}px;
+    --page-width: 1200px;
+    --gutter: 20px;
+    --grid-gap: 20px;
+    --section-padding-mobile: 40px;
+    --section-padding-desktop: 64px;
+    --duration: 200ms;
+  }
+
+  @media screen and (min-width: 750px) {
+    :root {
+      --gutter: 32px;
+      --grid-gap: 28px;
+    }
+  }
+</style>
