@@ -9,31 +9,109 @@
       endif
     endfor
   endif
+  assign is_overlay = false
+  if section.settings.layout == 'overlay'
+    assign is_overlay = true
+  endif
+
+  comment
+    A product photograph is rarely the shape of the frame it lands in. Cropping
+    one to a tall pill eats a third of its width, which on a packshot means the
+    box loses its top. Default to showing all of it and letting the pearl fill
+    carry the rest.
+  endcomment
+  comment
+    The frame carries the radius as well as the ratio. An oval is right for a
+    tall crop and wrong for a square one: it would take the corners off a
+    packshot, which is the crop this setting exists to avoid.
+  endcomment
+  assign media_span = section.settings.media_span | default: 125 | divided_by: 100.0
+
+  case section.settings.media_shape
+    when 'portrait'
+      assign media_ratio = '4 / 5'
+      assign media_radius = '52px'
+      assign media_bleed = '0px'
+      assign media_gutter = 'var(--content-inset)'
+    when 'square'
+      assign media_ratio = '1 / 1'
+      assign media_radius = '52px'
+      assign media_bleed = '0px'
+      assign media_gutter = 'var(--content-inset)'
+    else
+      assign media_ratio = '3 / 4.4'
+      assign media_radius = '220px 220px 220px 220px / 180px 180px 180px 180px'
+      assign media_bleed = '-6vw'
+      assign media_gutter = '0px'
+  endcase
+
+  comment
+    The product already carries its photography. Fall back to it so linking the
+    featured product is the only step needed to light the hero up.
+  endcomment
+  assign hero_media = hero_product.featured_media
+  assign wanted_media = section.settings.product_image | minus: 1
+  if wanted_media > 0 and hero_product.media[wanted_media] != blank
+    assign hero_media = hero_product.media[wanted_media]
+  endif
+
+  comment
+    The bundled packshot is the product photograph with its white studio ground
+    removed, so it sits on the page with no edge at all rather than as a
+    rectangle to be blended. It wins over the product's own media, because the
+    media is the same shot with the white still on it. Clear the setting to go
+    back to the live product photo.
+  endcomment
+  assign hero_poster_url = blank
+  if section.settings.poster_asset != blank
+    assign hero_poster_url = section.settings.poster_asset | asset_url
+  endif
+
+  assign hero_poster = section.settings.poster
+  if hero_poster == blank
+    assign hero_poster = hero_media.preview_image
+  endif
+  if section.settings.poster != blank
+    assign hero_poster_url = blank
+  endif
+
+  assign hero_poster_alt = section.settings.poster_alt
+  if hero_poster_alt == blank
+    assign hero_poster_alt = hero_media.alt | default: hero_product.title
+  endif
 -%}
 
 <section
-  class="hero{% if section.settings.layout == 'split' %} hero--split{% endif %}"
+  class="hero hero--{{ section.settings.layout }}{% unless is_overlay %} section--wash{% endunless %}"
   data-sticky-trigger
-  style="--hero-height: {{ section.settings.height }}vh; --hero-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }}; --hero-text: {{ section.settings.text_color }};"
+  style="--hero-height: {{ section.settings.height }}vh; --hero-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }}; --hero-text: {{ section.settings.text_color }}; --media-fit: {{ section.settings.media_fit | default: 'contain' }}; --media-ratio: {{ media_ratio }}; --media-radius: {{ media_radius }}; --media-bleed: {{ media_bleed }}; --media-gutter: {{ media_gutter }}; --media-span: {{ media_span }}fr; --media-frame: {{ section.settings.frame_color }}; --media-zoom: {{ section.settings.image_zoom | divided_by: 100.0 }}; --media-pos-y: {{ section.settings.image_position }}%;"
 >
-  <div class="hero__media">
-    {% render 'video',
-      shopify_video: section.settings.video,
-      mp4_url: section.settings.video_mp4_url,
-      webm_url: section.settings.video_webm_url,
-      poster: section.settings.poster,
-      alt: section.settings.poster_alt,
-      ratio: '16 / 9',
-      loading_eager: true
-    %}
-    <div class="hero__scrim" role="presentation"></div>
-  </div>
+  {%- unless is_overlay -%}
+    <span class="orb hero__orb" aria-hidden="true"></span>
+  {%- endunless -%}
 
-  <div class="hero__content">
-    <span class="glow hero__glow" aria-hidden="true"></span>
-    <div class="page-width hero__inner">
+  <div class="hero__grid">
+    <div class="hero__media parallax" data-parallax="0.06">
+      <div class="media {% if is_overlay %}media--fill{% else %}media--tall media--pill{% if section.settings.frame_style == 'float' %} media--float{% elsif section.settings.frame_style == 'bare' %} media--bare{% endif %}{% endif %}">
+        {% render 'video',
+          shopify_video: section.settings.video,
+          mp4_url: section.settings.video_mp4_url,
+          webm_url: section.settings.video_webm_url,
+          poster: hero_poster,
+          poster_url: hero_poster_url,
+          alt: hero_poster_alt,
+          ratio: media_ratio,
+          loading_eager: true
+        %}
+      </div>
+      {%- if is_overlay -%}
+        <div class="hero__scrim" aria-hidden="true"></div>
+      {%- endif -%}
+    </div>
+
+    <div class="hero__copy">
       {%- if section.settings.eyebrow != blank -%}
-        <p class="hero__eyebrow text-eyebrow">
+        <p class="eyebrow hero__eyebrow rise" style="--rise-index: 0;">
           {%- if section.settings.eyebrow_icon != 'none' -%}
             {% render 'icon', icon: section.settings.eyebrow_icon %}
           {%- endif -%}
@@ -42,15 +120,15 @@
       {%- endif -%}
 
       {%- if section.settings.heading != blank -%}
-        <h2 class="hero__heading">{{ section.settings.heading }}</h2>
+        <h2 class="hero__heading rise" style="--rise-index: 1;">{{ section.settings.heading }}</h2>
       {%- endif -%}
 
       {%- if section.settings.subheading != blank -%}
-        <p class="hero__subheading">{{ section.settings.subheading }}</p>
+        <p class="lede hero__lede rise" style="--rise-index: 2;">{{ section.settings.subheading }}</p>
       {%- endif -%}
 
-      {%- if section.settings.show_rating -%}
-        <div class="hero__rating">
+      {%- if section.settings.show_rating and section.settings.review_count_text != blank -%}
+        <div class="hero__rating rise" style="--rise-index: 3;">
           {% render 'star-rating',
             rating: section.settings.rating_value,
             count_text: section.settings.review_count_text
@@ -59,40 +137,54 @@
       {%- endif -%}
 
       {%- if hero_product != blank -%}
-        <div class="hero__price">
-          {% render 'product-price', variant: chosen_variant, large: true %}
-        </div>
+        <div class="hero__buy rise" style="--rise-index: 4;">
+          {%- comment -%}
+            Display only. The offer section below is the single place to buy —
+            a second add-to-cart here would mean two prices and two checkout
+            paths for one product.
+          {%- endcomment -%}
+          {%- if section.settings.show_price -%}
+            <p class="hero__price">
+              {%- if hero_product.price_varies -%}
+                <span class="hero__price-prefix">{{ section.settings.price_prefix }}</span>
+              {%- endif -%}
+              {% render 'product-price', variant: chosen_variant, large: true, show_compare: false %}
+            </p>
+          {%- endif -%}
 
-        <product-form class="hero__form">
-          {%- form 'product', hero_product, id: 'HeroProductForm', novalidate: 'novalidate' -%}
-            <input type="hidden" name="id" value="{{ chosen_variant.id }}" data-variant-input>
-            <input type="hidden" name="quantity" value="1">
-            <button
-              class="button hero__button{% if section.settings.button_variant != 'accent' %} button--{{ section.settings.button_variant }}{% endif %}"
-              type="submit"
-              {% unless chosen_variant.available %}
-                disabled
-              {% endunless %}
+          <div class="hero__actions">
+            <a
+              class="button hero__button{% if is_overlay %} button--light{% endif %}"
+              href="{{ section.settings.button_link | default: '#bundle' }}"
             >
-              <span data-button-label>
-                {%- if chosen_variant.available -%}
-                  {{ section.settings.button_label | default: 'Add to cart' }}
-                {%- else -%}
-                  {{ 'products.product.sold_out' | t }}
-                {%- endif -%}
-              </span>
-            </button>
-            <p class="form-error text-small" data-form-error role="alert" hidden></p>
-          {%- endform -%}
-        </product-form>
+              {{- section.settings.button_label | default: 'Choose your bundle' -}}
+            </a>
+
+            {%- if section.settings.link_label != blank -%}
+              <a class="link-quiet hero__link" href="{{ section.settings.link_url | default: '#how' }}">
+                <span>{{ section.settings.link_label }}</span>
+                {% render 'icon', icon: 'arrow-down' %}
+              </a>
+            {%- endif -%}
+          </div>
+        </div>
       {%- else -%}
-        <p class="hero__subheading">
-          Choose a featured product in Theme settings &rarr; Product to show the price and add to cart button.
+        <p class="lede">
+          Choose a featured product in Theme settings &rarr; Product to show the price here.
         </p>
       {%- endif -%}
 
-      {%- if section.settings.trust_line != blank -%}
-        <p class="hero__trust text-small">{{ section.settings.trust_line }}</p>
+      {%- if section.blocks.size > 0 -%}
+        <ul class="hero__stats rise" style="--rise-index: 5;" role="list">
+          {%- for block in section.blocks -%}
+            <li class="hero__stat" {{ block.shopify_attributes }}>
+              {%- if block.settings.value != blank -%}
+                <span class="numeral hero__stat-value">{{ block.settings.value }}</span>
+              {%- endif -%}
+              <span class="hero__stat-label">{{ block.settings.label }}</span>
+            </li>
+          {%- endfor -%}
+        </ul>
       {%- endif -%}
     </div>
   </div>
@@ -101,191 +193,209 @@
 {% style %}
   .hero {
     position: relative;
-    color: var(--hero-text);
-  }
-
-  .hero__media {
-    position: absolute;
-    inset: 0;
     overflow: hidden;
   }
 
-  .hero--split .hero__media {
-    position: relative;
-    inset: auto;
-  }
-
-  .hero__media .video-wrapper {
-    border-radius: 0;
-  }
-
-  .hero__media .video-wrapper,
-  .hero__media .video-wrapper__video,
-  .hero__media .video-wrapper__poster,
-  .hero__media .placeholder-media {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .hero--split .hero__media .video-wrapper {
-    aspect-ratio: var(--video-ratio, 16 / 9);
-    height: auto;
-  }
-
-  .hero__scrim {
-    position: absolute;
-    inset: 0;
-    background-color: rgba(var(--color-text-rgb), var(--hero-overlay, 0.3));
-  }
-
-  .hero__glow {
-    display: none;
-  }
-
-  .hero--split .hero__scrim {
-    display: none;
-  }
-
-  .hero__content {
-    position: relative;
-    display: flex;
-    align-items: flex-end;
-    min-height: var(--hero-height, 78vh);
-    padding-block: 56px;
-  }
-
-  .hero--split {
-    color: var(--color-text);
-  }
-
-  .hero--split .hero__content {
-    min-height: 0;
-    align-items: flex-start;
-    padding-block: var(--section-padding-mobile);
-  }
-
-  .hero--split .hero__glow {
-    display: block;
+  .hero__orb {
+    --orb-size: min(760px, 90vw);
     top: -18%;
-    right: -14%;
+    right: -12%;
   }
 
-  .hero__inner {
+  .hero__grid {
     position: relative;
     z-index: 1;
-    max-width: 34ch;
-    margin-inline: 0;
+    display: grid;
+    gap: 36px;
+    padding-block: 48px 56px;
+  }
+
+  .hero__copy {
+    padding-inline: var(--gutter);
+  }
+
+  .hero__media {
+    padding-inline: var(--gutter);
   }
 
   .hero__eyebrow {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    margin: 0 0 22px;
-    font-size: 0.6875rem;
-    font-weight: 500;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    opacity: 0.92;
+    gap: 9px;
   }
 
   .hero__eyebrow .icon {
     width: 15px;
     height: 15px;
-    stroke-width: 1.25;
   }
 
   .hero__heading {
     margin: 0 0 20px;
+    max-width: 11ch;
   }
 
-  .hero__subheading {
-    max-width: 42ch;
+  .hero__lede {
     margin: 0 0 26px;
-    font-size: 1.0625rem;
-    line-height: 1.65;
-    opacity: 0.88;
   }
 
   .hero__rating {
     margin-bottom: 26px;
   }
 
-  .hero__rating .rating {
-    color: inherit;
-  }
-
-  .hero__rating .rating__stars {
-    color: inherit;
-  }
-
-  .hero--split .hero__rating .rating {
-    color: var(--color-text-secondary);
-  }
-
-  .hero--split .hero__rating .rating__stars {
-    color: var(--color-accent);
-  }
-
   .hero__price {
-    margin-bottom: 24px;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin: 0 0 24px;
   }
 
-  .hero__price .price__compare,
-  .hero__price .price__unit {
-    color: inherit;
-    opacity: 0.7;
-  }
-
-  .hero--split .hero__price .price__compare,
-  .hero--split .hero__price .price__unit {
+  .hero__price-prefix {
+    font-size: 0.8125rem;
+    letter-spacing: 0.04em;
     color: var(--color-text-secondary);
-    opacity: 1;
+  }
+
+  .hero--overlay .hero__price-prefix {
+    color: inherit;
+    opacity: 0.8;
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 22px;
   }
 
   .hero__button {
-    width: 100%;
+    min-width: 240px;
   }
 
-  .hero__trust {
-    max-width: 46ch;
-    margin: 18px 0 0;
+  /* A thin silver rule, then the three facts that answer "is this for me". */
+  .hero__stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 18px;
+    margin: 36px 0 0;
+    padding: 22px 0 0;
+    border-top: 1px solid transparent;
+    border-image: var(--silver-line) 1;
+    list-style: none;
+  }
+
+  .hero__stat {
+    display: grid;
+    gap: 2px;
+    align-content: start;
+  }
+
+  /* Hairline separators rather than inline dots: a wrapped row can never
+     orphan a marker at the start of a line. */
+  .hero__stat + .hero__stat {
+    padding-left: 18px;
+    border-left: 1px solid transparent;
+    border-image: var(--silver-line-v) 1;
+  }
+
+  .hero__stat-value {
+    font-size: 1.125rem;
+    line-height: 1.2;
+  }
+
+  .hero__stat-label {
+    color: var(--color-text-secondary);
     font-size: 0.75rem;
-    letter-spacing: 0.06em;
-    opacity: 0.78;
+    line-height: 1.4;
   }
 
-  @media screen and (min-width: 750px) {
-    .hero__content {
+  @media screen and (min-width: 990px) {
+    .hero__grid {
+      grid-template-columns: minmax(0, 1fr) minmax(0, var(--media-span, 1.02fr));
       align-items: center;
-      padding-block: 96px;
+      gap: 56px;
+      padding-block: 88px 96px;
     }
 
-    .hero--split .hero__content {
-      padding-block: var(--section-padding-desktop);
+    .hero__copy {
+      order: 1;
+      padding-inline: 0;
+      padding-left: var(--content-inset);
+      max-width: 620px;
     }
 
-    .hero__inner {
-      margin-inline: auto;
+    /* The tall pill runs past the right edge of the viewport, which is what
+       makes the composition asymmetric. A square or portrait frame does not:
+       bleeding one off-screen cuts the feathered edge off on that side and
+       leaves the photograph looking half-finished against the window. */
+    .hero__media {
+      order: 2;
+      padding-inline: 0 var(--media-gutter, 0);
+      margin-right: var(--media-bleed, 0);
+    }
+
+    .hero__media .media--tall {
+      max-height: 78vh;
+      max-width: 100%;
+    }
+  }
+
+  /* The original full-bleed video layout, kept as an option. */
+  .hero--overlay {
+    color: var(--hero-text);
+  }
+
+  .hero--overlay .hero__media {
+    position: absolute;
+    inset: 0;
+    padding: 0;
+    margin: 0;
+  }
+
+  .hero--overlay .media--fill,
+  .hero--overlay .media--fill .video-wrapper {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+  }
+
+  .hero--overlay .hero__scrim {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(var(--color-deep-rgb), var(--hero-overlay, 0.34));
+  }
+
+  .hero--overlay .hero__grid {
+    display: block;
+    min-height: var(--hero-height, 82vh);
+    padding-block: 0;
+  }
+
+  .hero--overlay .hero__copy {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: var(--hero-height, 82vh);
+    max-width: var(--page-width);
+    margin-inline: auto;
+    padding-block: 56px;
+  }
+
+  .hero--overlay .eyebrow,
+  .hero--overlay .lede,
+  .hero--overlay .hero__stat-label,
+  .hero--overlay .rating,
+  .hero--overlay .price__compare,
+  .hero--overlay .price__unit {
+    color: inherit;
+    opacity: 0.88;
+  }
+
+  @media screen and (min-width: 990px) {
+    .hero--overlay .hero__copy {
+      justify-content: center;
       max-width: var(--page-width);
-    }
-
-    .hero__inner > * {
-      max-width: 40ch;
-    }
-
-    .hero__inner > .hero__trust {
-      max-width: 52ch;
-    }
-
-    .hero__heading {
-      max-width: 16ch;
-    }
-
-    .hero__button {
-      width: auto;
-      min-width: 280px;
+      padding-left: var(--gutter);
     }
   }
 {% endstyle %}
@@ -319,16 +429,108 @@
       "info": "Optional. Upload a .webm under Content > Files and paste its URL. Served first where supported."
     },
     {
+      "type": "text",
+      "id": "poster_asset",
+      "label": "Bundled packshot",
+      "default": "hero-packshot.webp",
+      "info": "A theme asset, shipped with the theme: the product shot with its white studio ground removed, so it sits on the page with no edge to blend. Clear this to fall back to the product's own photo, or upload a Poster image below to override it."
+    },
+    {
+      "type": "range",
+      "id": "media_span",
+      "label": "Photo size",
+      "min": 80,
+      "max": 170,
+      "step": 5,
+      "default": 125,
+      "unit": "%",
+      "info": "How much of the row the photograph takes next to the copy. 100 splits it evenly."
+    },
+    {
+      "type": "select",
+      "id": "frame_style",
+      "label": "Frame style",
+      "options": [
+        { "value": "bare", "label": "None — for a cut-out photo" },
+        { "value": "float", "label": "Soft light pool — for a photo on white" },
+        { "value": "panel", "label": "Panel — silver rim and shadow" }
+      ],
+      "default": "bare",
+      "info": "None is right for a photo with a transparent background, which the bundled packshot has: nothing is drawn behind it, so there is no rectangle. Soft light pool suits a photo still on a white or pale ground: the frame goes and the photo's own light spreads into the page instead of ending at an edge. Panel suits a photo with a strong coloured backdrop, which needs a frame of its own colour to fade into."
+    },
+    {
+      "type": "color",
+      "id": "frame_color",
+      "label": "Frame fill",
+      "default": "#FBFAFE",
+      "info": "Match this to the backdrop of your photograph. A photo cannot fade into a pale page — it only goes grey. It fades into a frame that is already its own colour, and the frame then sits on the page as a panel."
+    },
+    {
+      "type": "range",
+      "id": "image_zoom",
+      "label": "Photo zoom",
+      "min": 100,
+      "max": 180,
+      "step": 5,
+      "default": 100,
+      "unit": "%",
+      "info": "Zoom in to crop past anything printed into the supplier's image, such as a promotional banner."
+    },
+    {
+      "type": "range",
+      "id": "image_position",
+      "label": "Photo vertical position",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 50,
+      "unit": "%",
+      "info": "0 shows the top of the photo, 100 the bottom. Use with zoom to choose what the crop keeps."
+    },
+    {
+      "type": "select",
+      "id": "media_fit",
+      "label": "Image fit",
+      "options": [
+        { "value": "contain", "label": "Show the whole photo" },
+        { "value": "cover", "label": "Fill the frame (crops)" }
+      ],
+      "default": "contain",
+      "info": "Supplier packshots are rarely the shape of the frame. Filling it crops the edges, which on a box shot usually takes the top off."
+    },
+    {
+      "type": "select",
+      "id": "media_shape",
+      "label": "Image frame shape",
+      "options": [
+        { "value": "square", "label": "Square" },
+        { "value": "portrait", "label": "Portrait" },
+        { "value": "tall", "label": "Tall pill" }
+      ],
+      "default": "square",
+      "info": "The closer this is to the shape of your photo, the less empty space around it."
+    },
+    {
+      "type": "range",
+      "id": "product_image",
+      "label": "Which product photo",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 1,
+      "info": "Counts through the product's own media in admin order. Ignored when a poster image is uploaded below."
+    },
+    {
       "type": "image_picker",
       "id": "poster",
       "label": "Poster image",
-      "info": "Shown before the video loads, and instead of it for reduced-motion visitors."
+      "info": "Shown before the video loads, and instead of it for reduced-motion visitors. Leave empty to use the featured product's own first photo."
     },
     {
       "type": "text",
       "id": "poster_alt",
       "label": "Poster alt text",
-      "default": "A hand holding the serum bottle in soft daylight"
+      "info": "Leave empty to use the product photo's own alt text."
     },
     {
       "type": "header",
@@ -365,10 +567,51 @@
       "default": "Salmon DNA serum, sealed in each orb until it touches your skin."
     },
     {
+      "type": "header",
+      "content": "Actions"
+    },
+    {
+      "type": "paragraph",
+      "content": "The hero displays the product. Buying happens once, in the offer section below, so this button scrolls there rather than adding to cart."
+    },
+    {
       "type": "text",
-      "id": "trust_line",
-      "label": "Trust line",
-      "default": "45g · For all skin types · 30-day money-back guarantee"
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Choose your bundle"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+      "info": "Defaults to the offer section on this page."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_price",
+      "label": "Show the price",
+      "default": false,
+      "info": "Off by default. The offer section below already prices every option, and two prices above the fold read as two different products."
+
+    },
+    {
+      "type": "text",
+      "id": "price_prefix",
+      "label": "Price prefix",
+      "default": "From",
+      "info": "Shown only when the product has more than one price."
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Text link label",
+      "default": "How it works"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Text link URL",
+      "info": "Defaults to the How it works section on this page."
     },
     {
       "type": "header",
@@ -378,19 +621,20 @@
       "type": "checkbox",
       "id": "show_rating",
       "label": "Show star rating",
-      "default": true
+      "default": true,
+      "info": "Nothing renders until you fill in the review count below."
     },
     {
       "type": "text",
       "id": "rating_value",
       "label": "Star rating",
-      "default": "4.8"
+      "info": "For example 4.8."
     },
     {
       "type": "text",
       "id": "review_count_text",
       "label": "Review count text",
-      "default": "2,431 reviews"
+      "info": "For example 2,431 reviews. Leave empty until you have real numbers."
     },
     {
       "type": "header",
@@ -409,23 +653,6 @@
       "info": "Optional. The variant this button adds — paste the numeric ID from the product's variant URL in admin. Defaults to the first available variant."
     },
     {
-      "type": "text",
-      "id": "button_label",
-      "label": "Button label",
-      "default": "Add to cart"
-    },
-    {
-      "type": "select",
-      "id": "button_variant",
-      "label": "Button colour",
-      "options": [
-        { "value": "light", "label": "Light — best over video" },
-        { "value": "accent", "label": "Accent" },
-        { "value": "dark", "label": "Dark" }
-      ],
-      "default": "light"
-    },
-    {
       "type": "header",
       "content": "Layout"
     },
@@ -434,10 +661,10 @@
       "id": "layout",
       "label": "Layout",
       "options": [
-        { "value": "overlay", "label": "Text over video" },
-        { "value": "split", "label": "Text under video" }
+        { "value": "editorial", "label": "Editorial — copy left, media bleeding right" },
+        { "value": "overlay", "label": "Full-bleed video with text over it" }
       ],
-      "default": "overlay"
+      "default": "editorial"
     },
     {
       "type": "range",
@@ -447,8 +674,8 @@
       "max": 100,
       "step": 2,
       "unit": "vh",
-      "default": 78,
-      "info": "Only applies to the text-over-video layout."
+      "default": 82,
+      "info": "Only applies to the full-bleed layout."
     },
     {
       "type": "range",
@@ -458,7 +685,8 @@
       "max": 70,
       "step": 5,
       "unit": "%",
-      "default": 30
+      "default": 35,
+      "info": "Only applies to the full-bleed layout."
     },
     {
       "type": "color",
@@ -467,6 +695,37 @@
       "default": "#FFFFFF"
     }
   ],
-  "presets": [{ "name": "Hero video" }]
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Micro-stat",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "text",
+          "id": "value",
+          "label": "Value",
+          "default": "30,000ppm",
+          "info": "Set in the display face. Leave empty for a label on its own."
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Hyaluronic PDRN"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero video",
+      "blocks": [
+        { "type": "stat", "settings": { "value": "30,000ppm", "label": "Hyaluronic PDRN" } },
+        { "type": "stat", "settings": { "value": "45 g", "label": "Net weight" } },
+        { "type": "stat", "settings": { "value": "30 days", "label": "Money-back guarantee" } }
+      ]
+    }
+  ]
 }
 {% endschema %}

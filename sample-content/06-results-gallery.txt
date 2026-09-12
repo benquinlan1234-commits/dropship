@@ -1,3 +1,7 @@
+NOT ON THE PAGE BY DEFAULT
+This section ships with the theme but is not in either template. Add it from
+Customize > Add section, then this copy applies.
+
 RESULTS GALLERY
 Section: results-gallery
 

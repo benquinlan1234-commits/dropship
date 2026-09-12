@@ -3,14 +3,14 @@
     <div class="reviews__header">
       <div>
         {%- if section.settings.eyebrow != blank -%}
-          <p class="section__eyebrow">{{ section.settings.eyebrow }}</p>
+          <p class="eyebrow eyebrow--rule">{{ section.settings.eyebrow }}</p>
         {%- endif -%}
         {%- if section.settings.heading != blank -%}
           <h2>{{ section.settings.heading }}</h2>
         {%- endif -%}
       </div>
 
-      {%- if section.settings.show_summary -%}
+      {%- if section.settings.show_summary and section.settings.review_count_text != blank -%}
         <div class="reviews__summary">
           {% render 'star-rating',
             rating: section.settings.rating_value,
@@ -62,6 +62,9 @@
                 </blockquote>
 
                 <figcaption class="review__meta">
+                  <span class="review__avatar" aria-hidden="true">
+                    {{- block.settings.name | slice: 0 | upcase -}}
+                  </span>
                   <span class="review__name">{{ block.settings.name }}</span>
                   {%- if block.settings.meta != blank -%}
                     <span class="review__detail text-small text-secondary">{{ block.settings.meta }}</span>
@@ -98,16 +101,22 @@
 </div>
 
 {% style %}
+  /* Pearl cards over a deeper lilac band, so they lift without shadows. */
+  .reviews {
+    background-color: var(--color-pearl);
+  }
+
   .reviews__header {
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
     gap: 24px;
-    margin-bottom: 40px;
+    margin-bottom: 48px;
   }
 
   .reviews__header h2 {
     margin-bottom: 0;
+    max-width: 18ch;
   }
 
   .reviews__summary {
@@ -120,9 +129,10 @@
 
   .reviews__track {
     display: flex;
-    gap: 16px;
+    gap: 20px;
     margin: 0;
     padding-inline: var(--content-inset);
+    padding-block: 34px;
     list-style: none;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
@@ -138,8 +148,13 @@
 
   .reviews__item {
     flex: 0 0 auto;
-    width: min(78vw, 340px);
+    width: min(78vw, 330px);
     scroll-snap-align: start;
+  }
+
+  /* Alternating vertical offset, so the row reads as a hand-laid set. */
+  .reviews__item:nth-child(even) {
+    transform: translateY(26px);
   }
 
   .review {
@@ -147,86 +162,129 @@
     flex-direction: column;
     height: 100%;
     margin: 0;
-    padding: 26px;
+    padding: 28px;
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
     background-color: var(--color-surface);
+    background-image: var(--sheen);
+    box-shadow: var(--edge-light), var(--shadow-soft);
+    transition: transform var(--duration-hover) var(--ease-out),
+      box-shadow var(--duration-hover) var(--ease-out);
+  }
+
+  .review:hover {
+    transform: translateY(var(--lift-y));
+    box-shadow: var(--edge-light), var(--shadow-lift);
   }
 
   .review__media {
-    margin: -26px -26px 22px;
+    margin: -28px -28px 24px;
     border-radius: var(--radius) var(--radius) 0 0;
   }
 
   .review__rating {
-    margin-bottom: 16px;
+    margin-bottom: 18px;
   }
 
   .review__quote {
     flex: 1 1 auto;
-    margin: 0 0 22px;
+    margin: 0 0 24px;
   }
 
   .review__quote p {
     margin: 0;
     font-size: 0.9375rem;
-    line-height: 1.65;
+    line-height: 1.7;
   }
 
   .review__meta {
     display: grid;
-    gap: 2px;
-    padding-top: 18px;
-    border-top: 1px solid var(--color-border);
+    grid-template-columns: 38px minmax(0, 1fr);
+    align-items: center;
+    column-gap: 12px;
+    row-gap: 2px;
+    padding-top: 20px;
+    border-top: 1px solid transparent;
+    border-image: var(--silver-line) 1;
+  }
+
+  /* A hairline ring with the initial, instead of a stock avatar. */
+  .review__avatar {
+    grid-row: span 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border: 1px solid transparent;
+    border-radius: 50%;
+    background-image: linear-gradient(var(--color-surface), var(--color-surface)), var(--silver-fill);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    font-family: var(--font-display);
+    font-optical-sizing: auto;
+    font-size: 0.9375rem;
+    color: var(--color-accent-ink);
   }
 
   .review__name {
-    font-size: 0.875rem;
-    font-weight: 600;
+    font-size: 0.9375rem;
+    font-weight: 500;
+  }
+
+  .review__detail {
+    font-size: 0.75rem;
   }
 
   .review__verified {
+    grid-column: 2;
     display: inline-flex;
     align-items: center;
     gap: 6px;
     margin-top: 6px;
-    color: var(--color-accent);
+    color: var(--color-accent-ink);
+    font-size: 0.75rem;
   }
 
   .review__verified .icon {
-    width: 14px;
-    height: 14px;
+    width: 13px;
+    height: 13px;
   }
 
   .reviews__controls {
     display: none;
     gap: 8px;
     justify-content: flex-end;
-    margin-top: 24px;
+    margin-top: 12px;
   }
 
   .carousel-control {
     display: inline-flex;
-    width: 42px;
-    height: 42px;
+    width: 44px;
+    height: 44px;
     align-items: center;
     justify-content: center;
     padding: 0;
-    border: 1px solid var(--color-silver);
-    border-radius: 999px;
-    background: none;
+    border: 1px solid transparent;
+    border-radius: 50%;
+    background-color: var(--color-surface);
+    background-image: linear-gradient(var(--color-surface), var(--color-surface)), var(--silver-fill);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
     color: inherit;
     cursor: pointer;
-    transition: background-color var(--duration) var(--ease), color var(--duration) var(--ease);
+    transition: background-color var(--duration) var(--ease), color var(--duration) var(--ease),
+      transform var(--duration) var(--ease);
   }
 
   .carousel-control:hover:not([disabled]) {
     background-color: var(--color-text);
-    color: var(--color-background);
+    color: var(--color-surface);
+    transform: translateY(var(--lift-y-sm));
   }
 
   .carousel-control[disabled] {
-    opacity: 0.3;
+    opacity: 0.35;
     cursor: default;
   }
 
@@ -239,16 +297,18 @@
   }
 
   .reviews__app:not(:empty) {
-    margin-top: 40px;
+    margin-top: 44px;
   }
 
   @media screen and (min-width: 750px) {
     .reviews__controls {
       display: flex;
     }
+  }
 
-    .reviews__track {
-      gap: 20px;
+  @media (prefers-reduced-motion: reduce) {
+    .reviews__item:nth-child(even) {
+      transform: none;
     }
   }
 {% endstyle %}
@@ -281,13 +341,13 @@
       "type": "text",
       "id": "rating_value",
       "label": "Star rating",
-      "default": "4.8"
+      "info": "For example 4.8."
     },
     {
       "type": "text",
       "id": "review_count_text",
       "label": "Review count text",
-      "default": "2,431 reviews"
+      "info": "For example 2,431 reviews. The summary stays hidden until this is filled in."
     },
     {
       "type": "text",

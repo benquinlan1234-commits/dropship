@@ -3,16 +3,16 @@
     <div class="faq__layout">
       <div class="faq__intro">
         {%- if section.settings.eyebrow != blank -%}
-          <p class="section__eyebrow">{{ section.settings.eyebrow }}</p>
+          <p class="eyebrow eyebrow--rule">{{ section.settings.eyebrow }}</p>
         {%- endif -%}
         {%- if section.settings.heading != blank -%}
           <h2>{{ section.settings.heading }}</h2>
         {%- endif -%}
         {%- if section.settings.subheading != blank -%}
-          <p class="section__subheading">{{ section.settings.subheading }}</p>
+          <p class="lede">{{ section.settings.subheading }}</p>
         {%- endif -%}
         {%- if section.settings.link_label != blank -%}
-          <a class="link-arrow faq__link" href="{{ section.settings.link_url | default: '#' }}">
+          <a class="link-quiet faq__link" href="{{ section.settings.link_url | default: '#' }}">
             <span>{{ section.settings.link_label }}</span>
             {% render 'icon', icon: 'arrow-right' %}
           </a>
@@ -25,11 +25,14 @@
             <summary class="accordion__summary">
               <span class="accordion__question">{{ block.settings.question }}</span>
               <span class="accordion__marker" aria-hidden="true">
-                {% render 'icon', icon: 'chevron' %}
+                {% render 'icon', icon: 'plus', extra_class: 'accordion__plus' %}
+                {% render 'icon', icon: 'minus', extra_class: 'accordion__minus' %}
               </span>
             </summary>
             <div class="accordion__panel">
-              <div class="rte text-secondary">{{ block.settings.answer }}</div>
+              <div class="accordion__panel-inner">
+                <div class="rte text-secondary accordion__body">{{ block.settings.answer }}</div>
+              </div>
             </div>
           </details>
         {%- endfor -%}
@@ -39,10 +42,14 @@
 </div>
 
 {% style %}
+  /* One column, centred. Questions in the display face. */
   .faq__layout {
-    display: grid;
-    gap: 36px;
-    align-items: start;
+    max-width: 760px;
+    margin-inline: auto;
+  }
+
+  .faq__intro {
+    margin-bottom: 40px;
   }
 
   .faq__intro h2 {
@@ -54,19 +61,16 @@
   }
 
   .accordion {
-    border-top: 1px solid var(--color-border);
-  }
-
-  .accordion:last-child {
-    border-bottom: 1px solid var(--color-border);
+    border-top: 1px solid transparent;
+    border-image: var(--silver-line) 1;
   }
 
   .accordion__summary {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 20px;
-    padding: 22px 0;
+    gap: 24px;
+    padding: 26px 0;
     cursor: pointer;
     list-style: none;
   }
@@ -81,32 +85,108 @@
   }
 
   .accordion__question {
-    font-size: 1rem;
-    font-weight: 500;
-    letter-spacing: -0.01em;
+    font-family: var(--font-display);
+    font-weight: var(--display-weight);
+    font-optical-sizing: auto;
+    font-size: 1.25rem;
+    letter-spacing: var(--display-tracking);
+    line-height: 1.3;
   }
 
   .accordion__marker {
+    position: relative;
     flex: 0 0 auto;
     display: inline-flex;
-    color: var(--color-text-secondary);
-    transition: transform var(--duration) var(--ease);
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border: 1px solid transparent;
+    border-radius: 50%;
+    color: var(--color-accent);
+    background-image: linear-gradient(var(--color-background), var(--color-background)), var(--silver-fill);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    transition: background-color var(--duration-hover) var(--ease-out),
+      transform var(--duration-hover) var(--ease-out),
+      box-shadow var(--duration-hover) var(--ease-out);
+  }
+
+  .accordion__summary:hover .accordion__marker {
+    transform: scale(var(--lift-scale));
+    box-shadow: var(--shadow-press);
+  }
+
+  .accordion__question {
+    transition: color var(--duration-hover) var(--ease-out);
+  }
+
+  .accordion__summary:hover .accordion__question {
+    color: var(--color-accent-ink);
+  }
+
+  .accordion__marker .icon {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    transition: opacity var(--duration-hover) var(--ease-out),
+      transform var(--duration-hover) var(--ease-out);
+  }
+
+  .accordion__minus {
+    opacity: 0;
+  }
+
+  .accordion[open] .accordion__plus {
+    opacity: 0;
+  }
+
+  .accordion[open] .accordion__minus {
+    opacity: 1;
   }
 
   .accordion[open] .accordion__marker {
-    transform: rotate(180deg);
+    background-image: linear-gradient(var(--color-accent-soft), var(--color-accent-soft)), var(--silver-fill);
   }
 
-  .accordion__panel {
-    padding: 0 0 24px;
-    max-width: 62ch;
+  /* A <details> snaps open: the browser reveals the panel at full height in one
+     frame, so any animation on it starts after the layout has already jumped.
+     The panel is a grid whose single row goes 0fr -> 1fr, which is a real
+     height transition both ways, and the custom element holds the open
+     attribute on until the closing transition has finished.
+
+     Only once the element has upgraded — until then an open panel is simply
+     open, so the answers are readable with no JavaScript at all. */
+  .accordion__panel-inner {
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  .accordion__body {
+    padding: 0 0 28px;
+    max-width: 60ch;
     font-size: 0.9375rem;
   }
 
-  @media screen and (min-width: 990px) {
-    .faq__layout {
-      grid-template-columns: 0.8fr 1.2fr;
-      gap: 72px;
+  accordion-group.is-ready .accordion__panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transition: grid-template-rows 420ms var(--ease-out), opacity 260ms var(--ease-out);
+  }
+
+  accordion-group.is-ready .accordion.is-open .accordion__panel {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+
+  accordion-group.is-ready .accordion.is-open .accordion__body {
+    transition: transform 420ms var(--ease-out);
+  }
+
+  @media screen and (min-width: 750px) {
+    .accordion__question {
+      font-size: 1.4375rem;
     }
   }
 {% endstyle %}
@@ -229,7 +309,7 @@
           "type": "question",
           "settings": {
             "question": "How long does one bottle last?",
-            "answer": "<p>The 45g bottle holds about eight weeks of use at 2–3 orbs, morning and night. Most people order two bottles so they do not run out mid-routine.</p>"
+            "answer": "<p>The 45 g bottle is designed for daily use at 2–3 orbs, morning and night.</p>"
           }
         },
         {

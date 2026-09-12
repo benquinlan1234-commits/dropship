@@ -6,17 +6,19 @@
 <div class="section section--tight guarantee{% if section.settings.show_divider %} section--bordered{% endif %}">
   <div class="page-width">
     {%- if section.settings.heading != blank -%}
-      <div class="section__header section__header--center">
-        <h2 class="guarantee__heading">{{ section.settings.heading }}</h2>
-      </div>
+      <h2 class="guarantee__heading">{{ section.settings.heading }}</h2>
     {%- endif -%}
+
+    <div class="orb-rule guarantee__rule" role="presentation">
+      <span class="orb-rule__dot"></span>
+    </div>
 
     <ul class="guarantee__items grid grid--3" role="list">
       {%- for block in section.blocks -%}
         <li class="guarantee__item reveal" {{ block.shopify_attributes }}>
           {%- if block.settings.icon != 'none' -%}
             <span class="icon-ring guarantee__icon">
-              {% render 'icon', icon: block.settings.icon, size: 'lg' %}
+              {% render 'icon', icon: block.settings.icon %}
             </span>
           {%- endif -%}
 
@@ -38,8 +40,14 @@
 
 {% style %}
   .guarantee__heading {
-    font-size: clamp(1.25rem, 2.6vw, 1.625rem);
-    margin-bottom: 0;
+    max-width: 20ch;
+    margin: 0 auto 28px;
+    text-align: center;
+    font-size: clamp(1.5rem, 2.6vw, 2rem);
+  }
+
+  .guarantee__rule {
+    margin-bottom: 44px;
   }
 
   .guarantee__items {
@@ -55,18 +63,19 @@
   }
 
   .guarantee__icon {
-    width: 46px;
-    height: 46px;
+    transition: transform var(--duration-hover) var(--ease-out),
+      box-shadow var(--duration-hover) var(--ease-out);
   }
 
-  .guarantee__icon .icon {
-    width: 20px;
-    height: 20px;
+  .guarantee__item:hover .guarantee__icon {
+    transform: scale(var(--lift-scale));
+    box-shadow: var(--shadow-press);
   }
 
   .guarantee__title {
-    margin: 0 0 4px;
-    font-size: 0.9375rem;
+    margin: 0 0 5px;
+    font-size: 1.0625rem;
+    letter-spacing: -0.005em;
   }
 
   .guarantee__text {
@@ -76,7 +85,7 @@
 
   @media screen and (min-width: 750px) {
     .guarantee__items {
-      gap: 40px;
+      gap: 44px;
     }
   }
 {% endstyle %}

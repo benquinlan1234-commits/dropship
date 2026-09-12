@@ -1,7 +1,7 @@
 [
   {
     "name": "theme_info",
-    "theme_name": "PDRN Orb Serum",
+    "theme_name": "HAUA — PDRN Orb Serum",
     "theme_version": "1.0.0",
     "theme_author": "Custom",
     "theme_documentation_url": "https://shopify.dev/docs/themes",
@@ -14,8 +14,8 @@
         "type": "text",
         "id": "brand_name",
         "label": "Brand name",
-        "default": "Orb",
-        "info": "Used in the header when no logo is uploaded, and in the page title."
+        "default": "HAUA",
+        "info": "Used in the header when no logo is uploaded, and in the page title. Taken from the packaging."
       },
       {
         "type": "image_picker",
@@ -36,7 +36,7 @@
         "type": "text",
         "id": "logo_alt",
         "label": "Logo alt text",
-        "default": "Orb"
+        "default": "HAUA"
       },
       {
         "type": "image_picker",
@@ -51,47 +51,83 @@
     "settings": [
       {
         "type": "paragraph",
-        "content": "A plum ink, a violet accent and a silver hairline. Keep the accent as the only saturated colour on the page."
+        "content": "Pearl, lilac and plum with a single violet accent. Every value here is measured for AA contrast at the defaults — if you change them, re-check text against its background."
+      },
+      {
+        "type": "header",
+        "content": "Light surfaces"
       },
       {
         "type": "color",
         "id": "color_background",
-        "label": "Background",
-        "default": "#FAF8F6"
+        "label": "Page",
+        "default": "#F1ECF7",
+        "info": "Lilac-pearl. Deliberately not white."
       },
       {
         "type": "color",
         "id": "color_surface",
-        "label": "Surface",
-        "default": "#FFFFFF",
-        "info": "Cards, inputs and media backgrounds."
+        "label": "Card",
+        "default": "#FAF8FD",
+        "info": "Pearl. Cards, drawers and inputs."
       },
       {
         "type": "color",
         "id": "color_pearl",
-        "label": "Pearl",
-        "default": "#F4F1F7",
-        "info": "A cooler tint used behind media and quiet panels."
+        "label": "Media",
+        "default": "#E7DFF2",
+        "info": "Behind images and placeholder blocks."
+      },
+      {
+        "type": "header",
+        "content": "Dark surfaces"
+      },
+      {
+        "type": "color",
+        "id": "color_deep",
+        "label": "Plum",
+        "default": "#2A2340",
+        "info": "The clinic section, footer and announcement bar."
+      },
+      {
+        "type": "color",
+        "id": "color_on_deep",
+        "label": "Text on plum",
+        "default": "#EFE9F7"
+      },
+      {
+        "type": "color",
+        "id": "color_accent_on_deep",
+        "label": "Accent on plum",
+        "default": "#BCA9EC",
+        "info": "Links and highlights inside dark sections. A light violet, because the main accent is unreadable on plum."
+      },
+      {
+        "type": "header",
+        "content": "Ink"
       },
       {
         "type": "color",
         "id": "color_text",
         "label": "Text — primary",
-        "default": "#2E2640",
-        "info": "A deep plum reads warmer than black against the off-white."
+        "default": "#2A2340"
       },
       {
         "type": "color",
         "id": "color_text_secondary",
         "label": "Text — secondary",
-        "default": "#6E6680"
+        "default": "#5C5470"
+      },
+      {
+        "type": "header",
+        "content": "Accent and lines"
       },
       {
         "type": "color",
         "id": "color_accent",
         "label": "Accent",
-        "default": "#7561B0",
-        "info": "Buttons, active states and highlights. Keep it dark enough for white button text to stay legible (at least 4.5:1)."
+        "default": "#6E5AAB",
+        "info": "Buttons, eyebrows, selected states. Keep it dark enough for white button text (at least 4.5:1)."
       },
       {
         "type": "color",
@@ -101,23 +137,37 @@
       },
       {
         "type": "color",
+        "id": "color_accent_ink",
+        "label": "Accent — text",
+        "default": "#635099",
+        "info": "Violet text such as eyebrows and per-bottle prices. A shade darker than the accent so it still passes AA on the tinted pearl and lilac fills."
+      },
+      {
+        "type": "color",
         "id": "color_accent_soft",
         "label": "Accent — soft",
-        "default": "#E8E1F5",
-        "info": "Selected cards, badges and quiet fills."
+        "default": "#E3D9F5",
+        "info": "Tints behind selected cards and badges."
       },
       {
         "type": "color",
         "id": "color_border",
         "label": "Hairline",
-        "default": "#E4E0EA"
+        "default": "#D6CEE4"
       },
       {
         "type": "color",
         "id": "color_silver",
         "label": "Silver",
-        "default": "#C8C3D7",
-        "info": "Rules, icon outlines and small metallic detail."
+        "default": "#C6C0D2",
+        "info": "Brushed-silver hairlines, rings and tags. Paired with the bright below to catch the light."
+      },
+      {
+        "type": "color",
+        "id": "color_silver_bright",
+        "label": "Silver — highlight",
+        "default": "#EDEBF2",
+        "info": "The bright point along a silver line or ring. Together these read as metal rather than as flat grey."
       }
     ]
   },
@@ -125,22 +175,39 @@
     "name": "Typography",
     "settings": [
       {
+        "type": "paragraph",
+        "content": "Two families: a serif for display and numbers, a sans for body and UI. The contrast between them is what stops the page reading as a template."
+      },
+      {
         "type": "checkbox",
         "id": "use_google_font",
-        "label": "Load font from Google Fonts",
+        "label": "Load fonts from Google Fonts",
         "default": true
       },
       {
         "type": "text",
-        "id": "google_font_family",
-        "label": "Google font family",
+        "id": "display_font_family",
+        "label": "Display font",
+        "default": "Fraunces",
+        "info": "Headings, numerals and prices. Loaded as a variable font where one exists."
+      },
+      {
+        "type": "text",
+        "id": "body_font_family",
+        "label": "Body font",
         "default": "Manrope",
-        "info": "Loaded at weights 300, 400, 500 and 600. Clear the checkbox above to use the system sans stack only."
+        "info": "Body copy, buttons and UI."
+      },
+      {
+        "type": "text",
+        "id": "display_font_fallback",
+        "label": "Display fallback stack",
+        "default": "Georgia, 'Times New Roman', serif"
       },
       {
         "type": "text",
         "id": "font_fallback_stack",
-        "label": "Fallback font stack",
+        "label": "Body fallback stack",
         "default": "system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
       },
       {
@@ -151,12 +218,12 @@
         "max": 20,
         "step": 1,
         "unit": "px",
-        "default": 16
+        "default": 17
       },
       {
         "type": "select",
         "id": "heading_weight",
-        "label": "Heading weight",
+        "label": "Display weight",
         "options": [
           {
             "value": "300",
@@ -175,43 +242,38 @@
             "label": "Semibold"
           }
         ],
-        "default": "500"
+        "default": "400"
       },
       {
         "type": "range",
         "id": "heading_tracking",
-        "label": "Heading letter spacing",
-        "min": -40,
-        "max": 0,
-        "step": 2,
-        "unit": "/1000em",
-        "default": -24
+        "label": "Display letter spacing",
+        "min": -30,
+        "max": 10,
+        "step": 1,
+        "default": -10,
+        "info": "In thousandths of an em, so -10 is -0.01em."
+      },
+      {
+        "type": "range",
+        "id": "display_softness",
+        "label": "Display softness",
+        "min": 0,
+        "max": 100,
+        "step": 5,
+        "unit": "%",
+        "default": 30,
+        "info": "Fraunces' SOFT axis — rounds the terminals. No effect on fonts without that axis."
       },
       {
         "type": "range",
         "id": "border_radius",
-        "label": "Corner radius",
+        "label": "Card radius",
         "min": 0,
-        "max": 24,
+        "max": 32,
         "step": 2,
         "unit": "px",
-        "default": 12
-      },
-      {
-        "type": "select",
-        "id": "button_style",
-        "label": "Button shape",
-        "options": [
-          {
-            "value": "pill",
-            "label": "Pill"
-          },
-          {
-            "value": "rounded",
-            "label": "Rounded"
-          }
-        ],
-        "default": "pill"
+        "default": 22
       }
     ]
   },
@@ -248,8 +310,8 @@
         "type": "number",
         "id": "free_shipping_threshold",
         "label": "Free shipping threshold",
-        "default": 35,
-        "info": "In your store currency, without decimals. Used in the guarantee strip and cart drawer."
+        "default": 44.70,
+        "info": "In your store currency; decimals are fine. Free shipping is earned by going OVER this figure, not by reaching it — so setting it to the price of one bottle means a single bottle pays shipping and two do not. Used in the guarantee strip and cart drawer."
       }
     ]
   },
@@ -301,21 +363,76 @@
     ]
   },
   {
-    "name": "Motion",
+    "name": "Motion & softness",
     "settings": [
+      {
+        "type": "range",
+        "id": "shadow_strength",
+        "label": "Glow",
+        "min": 0,
+        "max": 100,
+        "step": 5,
+        "unit": "%",
+        "default": 60,
+        "info": "A soft violet halo under cards and buttons — the dewy quality skincare sites get from tinted shadows rather than grey ones. 0 turns it off completely."
+      },
+      {
+        "type": "range",
+        "id": "surface_sheen",
+        "label": "Surface sheen",
+        "min": 0,
+        "max": 100,
+        "step": 5,
+        "unit": "%",
+        "default": 50,
+        "info": "A faint gradient across card fills so they are not flat colour."
+      },
+      {
+        "type": "range",
+        "id": "atmosphere_strength",
+        "label": "Background depth",
+        "min": 0,
+        "max": 150,
+        "step": 5,
+        "default": 100,
+        "unit": "%",
+        "info": "Scales the layered violet and silver field behind the page. 0 is a flat background colour."
+      },
+      {
+        "type": "range",
+        "id": "media_blend",
+        "label": "Photo blending",
+        "min": 0,
+        "max": 100,
+        "step": 5,
+        "default": 100,
+        "unit": "%",
+        "info": "Feathers the hero photograph into the page at its edges and eases its saturation, so a supplier shot on its own backdrop does not read as pasted on. 0 is a hard edge."
+      },
       {
         "type": "checkbox",
         "id": "enable_animations",
-        "label": "Fade sections in on scroll",
+        "label": "Reveal sections on scroll",
         "default": true,
-        "info": "Always disabled for visitors who ask for reduced motion."
+        "info": "Always off for visitors who ask for reduced motion."
       },
       {
         "type": "checkbox",
         "id": "show_orb_glow",
-        "label": "Soft violet glow behind key sections",
+        "label": "Show the drifting orb",
         "default": true,
-        "info": "A faint radial tint that echoes the orbs. Turn it off for a completely flat look."
+        "info": "A large blurred violet orb behind the hero and offer. Drifts over 60 seconds; holds still under reduced motion."
+      },
+      {
+        "type": "range",
+        "id": "grain_opacity",
+        "label": "Grain",
+        "min": 0,
+        "max": 6,
+        "step": 1,
+        "unit": "%",
+        "default": 3,
+        "info": "A fine noise texture over flat areas so they do not look digital."
       }
     ]
   }

@@ -1,6 +1,6 @@
 /* ==========================================================================
-   PDRN Orb Serum — base styles
-   Tokens are injected from theme settings in snippets/css-variables.liquid
+   ORB — base styles
+   Tokens come from theme settings via snippets/css-variables.liquid
    ========================================================================== */
 
 *,
@@ -15,16 +15,84 @@ html {
 }
 
 body {
+  position: relative;
   margin: 0;
   background-color: var(--color-background);
   color: var(--color-text);
   font-family: var(--font-body);
   font-size: var(--font-size-base);
   font-weight: 400;
-  line-height: 1.7;
-  letter-spacing: -0.005em;
+  line-height: 1.65;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* The page ground.
+
+   One continuous field fixed behind every section, rather than each section
+   painting its own. Sections that butt against each other used to show as
+   bands of flat colour; with the field fixed, content scrolls over an
+   unbroken wash and the seams disappear.
+
+   Six layers, back to front: a cool silver pool bottom-left and a second
+   low on the right — this is where the metal enters the page rather than
+   only appearing as hairlines — then lilac and violet pools top-right and
+   bottom-right, a warm pearl top-left, and a wide diagonal sheen raking
+   across all of it. Every alpha is scaled by --atmosphere, so 0 returns the
+   page to the flat colour exactly. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-color: var(--color-background);
+  background-image:
+    linear-gradient(
+      112deg,
+      rgba(var(--color-silver-rgb), 0) 8%,
+      rgba(255, 255, 255, calc(0.60 * var(--atmosphere))) 34%,
+      rgba(var(--color-silver-rgb), calc(0.52 * var(--atmosphere))) 57%,
+      rgba(255, 255, 255, calc(0.46 * var(--atmosphere))) 74%,
+      rgba(var(--color-silver-rgb), 0) 96%
+    ),
+    radial-gradient(
+      ellipse 44% 38% at 92% 4%,
+      rgba(var(--color-accent-rgb), calc(0.34 * var(--atmosphere))) 0%,
+      rgba(var(--color-accent-rgb), 0) 72%
+    ),
+    radial-gradient(
+      ellipse 50% 40% at 6% 92%,
+      rgba(var(--color-accent-rgb), calc(0.26 * var(--atmosphere))) 0%,
+      rgba(var(--color-accent-rgb), 0) 74%
+    ),
+    radial-gradient(
+      ellipse 40% 52% at 98% 62%,
+      rgba(var(--color-silver-rgb), calc(0.95 * var(--atmosphere))) 0%,
+      rgba(var(--color-silver-rgb), 0) 70%
+    ),
+    radial-gradient(
+      ellipse 38% 34% at 2% 30%,
+      rgba(var(--color-silver-rgb), calc(0.70 * var(--atmosphere))) 0%,
+      rgba(var(--color-silver-rgb), 0) 72%
+    ),
+    radial-gradient(
+      ellipse 46% 34% at 26% -4%,
+      rgba(var(--color-surface-rgb), calc(0.90 * var(--atmosphere))) 0%,
+      rgba(var(--color-surface-rgb), 0) 70%
+    );
+}
+
+/* A fine grain over everything, so large flat areas do not read as digital.
+   Generated, not an asset request. */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: var(--grain-opacity, 0.03);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 img,
@@ -44,28 +112,29 @@ video {
 h1,
 h2,
 h3,
-h4 {
-  font-family: var(--font-heading);
-  font-weight: var(--heading-weight);
-  letter-spacing: var(--heading-tracking);
-  line-height: 1.08;
-  margin: 0 0 0.5em;
+h4,
+.display {
+  font-family: var(--font-display);
+  font-weight: var(--display-weight);
+  font-optical-sizing: auto;
+  font-variation-settings: 'SOFT' var(--display-soft, 30);
+  letter-spacing: var(--display-tracking);
+  line-height: 1.06;
+  margin: 0 0 0.4em;
   text-wrap: balance;
 }
 
 h1 {
-  font-size: clamp(2.25rem, 7vw, 4rem);
+  font-size: clamp(2.5rem, 5.2vw, 4.5rem);
 }
 
 h2 {
-  font-size: clamp(1.75rem, 4.4vw, 2.75rem);
+  font-size: clamp(2rem, 3.8vw, 3.25rem);
 }
 
 h3 {
-  font-size: 1.0625rem;
-  font-weight: 600;
-  line-height: 1.35;
-  letter-spacing: -0.01em;
+  font-size: 1.25rem;
+  line-height: 1.25;
 }
 
 p {
@@ -86,12 +155,6 @@ ul,
 ol {
   margin: 0 0 1em;
   padding-left: 1.2em;
-}
-
-hr {
-  border: 0;
-  border-top: 1px solid var(--color-border);
-  margin: 0;
 }
 
 ::selection {
@@ -138,6 +201,100 @@ hr {
   background-color: var(--color-surface);
 }
 
+
+/* Page-level headers for the supporting templates. */
+.page-header {
+  max-width: 46ch;
+  margin: 0 auto 40px;
+  text-align: center;
+}
+
+.page-header h1 {
+  margin-bottom: 14px;
+}
+
+.page-header .rte,
+.page-header .lede {
+  margin-inline: auto;
+  color: var(--color-text-secondary);
+}
+
+/* Editorial type helpers ---------------------------------------------- */
+
+/* Numbers are set in the display face, larger than what surrounds them, so a
+   figure like 30,000ppm reads as data rather than as body copy. */
+.numeral {
+  font-family: var(--font-display);
+  font-weight: var(--display-weight);
+  font-optical-sizing: auto;
+  font-variation-settings: 'SOFT' var(--display-soft, 30);
+  letter-spacing: -0.01em;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+.eyebrow {
+  display: block;
+  margin: 0 0 20px;
+  color: var(--color-accent-ink);
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 500;
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.14em;
+  text-transform: lowercase;
+  line-height: 1.4;
+}
+
+/* Small caps are synthesised where the face has no real ones. */
+@supports not (font-variant-caps: all-small-caps) {
+  .eyebrow {
+    text-transform: uppercase;
+    font-size: 0.6875rem;
+  }
+}
+
+.eyebrow--rule {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.eyebrow--rule::after {
+  content: '';
+  flex: 0 0 auto;
+  width: 48px;
+  height: 1px;
+  background-image: var(--silver-line);
+}
+
+.text-secondary {
+  color: var(--color-text-secondary);
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-small {
+  font-size: 0.8125rem;
+  line-height: 1.6;
+}
+
+.lede {
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  color: var(--color-text-secondary);
+  max-width: 46ch;
+}
+
+.rte > :last-child {
+  margin-bottom: 0;
+}
+
+.rte p {
+  max-width: 58ch;
+}
+
 /* Layout -------------------------------------------------------------- */
 
 .page-width {
@@ -148,7 +305,7 @@ hr {
 }
 
 .page-width--narrow {
-  max-width: 820px;
+  max-width: 780px;
 }
 
 .section {
@@ -157,11 +314,12 @@ hr {
 }
 
 .section--tight {
-  padding-block: calc(var(--section-padding-mobile) * 0.6);
+  padding-block: calc(var(--section-padding-mobile) * 0.55);
 }
 
 .section--bordered {
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid transparent;
+  border-image: var(--silver-line) 1;
 }
 
 @media screen and (min-width: 750px) {
@@ -170,8 +328,41 @@ hr {
   }
 
   .section--tight {
-    padding-block: calc(var(--section-padding-desktop) * 0.6);
+    padding-block: calc(var(--section-padding-desktop) * 0.55);
   }
+}
+
+/* A pearl-centred wash, for the hero and the offer. */
+/* A local lift, not a second ground. The page field behind it stays visible,
+   so two washed sections in a row read as one surface with a bloom in each
+   rather than as two blocks. */
+.section--wash {
+  background: radial-gradient(
+    ellipse 96% 70% at 50% 14%,
+    rgba(var(--color-surface-rgb), calc(0.42 * var(--atmosphere))) 0%,
+    rgba(var(--color-surface-rgb), 0) 64%
+  );
+}
+
+/* The clinic section. */
+.section--deep {
+  background-color: var(--color-deep);
+  color: var(--color-on-deep);
+}
+
+.section--deep .eyebrow,
+.section--deep a:not(.button) {
+  color: var(--color-accent-on-deep);
+}
+
+/* A light button on plum keeps its ink, or it inherits the link colour and
+   drops to roughly 2:1 against its own fill. */
+.section--deep .button--light {
+  color: var(--color-text);
+}
+
+.section--deep .text-secondary {
+  color: rgba(239, 233, 247, 0.72);
 }
 
 .grid {
@@ -189,101 +380,58 @@ hr {
   }
 }
 
-/* Section headers ----------------------------------------------------- */
+/* The orb motif ------------------------------------------------------- */
 
-.section__header {
-  max-width: 44ch;
-  margin-bottom: 40px;
+.orb {
+  position: absolute;
+  z-index: 0;
+  width: var(--orb-size, 620px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: var(--orb-opacity, 0.12);
+  background: radial-gradient(
+    circle at 34% 32%,
+    rgba(var(--color-accent-rgb), 0.9) 0%,
+    rgba(var(--color-accent-rgb), 0.45) 38%,
+    rgba(var(--color-accent-rgb), 0) 70%
+  );
+  filter: blur(28px);
+  animation: orb-drift 60s ease-in-out infinite alternate;
 }
 
-.section__header--center {
-  margin-inline: auto;
-  text-align: center;
+@keyframes orb-drift {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(4%, -3%, 0) scale(1.08);
+  }
 }
 
-.section__header h2 {
-  margin-bottom: 16px;
-}
-
-/* An eyebrow is a small caps label trailed by a silver hairline. */
-.section__eyebrow,
-.text-eyebrow {
+/* A hairline divider carrying the orb motif at its centre. */
+.orb-rule {
   display: flex;
   align-items: center;
   gap: 14px;
-  margin: 0 0 20px;
-  font-size: 0.6875rem;
-  font-weight: 500;
-  letter-spacing: 0.2em;
-  line-height: 1.4;
-  text-transform: uppercase;
-  color: var(--color-text-secondary);
-}
-
-.section__eyebrow::after {
-  content: '';
-  flex: 0 0 auto;
-  width: 32px;
-  height: 1px;
-  background-color: var(--color-silver);
-}
-
-.section__header--center .section__eyebrow {
-  justify-content: center;
-}
-
-.section__header--center .section__eyebrow::before {
-  content: '';
-  flex: 0 0 auto;
-  width: 32px;
-  height: 1px;
-  background-color: var(--color-silver);
-}
-
-.section__subheading {
   margin: 0;
-  color: var(--color-text-secondary);
-  font-size: 1rem;
-  max-width: 52ch;
+  border: 0;
 }
 
-.section__header--center .section__subheading {
-  margin-inline: auto;
+.orb-rule::before,
+.orb-rule::after {
+  content: '';
+  flex: 1 1 auto;
+  height: 1px;
+  background-image: var(--silver-line);
 }
 
-/* Type helpers -------------------------------------------------------- */
-
-.text-secondary {
-  color: var(--color-text-secondary);
-}
-
-.text-center {
-  text-align: center;
-}
-
-.text-small {
-  font-size: 0.8125rem;
-  line-height: 1.6;
-}
-
-.rte > :last-child {
-  margin-bottom: 0;
-}
-
-.rte p {
-  max-width: 58ch;
-}
-
-/* The soft violet glow that echoes the orbs. */
-.glow {
-  position: absolute;
-  z-index: 0;
-  width: min(620px, 90vw);
-  aspect-ratio: 1;
+.orb-rule__dot {
+  flex: 0 0 auto;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--color-accent-rgb), 0.16) 0%, rgba(var(--color-accent-rgb), 0) 68%);
-  opacity: var(--glow-opacity, 1);
-  pointer-events: none;
+  background-image: var(--silver-fill);
 }
 
 /* Buttons ------------------------------------------------------------- */
@@ -294,27 +442,53 @@ hr {
   align-items: center;
   justify-content: center;
   gap: 10px;
-  min-height: 54px;
-  padding: 15px 34px;
+  min-height: 56px;
+  padding: 16px 36px;
   border: 1px solid transparent;
-  border-radius: var(--radius-button);
+  border-radius: var(--radius-pill);
   background-color: var(--color-accent);
   color: var(--color-accent-text);
-  font-family: inherit;
+  font-family: var(--font-body);
   font-size: 0.9375rem;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: 0.01em;
   line-height: 1.2;
   text-align: center;
   text-decoration: none;
   cursor: pointer;
-  transition: background-color var(--duration) var(--ease), color var(--duration) var(--ease),
-    border-color var(--duration) var(--ease);
+  box-shadow: var(--shadow-soft);
+  background-image: linear-gradient(
+    118deg,
+    rgba(255, 255, 255, 0) 30%,
+    rgba(255, 255, 255, 0.26) 50%,
+    rgba(255, 255, 255, 0) 70%
+  );
+  background-repeat: no-repeat;
+  background-size: 260% 100%;
+  background-position: 130% 0;
+  transition: background-color var(--duration-hover) var(--ease-out),
+    background-position 620ms var(--ease-out),
+    color var(--duration-hover) var(--ease-out),
+    transform var(--duration-hover) var(--ease-out),
+    box-shadow var(--duration-hover) var(--ease-out),
+    border-color var(--duration-hover) var(--ease-out);
 }
 
+/* A light rakes across the button on hover. It rides the background layer
+   rather than a pseudo-element, so it always passes under the label instead of
+   tinting it — buttons here carry bare text that cannot be raised above an
+   overlay. The colour only deepens a step: a violet button jumping to
+   near-black reads as a different button, not as this one under the cursor. */
 .button:hover {
-  background-color: var(--color-text);
-  color: var(--color-background);
+  background-color: var(--color-accent-ink);
+  background-position: -30% 0;
+  transform: translateY(var(--lift-y-sm));
+  box-shadow: var(--shadow-lift);
+}
+
+.button:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-press);
 }
 
 .button[disabled],
@@ -322,6 +496,8 @@ hr {
   background-color: var(--color-border);
   color: var(--color-text-secondary);
   cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 .button--full {
@@ -335,13 +511,13 @@ hr {
 }
 
 .button--secondary:hover {
-  background-color: var(--color-text);
-  border-color: var(--color-text);
-  color: var(--color-background);
+  background-color: rgba(var(--color-accent-rgb), 0.09);
+  border-color: var(--color-accent);
+  color: var(--color-accent-ink);
 }
 
 .button--light {
-  background-color: var(--color-background);
+  background-color: var(--color-surface);
   color: var(--color-text);
 }
 
@@ -350,19 +526,9 @@ hr {
   color: var(--color-accent-text);
 }
 
-.button--dark {
-  background-color: var(--color-text);
-  color: var(--color-background);
-}
-
-.button--dark:hover {
-  background-color: var(--color-accent);
-  color: var(--color-accent-text);
-}
-
 .button--small {
-  min-height: 42px;
-  padding: 10px 20px;
+  min-height: 44px;
+  padding: 11px 22px;
   font-size: 0.8125rem;
 }
 
@@ -381,30 +547,53 @@ hr {
   text-underline-offset: 3px;
 }
 
-/* A quiet text link with a hairline that grows on hover. */
-.link-arrow {
+/* A quiet text link that sits beside a button. */
+.link-quiet {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  text-decoration: none;
-  padding-bottom: 4px;
+  padding-bottom: 3px;
   border-bottom: 1px solid var(--color-silver);
-  transition: border-color var(--duration) var(--ease);
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+  text-decoration: none;
+  transition: color var(--duration) var(--ease), border-color var(--duration) var(--ease);
 }
 
-.link-arrow:hover {
+.link-quiet:hover {
+  color: var(--color-text);
   border-color: var(--color-text);
+}
+
+.link-quiet .icon {
+  width: 15px;
+  height: 15px;
 }
 
 /* Surfaces ------------------------------------------------------------ */
 
-.card {
+/* Frosted glass: a pearl fill, a silver-lilac hairline and a 1px highlight
+   along the top edge. No drop shadows anywhere in this theme. */
+.surface {
   background-color: var(--color-surface);
+  background-image: var(--sheen);
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
-  padding: 28px;
+  box-shadow: var(--edge-light), var(--shadow-soft);
+}
+
+/* Lifts on hover with a violet halo, the way a jar catches light when you
+   pick it up. Used by every card the visitor can act on. */
+.hover-lift {
+  transition: transform var(--duration-hover) var(--ease-out),
+    box-shadow var(--duration-hover) var(--ease-out),
+    border-color var(--duration-hover) var(--ease-out);
+}
+
+.hover-lift:hover {
+  transform: translateY(var(--lift-y));
+  box-shadow: var(--edge-light), var(--shadow-lift);
+  border-color: var(--color-silver);
 }
 
 .media {
@@ -418,7 +607,14 @@ hr {
 .media video {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: var(--media-fit, cover);
+  transition: transform 1.2s var(--ease-out);
+}
+
+/* A slow drift in, never a snap. */
+.media--zoom:hover img,
+.hover-lift:hover .media img {
+  transform: scale(1.03);
 }
 
 .media--square {
@@ -429,24 +625,176 @@ hr {
   aspect-ratio: 4 / 5;
 }
 
+.media--tall {
+  aspect-ratio: var(--media-ratio, 3 / 4.4);
+}
+
 .media--landscape {
   aspect-ratio: 3 / 2;
 }
 
-.placeholder-media {
-  display: grid;
-  place-items: center;
-  width: 100%;
-  height: 100%;
-  background-color: var(--color-pearl);
-  color: var(--color-silver);
+/* A tall pill mask edged in brushed silver: the gradient sits in the border
+   box, the fill in the padding box, so the metal follows the curve. */
+.media--pill {
+  position: relative;
+  border-radius: var(--media-radius, 220px 220px 220px 220px / 180px 180px 180px 180px);
+  border: 1px solid transparent;
+  background-image: linear-gradient(var(--media-frame, var(--color-pearl)), var(--media-frame, var(--color-pearl))),
+    var(--silver-fill);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  box-shadow: var(--shadow-soft);
 }
 
-.placeholder-media svg {
+/* Supplier photography arrives on its own backdrop and meets the page at a hard
+   edge, reading as a photo pasted onto a colour.
+
+   The rim is feathered with a mask rather than a vignette painted in the page
+   colour: the photograph itself becomes transparent at its edges, so it blends
+   into whatever is actually behind it — the pearl fill, the silver rim, the
+   gradient field — instead of into one flat colour that only matches in the
+   middle of the page. Saturation eases back a touch so the shot sits in the
+   palette. --media-blend at 0 restores a clean cut. */
+.media--pill img,
+.media--pill video {
+  object-position: 50% var(--media-pos-y, 50%);
+  scale: var(--media-zoom, 1);
+  /* Scale about the chosen line rather than the middle, or zooming trims the
+     top and the bottom equally and can never crop past a banner printed across
+     the top of a supplier's photograph. */
+  transform-origin: 50% var(--media-pos-y, 50%);
+  filter: saturate(calc(1 - 0.16 * var(--media-blend))) contrast(calc(1 - 0.04 * var(--media-blend)))
+    brightness(calc(1 + 0.025 * var(--media-blend)));
+  -webkit-mask-image: radial-gradient(
+    ellipse 88% 90% at 50% 48%,
+    rgba(0, 0, 0, 1) 34%,
+    rgba(0, 0, 0, calc(1 - 0.42 * var(--media-blend))) 68%,
+    rgba(0, 0, 0, calc(1 - var(--media-blend))) 99%
+  );
+  mask-image: radial-gradient(
+    ellipse 88% 90% at 50% 48%,
+    rgba(0, 0, 0, 1) 34%,
+    rgba(0, 0, 0, calc(1 - 0.42 * var(--media-blend))) 68%,
+    rgba(0, 0, 0, calc(1 - var(--media-blend))) 99%
+  );
+}
+
+/* A packshot already cut out on white needs the opposite of a panel. Given a
+   rim and a fill it reads as a photo mounted on a card; given none, and a fill
+   that is itself only a soft bloom, the white dissolves into the page and the
+   product is left floating on it. No hard edge anywhere on the element. */
+/* A photograph that is already cut out needs nothing at all behind it: no fill,
+   no rim, no pool of light, no feather. Anything added is the only rectangle on
+   the page. */
+.media--bare {
+  border: 0;
+  box-shadow: none;
+  background-color: transparent;
+  background-image: none;
+}
+
+/* The wrapper inside carries the pearl fill for a loading poster; with a
+   cut-out there is nothing to fill behind. */
+.media--bare .video-wrapper,
+.media--bare .video-wrapper__poster {
+  background: transparent;
+}
+
+.media--bare img,
+.media--bare video {
+  -webkit-mask-image: none;
+  mask-image: none;
+  filter: none;
+}
+
+.media--bare::after {
+  content: none;
+}
+
+/* A packshot on white cannot have its ground removed: the product is itself
+   near-white, so every blend mode that drops the white damages the pack too.
+   Instead the white is allowed to spread past the frame as a wide, soft pool
+   and fade into the page over a distance — there is then no edge anywhere for
+   the eye to catch, and the pool reads as light thrown behind the product.
+   The spread is a box-shadow rather than a background so it can extend well
+   beyond the element's own box. */
+.media--float {
+  border: 0;
+  background-color: transparent;
+  background-image: radial-gradient(
+    ellipse 84% 84% at 50% 48%,
+    var(--media-frame, var(--color-surface)) 0%,
+    rgba(var(--color-surface-rgb), 0) 92%
+  );
+  box-shadow: 0 0 120px 60px var(--media-frame, var(--color-surface));
+}
+
+/* A cut-out packshot fills most of its frame, so the feather has to stay in the
+   outer margin. Fading from the middle out washes the product itself — the white
+   ground barely needs help against a pale page, it is only the last few percent
+   at the edge that reads as a rectangle. */
+/* No mask on the photograph itself. A feather that reaches inward far enough to
+   soften an edge also eats whatever is near it, and on a tightly cropped
+   packshot that means the corners — which is where the loose orbs sit. It is
+   not needed either: the frame fill is the photo's own white, so the edge of
+   the picture meets the same colour and the pool behind it carries that white
+   out into the page. There is nothing to feather. */
+.media--float img,
+.media--float video {
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
+.media--float::after {
+  content: none;
+}
+
+/* A single soft highlight down the top-left, so the pill reads as a lit surface
+   the photograph is sitting in rather than a hole cut out of the page. */
+.media--pill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    148deg,
+    rgba(255, 255, 255, calc(0.30 * var(--media-blend))) 0%,
+    rgba(255, 255, 255, 0) 46%
+  );
+}
+
+@media screen and (max-width: 749px) {
+  .media--pill {
+    border-radius: 140px 140px 140px 140px / 110px 110px 110px 110px;
+  }
+}
+
+/* Placeholder: a lilac wash with a faint orb, never a stock illustration. */
+.placeholder-media {
+  position: relative;
   width: 100%;
   height: 100%;
-  fill: currentColor;
-  opacity: 0.5;
+  background: linear-gradient(155deg, var(--color-surface) 0%, var(--color-pearl) 55%, var(--color-accent-soft) 100%);
+  overflow: hidden;
+}
+
+.placeholder-media::after {
+  content: '';
+  position: absolute;
+  top: 22%;
+  left: 20%;
+  width: 58%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 36% 32%,
+    rgba(var(--color-accent-rgb), 0.34) 0%,
+    rgba(var(--color-accent-rgb), 0.12) 45%,
+    rgba(var(--color-accent-rgb), 0) 72%
+  );
+  filter: blur(12px);
 }
 
 /* Icons --------------------------------------------------------------- */
@@ -472,17 +820,33 @@ hr {
   height: 26px;
 }
 
-/* A thin silver ring around an icon — used for ingredients and trust items. */
 .icon-ring {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 52px;
-  height: 52px;
-  border: 1px solid var(--color-silver);
+  width: 54px;
+  height: 54px;
+  border: 1px solid transparent;
   border-radius: 50%;
   color: var(--color-accent);
-  transition: border-color var(--duration) var(--ease), background-color var(--duration) var(--ease);
+  background-image: linear-gradient(var(--color-surface), var(--color-surface)), var(--silver-fill);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  transition: color var(--duration-hover) var(--ease-out),
+    transform var(--duration-hover) var(--ease-out),
+    box-shadow var(--duration-hover) var(--ease-out);
+}
+
+/* The ring warms and lifts when its row is hovered. */
+.hover-lift:hover .icon-ring,
+.icon-ring--active {
+  transform: scale(var(--lift-scale));
+  box-shadow: var(--shadow-press);
+}
+
+.icon-ring .icon {
+  width: 21px;
+  height: 21px;
 }
 
 /* Rating -------------------------------------------------------------- */
@@ -493,23 +857,25 @@ hr {
   gap: 10px;
   color: var(--color-text-secondary);
   font-size: 0.8125rem;
-  letter-spacing: 0.01em;
 }
 
 .rating__stars {
   display: inline-flex;
   gap: 3px;
+  color: var(--color-silver);
+}
+
+.rating__stars .icon--filled {
   color: var(--color-accent);
 }
 
 .rating__stars .icon {
-  width: 14px;
-  height: 14px;
+  width: 13px;
+  height: 13px;
 }
 
-.rating__stars .icon:not(.icon--filled) {
-  color: var(--color-silver);
-  stroke-width: 1.25;
+.section--deep .rating__stars .icon--filled {
+  color: var(--color-accent-on-deep);
 }
 
 /* Price --------------------------------------------------------------- */
@@ -519,11 +885,14 @@ hr {
   align-items: baseline;
   gap: 10px;
   flex-wrap: wrap;
-  font-variant-numeric: tabular-nums;
+  font-variant-numeric: lining-nums tabular-nums;
 }
 
 .price__current {
-  font-weight: 600;
+  font-family: var(--font-display);
+  font-weight: var(--display-weight);
+  font-optical-sizing: auto;
+  font-size: 1.125rem;
   letter-spacing: -0.01em;
 }
 
@@ -531,7 +900,7 @@ hr {
   color: var(--color-text-secondary);
   text-decoration: line-through;
   text-decoration-thickness: 1px;
-  font-weight: 400;
+  font-size: 0.9375rem;
 }
 
 .price__unit {
@@ -539,32 +908,41 @@ hr {
   font-size: 0.8125rem;
 }
 
+.price__unit--accent {
+  color: var(--color-accent-ink);
+}
+
 .price--large .price__current {
-  font-size: 1.75rem;
-  font-family: var(--font-heading);
-  font-weight: var(--heading-weight);
-  letter-spacing: var(--heading-tracking);
+  font-size: clamp(2rem, 3.4vw, 2.75rem);
+  line-height: 1;
 }
 
-/* Badge --------------------------------------------------------------- */
+/* Tags ---------------------------------------------------------------- */
 
-.badge {
+/* A silver tag that sits astride an edge, not a corner sticker. */
+.tag {
   display: inline-block;
-  padding: 5px 12px;
-  border-radius: 999px;
-  background-color: var(--color-accent-soft);
+  padding: 6px 16px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-surface);
+  background-image: linear-gradient(var(--color-surface), var(--color-surface)), var(--silver-fill);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  box-shadow: var(--shadow-soft);
   color: var(--color-text);
-  font-size: 0.625rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  line-height: 1.5;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.14em;
+  line-height: 1.4;
+  white-space: nowrap;
 }
 
-.badge--outline {
-  background-color: transparent;
-  border: 1px solid var(--color-silver);
-  color: var(--color-text-secondary);
+.tag--accent {
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-accent-text);
 }
 
 /* Forms --------------------------------------------------------------- */
@@ -573,16 +951,9 @@ hr {
   color: #9b2c2c;
 }
 
-.field {
-  display: grid;
-  gap: 8px;
-}
-
-.field input,
-.field textarea,
-.field select {
+.input {
   width: 100%;
-  padding: 14px 16px;
+  padding: 14px 18px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   background-color: var(--color-surface);
@@ -596,7 +967,7 @@ hr {
   position: relative;
   aspect-ratio: var(--video-ratio, 16 / 9);
   overflow: hidden;
-  border-radius: var(--radius);
+  border-radius: inherit;
   background-color: var(--color-pearl);
 }
 
@@ -617,49 +988,101 @@ hr {
   display: none;
 }
 
-/* Scroll reveal ------------------------------------------------------- */
+/* Motion -------------------------------------------------------------- */
 
 .reveal {
   opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 700ms var(--ease), transform 700ms var(--ease);
+  transform: translateY(18px) scale(0.994);
+  transition: opacity var(--duration-slow) var(--ease-out),
+    transform var(--duration-slow) var(--ease-out);
+  /* Staggered by index, set by theme.js per group, so a row of three arrives
+     in sequence instead of together. */
+  transition-delay: calc(var(--reveal-index, 0) * 90ms);
+  will-change: opacity, transform;
 }
 
 .reveal.is-visible {
   opacity: 1;
   transform: none;
+  will-change: auto;
 }
 
-/* Stagger children inside a grid so a row does not pop in all at once. */
-.reveal:nth-child(2) {
-  transition-delay: 80ms;
+/* Hero copy rises in on load, staggered, without waiting for the observer. */
+.rise {
+  opacity: 0;
+  transform: translateY(14px);
+  animation: rise-in 300ms var(--ease) forwards;
+  animation-delay: calc(var(--rise-index, 0) * 70ms);
 }
 
-.reveal:nth-child(3) {
-  transition-delay: 160ms;
+@keyframes rise-in {
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
-.reveal:nth-child(4) {
-  transition-delay: 240ms;
+/* The hero media drifts a little slower than the page scrolls. Set by JS,
+   clamped small enough that nothing detaches from its column. */
+.parallax {
+  transform: translate3d(0, var(--parallax-y, 0px), 0);
+  will-change: transform;
 }
 
 @media (prefers-reduced-motion: reduce) {
+  :root {
+    --lift-y: 0px;
+    --lift-y-sm: 0px;
+    --lift-scale: 1;
+  }
+
   html {
     scroll-behavior: auto;
   }
 
-  .reveal {
+  .reveal,
+  .rise {
     opacity: 1;
     transform: none;
     transition: none;
+    animation: none;
   }
 
+  .orb {
+    animation: none;
+  }
+
+  .parallax {
+    transform: none;
+  }
+
+  .media--zoom:hover img,
+  .hover-lift:hover .media img {
+    transform: none;
+  }
+
+  accordion-group.is-ready .accordion__panel {
+    grid-template-rows: 0fr;
+    opacity: 0;
+  }
+
+  accordion-group.is-ready .accordion.is-open .accordion__panel {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+
+  /* Stop every animation and every transform, but leave colour and opacity
+     fades alone. A 200ms colour change is not the motion this query is about,
+     and killing it globally left buttons and panels snapping between states
+     with no feedback at all. */
   *,
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    transition-property: background-color, border-color, color, fill, stroke, opacity,
+      box-shadow, grid-template-rows, background-position !important;
+    transition-duration: 220ms !important;
     scroll-behavior: auto !important;
   }
 }

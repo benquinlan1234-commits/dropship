@@ -3,59 +3,133 @@
   Usage: {% render 'css-variables' %}
 {%- endcomment -%}
 {%- liquid
-  assign fallback_stack = settings.font_fallback_stack | default: 'system-ui, -apple-system, sans-serif'
-  if settings.use_google_font and settings.google_font_family != blank
-    assign font_stack = settings.google_font_family | append: ', ' | append: fallback_stack
+  assign body_fallback = settings.font_fallback_stack | default: 'system-ui, -apple-system, sans-serif'
+  assign display_fallback = settings.display_font_fallback | default: 'Georgia, serif'
+
+  if settings.use_google_font and settings.body_font_family != blank
+    assign body_stack = settings.body_font_family | append: ', ' | append: body_fallback
   else
-    assign font_stack = fallback_stack
+    assign body_stack = body_fallback
   endif
 
-  assign tracking = settings.heading_tracking | default: -24 | divided_by: 1000.0
-
-  assign button_radius = settings.border_radius | default: 12
-  if settings.button_style == 'pill'
-    assign button_radius = 999
+  if settings.use_google_font and settings.display_font_family != blank
+    assign display_stack = settings.display_font_family | append: ', ' | append: display_fallback
+  else
+    assign display_stack = display_fallback
   endif
+
+  assign tracking = settings.heading_tracking | default: -10 | divided_by: 1000.0
+  assign grain = settings.grain_opacity | default: 3 | divided_by: 100.0
+  assign softness = settings.display_softness | default: 30
+  assign shadow_scale = settings.shadow_strength | default: 60 | divided_by: 100.0
+  assign sheen_scale = settings.surface_sheen | default: 50 | divided_by: 100.0
+  assign atmosphere = settings.atmosphere_strength | default: 100 | divided_by: 100.0
+  assign media_blend = settings.media_blend | default: 100 | divided_by: 100.0
 -%}
 <style>
   :root {
     --color-background: {{ settings.color_background }};
     --color-surface: {{ settings.color_surface }};
     --color-pearl: {{ settings.color_pearl }};
-    --color-accent: {{ settings.color_accent }};
-    --color-accent-text: {{ settings.color_accent_text }};
-    --color-accent-soft: {{ settings.color_accent_soft }};
+    --color-deep: {{ settings.color_deep }};
+    --color-on-deep: {{ settings.color_on_deep }};
+    --color-accent-on-deep: {{ settings.color_accent_on_deep }};
     --color-text: {{ settings.color_text }};
     --color-text-secondary: {{ settings.color_text_secondary }};
+    --color-accent: {{ settings.color_accent }};
+    --color-accent-text: {{ settings.color_accent_text }};
+    --color-accent-ink: {{ settings.color_accent_ink }};
+    --color-accent-soft: {{ settings.color_accent_soft }};
     --color-border: {{ settings.color_border }};
     --color-silver: {{ settings.color_silver }};
+    --color-silver-bright: {{ settings.color_silver_bright }};
 
     --color-background-rgb: {{ settings.color_background.red }}, {{ settings.color_background.green }}, {{ settings.color_background.blue }};
+    --color-surface-rgb: {{ settings.color_surface.red }}, {{ settings.color_surface.green }}, {{ settings.color_surface.blue }};
     --color-text-rgb: {{ settings.color_text.red }}, {{ settings.color_text.green }}, {{ settings.color_text.blue }};
     --color-accent-rgb: {{ settings.color_accent.red }}, {{ settings.color_accent.green }}, {{ settings.color_accent.blue }};
+    --color-deep-rgb: {{ settings.color_deep.red }}, {{ settings.color_deep.green }}, {{ settings.color_deep.blue }};
+    --color-silver-rgb: {{ settings.color_silver.red }}, {{ settings.color_silver.green }}, {{ settings.color_silver.blue }};
 
-    --font-body: {{ font_stack }};
-    --font-heading: {{ font_stack }};
-    --font-size-base: {{ settings.font_size_base | default: 16 }}px;
-    --heading-weight: {{ settings.heading_weight | default: '500' }};
-    --heading-tracking: {{ tracking }}em;
+    --font-body: {{ body_stack }};
+    --font-display: {{ display_stack }};
+    --font-size-base: {{ settings.font_size_base | default: 17 }}px;
+    --display-weight: {{ settings.heading_weight | default: '400' }};
+    --display-tracking: {{ tracking }}em;
+    --display-soft: {{ softness }};
 
-    --radius: {{ settings.border_radius | default: 12 }}px;
-    --radius-sm: 8px;
-    --radius-button: {{ button_radius }}px;
+    --radius: {{ settings.border_radius | default: 18 }}px;
+    --radius-sm: 10px;
+    --radius-pill: 999px;
 
-    --page-width: 1240px;
-    --gutter: 22px;
+    --page-width: 1180px;
+    --gutter: 20px;
+    --grid-gap: 20px;
     /* Distance from the viewport edge to the content column, for full-bleed rows
        that must still line up with the headings above them. */
     --content-inset: max(var(--gutter), calc((100vw - var(--page-width)) / 2 + var(--gutter)));
-    --grid-gap: 20px;
-    --section-padding-mobile: 56px;
-    --section-padding-desktop: 96px;
-    --duration: 240ms;
-    --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+    --section-padding-mobile: 64px;
+    --section-padding-desktop: 112px;
 
-    --glow-opacity: {% if settings.show_orb_glow %}1{% else %}0{% endif %};
+    --duration: 150ms;
+    --duration-hover: 240ms;
+    --duration-slow: 900ms;
+    --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+    /* A long, decelerating curve — things settle rather than stop. */
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+    /* Hover displacement, as tokens — so reduced motion can zero every lift on
+       the page from one place instead of per rule. */
+    --lift-y: -4px;
+    --lift-y-sm: -2px;
+    --lift-scale: 1.06;
+
+    --grain-opacity: {{ grain }};
+    /* Scales every layer of the page field. 0 is the flat background colour. */
+    --atmosphere: {{ atmosphere }};
+    /* How far photography is feathered into the page at its edges. 0 is a hard cut. */
+    --media-blend: {{ media_blend }};
+    --orb-opacity: {% if settings.show_orb_glow %}0.12{% else %}0{% endif %};
+
+    /* Glass: a 1px inner highlight along the top edge. */
+    --edge-light: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+
+    /* Depth is a violet halo, never a grey drop shadow — the difference
+       between skincare and software. Scaled by the Glow setting. */
+    --shadow-scale: {{ shadow_scale }};
+    --shadow-soft: 0 10px 30px rgba(var(--color-accent-rgb), calc(0.10 * var(--shadow-scale)));
+    --shadow-lift: 0 20px 46px rgba(var(--color-accent-rgb), calc(0.20 * var(--shadow-scale)));
+    --shadow-press: 0 6px 16px rgba(var(--color-accent-rgb), calc(0.12 * var(--shadow-scale)));
+
+    /* Brushed silver: a hairline that catches the light in the middle and
+       fades out at both ends, rather than a flat 1px of grey. */
+    --silver-line: linear-gradient(
+      90deg,
+      rgba(var(--color-silver-rgb), 0) 0%,
+      var(--color-silver) 16%,
+      var(--color-silver-bright) 50%,
+      var(--color-silver) 84%,
+      rgba(var(--color-silver-rgb), 0) 100%
+    );
+    --silver-line-v: linear-gradient(
+      180deg,
+      rgba(var(--color-silver-rgb), 0) 0%,
+      var(--color-silver) 20%,
+      var(--color-silver-bright) 50%,
+      var(--color-silver) 80%,
+      rgba(var(--color-silver-rgb), 0) 100%
+    );
+    /* The same metal as a fill, for rings, tags and frame edges. */
+    --silver-fill: linear-gradient(140deg, var(--color-silver-bright) 0%, var(--color-silver) 48%, var(--color-silver-bright) 100%);
+
+    /* A faint sheen across fills, so a card is not one flat colour. */
+    --sheen-alpha: calc(0.06 * {{ sheen_scale }});
+    --sheen: linear-gradient(
+      158deg,
+      rgba(255, 255, 255, calc(0.5 * {{ sheen_scale }})) 0%,
+      rgba(255, 255, 255, 0) 42%,
+      rgba(var(--color-accent-rgb), var(--sheen-alpha)) 100%
+    );
   }
 
   @media screen and (min-width: 750px) {

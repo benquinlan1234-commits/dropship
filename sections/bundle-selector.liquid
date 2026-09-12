@@ -6,17 +6,17 @@
   endif
 -%}
 
-<div class="section bundle{% if section.settings.show_divider %} section--bordered{% endif %}" id="{{ section.settings.anchor | default: 'bundle' }}">
+<div class="section section--wash bundle{% if section.settings.show_divider %} section--bordered{% endif %}" id="{{ section.settings.anchor | default: 'bundle' }}">
   <div class="page-width">
-    <div class="section__header section__header--center">
+    <div class="bundle__header">
       {%- if section.settings.eyebrow != blank -%}
-        <p class="section__eyebrow">{{ section.settings.eyebrow }}</p>
+        <p class="eyebrow bundle__eyebrow">{{ section.settings.eyebrow }}</p>
       {%- endif -%}
       {%- if section.settings.heading != blank -%}
-        <h2>{{ section.settings.heading }}</h2>
+        <h2 class="bundle__heading">{{ section.settings.heading }}</h2>
       {%- endif -%}
       {%- if section.settings.subheading != blank -%}
-        <p class="section__subheading">{{ section.settings.subheading }}</p>
+        <p class="lede bundle__lede">{{ section.settings.subheading }}</p>
       {%- endif -%}
     </div>
 
@@ -25,7 +25,7 @@
         Choose a featured product in Theme settings &rarr; Product to show bundle pricing.
       </p>
     {%- else -%}
-      <span class="glow bundle__glow" aria-hidden="true"></span>
+      <span class="orb bundle__orb" aria-hidden="true"></span>
       <bundle-selector class="bundle__wrap">
         {%- if has_selling_plans -%}
           {%- assign plan_group = bundle_product.selling_plan_groups | first -%}
@@ -56,7 +56,12 @@
         <div class="bundle__options" role="radiogroup" aria-label="{{ section.settings.heading | default: 'Choose a bundle' | escape }}">
           {%- for block in section.blocks -%}
             {%- liquid
-              assign block_variant = bundle_product.selected_or_first_available_variant
+              comment
+                Resolve to nothing rather than to the first variant when the
+                target does not exist. A product with one variant would
+                otherwise render three identical cards at the same price.
+              endcomment
+              assign block_variant = blank
               if block.settings.variant_id != blank
                 assign wanted_id = block.settings.variant_id | plus: 0
                 for variant in bundle_product.variants
@@ -66,18 +71,35 @@
                 endfor
               elsif block.settings.variant_position > 0
                 assign index = block.settings.variant_position | minus: 1
-                assign positioned = bundle_product.variants[index]
-                if positioned != blank
-                  assign block_variant = positioned
-                endif
+                assign block_variant = bundle_product.variants[index]
+              else
+                assign block_variant = bundle_product.selected_or_first_available_variant
               endif
 
               assign bottles = block.settings.bottles | default: 1
+
+              comment
+                A product with a single variant has no second or third variant to
+                point at, so the pack becomes a quantity of the one variant:
+                two bottles is two of it. Only when the product has exactly one
+                variant, so that adding real variants later takes over silently
+                and nothing has to be reconfigured.
+              endcomment
+              assign pack_quantity = 1
+              if block_variant == blank and bundle_product.variants.size == 1
+                assign block_variant = bundle_product.selected_or_first_available_variant
+                assign pack_quantity = bottles
+              endif
+
               assign allocation = blank
               if has_selling_plans
                 assign allocation = block_variant.selling_plan_allocations | first
               endif
             -%}
+
+            {%- if block_variant == blank -%}
+              {%- continue -%}
+            {%- endif -%}
 
             <div
               class="bundle__card{% if block.settings.badge != blank %} bundle__card--badged{% endif %}"
@@ -85,11 +107,11 @@
               {{ block.shopify_attributes }}
             >
               {%- if block.settings.badge != blank -%}
-                <span class="badge bundle__badge">{{ block.settings.badge }}</span>
+                <span class="tag bundle__tag">{{ block.settings.badge }}</span>
               {%- endif -%}
 
               {%- capture price_html -%}
-                {% render 'product-price', variant: block_variant, unit_count: bottles %}
+                {% render 'product-price', variant: block_variant, unit_count: bottles, pack_quantity: pack_quantity %}
               {%- endcapture -%}
 
               <label class="bundle__label" for="Bundle-{{ section.id }}-{{ block.id }}">
@@ -102,6 +124,7 @@
                   data-bundle-option
                   data-label="{{ block.settings.title | escape }}"
                   data-price="{{ price_html | escape }}"
+                  data-quantity="{{ pack_quantity }}"
                   {% if allocation != blank %}
                     data-selling-plan="{{ allocation.selling_plan.id }}"
                   {% endif %}
@@ -118,32 +141,34 @@
                 <span class="bundle__body">
                   <span class="bundle__title">{{ block.settings.title }}</span>
                   {%- if block.settings.subtitle != blank -%}
-                    <span class="bundle__subtitle text-small text-secondary">{{ block.settings.subtitle }}</span>
+                    <span class="bundle__subtitle">{{ block.settings.subtitle }}</span>
                   {%- endif -%}
                 </span>
 
                 <span class="bundle__pricing">
                   <span data-price-onetime>
-                    {% render 'product-price', variant: block_variant, unit_count: bottles %}
+                    {% render 'product-price', variant: block_variant, unit_count: bottles, pack_quantity: pack_quantity %}
                   </span>
 
                   {%- if allocation != blank -%}
                     <span data-price-subscription hidden>
                       <span class="price">
                         <span class="price__current">
+                          {%- assign pack_sub_price = allocation.price | times: pack_quantity -%}
                           {%- if settings.currency_code_enabled -%}
-                            {{ allocation.price | money_with_currency }}
+                            {{ pack_sub_price | money_with_currency }}
                           {%- else -%}
-                            {{ allocation.price | money }}
+                            {{ pack_sub_price | money }}
                           {%- endif -%}
                         </span>
                         {%- if allocation.compare_at_price > allocation.price -%}
-                          <s class="price__compare">{{ allocation.compare_at_price | money }}</s>
+                          {%- assign pack_sub_compare = allocation.compare_at_price | times: pack_quantity -%}
+                          <s class="price__compare">{{ pack_sub_compare | money }}</s>
                         {%- endif -%}
-                        {%- if bottles > 1 -%}
-                          {%- assign sub_unit = allocation.price | divided_by: bottles -%}
+                        {%- if bottles > 1 and pack_quantity == 1 -%}
+                          {%- assign sub_unit = pack_sub_price | divided_by: bottles | money -%}
                           <span class="price__unit">
-                            {{- 'products.product.per_bottle' | t: price: sub_unit | money -}}
+                            {{- 'products.product.per_bottle' | t: price: sub_unit -}}
                           </span>
                         {%- endif -%}
                       </span>
@@ -163,7 +188,7 @@
           {%- form 'product', bundle_product, id: 'BundleForm', novalidate: 'novalidate' -%}
             <input type="hidden" name="id" value="{{ bundle_product.selected_or_first_available_variant.id }}" data-variant-input>
             <input type="hidden" name="selling_plan" value="" data-selling-plan-input>
-            <input type="hidden" name="quantity" value="1">
+            <input type="hidden" name="quantity" value="1" data-quantity-input>
 
             <button class="button button--full bundle__button" type="submit">
               <span data-button-label>{{ section.settings.button_label | default: 'Add to cart' }}</span>
@@ -181,32 +206,60 @@
 </div>
 
 {% style %}
-  .bundle__wrap {
+  .bundle {
+    overflow: hidden;
+  }
+
+  .bundle__header {
     position: relative;
     z-index: 1;
-    display: block;
-    max-width: 560px;
+    max-width: 46ch;
+    margin: 0 auto 48px;
+    text-align: center;
+  }
+
+  .bundle__eyebrow {
+    margin-bottom: 18px;
+  }
+
+  .bundle__heading {
+    margin-bottom: 16px;
+  }
+
+  .bundle__lede {
     margin-inline: auto;
   }
 
-  .bundle__glow {
-    top: 4%;
+  .bundle__orb {
+    --orb-size: min(820px, 100vw);
+    top: -10%;
     left: 50%;
     transform: translateX(-50%);
   }
 
+  .bundle__wrap {
+    position: relative;
+    z-index: 1;
+    display: block;
+    max-width: 980px;
+    margin-inline: auto;
+  }
+
   .bundle__subscribe {
-    margin-bottom: 20px;
-    padding: 16px;
+    max-width: 520px;
+    margin: 0 auto 34px;
+    padding: 18px 22px;
     border: 1px solid var(--color-border);
-    border-radius: var(--radius);
+    border-radius: var(--radius-pill);
     background-color: var(--color-surface);
+    background-image: var(--sheen);
+    box-shadow: var(--edge-light), var(--shadow-soft);
   }
 
   .bundle__switch {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
     cursor: pointer;
   }
 
@@ -220,9 +273,9 @@
   .bundle__switch-track {
     position: relative;
     flex: 0 0 auto;
-    width: 44px;
-    height: 26px;
-    border-radius: 999px;
+    width: 46px;
+    height: 27px;
+    border-radius: var(--radius-pill);
     background-color: var(--color-silver);
     transition: background-color var(--duration) var(--ease);
   }
@@ -231,11 +284,11 @@
     position: absolute;
     top: 3px;
     left: 3px;
-    width: 20px;
-    height: 20px;
-    border-radius: 999px;
+    width: 21px;
+    height: 21px;
+    border-radius: 50%;
     background-color: var(--color-surface);
-    transition: transform var(--duration) ease;
+    transition: transform var(--duration) var(--ease);
   }
 
   .bundle__switch-input:checked + .bundle__switch-track {
@@ -243,11 +296,11 @@
   }
 
   .bundle__switch-input:checked + .bundle__switch-track .bundle__switch-thumb {
-    transform: translateX(18px);
+    transform: translateX(19px);
   }
 
   .bundle__switch-input:focus-visible + .bundle__switch-track {
-    outline: 2px solid var(--color-text);
+    outline: 2px solid var(--color-accent);
     outline-offset: 3px;
   }
 
@@ -257,51 +310,80 @@
   }
 
   .bundle__switch-title {
-    font-weight: 600;
+    font-weight: 500;
   }
 
+  .bundle__switch-label .text-small {
+    color: var(--color-text-secondary);
+  }
+
+  /* Three tall pills side by side, not a stack of rows. */
   .bundle__options {
     display: grid;
-    gap: 12px;
+    gap: 16px;
   }
 
   .bundle__card {
     position: relative;
+    padding-top: 13px;
   }
 
-  .bundle__card--badged {
-    padding-top: 12px;
-  }
-
-  /* Sits on the card's top edge as a deliberate tab rather than notching it. */
-  .bundle__badge {
+  /* The tag sits astride the card's top edge rather than in a corner. */
+  .bundle__tag {
     position: absolute;
     top: 0;
-    left: 24px;
-    z-index: 1;
-    background-color: var(--color-accent);
-    color: var(--color-accent-text);
+    left: 50%;
+    z-index: 2;
+    transform: translateX(-50%);
+  }
+
+  .bundle__card.is-selected .bundle__tag {
+    border-color: var(--color-accent);
+    color: var(--color-accent-ink);
   }
 
   .bundle__label {
     display: flex;
+    flex-direction: column;
     align-items: center;
     gap: 14px;
-    padding: 18px;
+    height: 100%;
+    padding: 34px 24px 30px;
     border: 1px solid var(--color-border);
-    border-radius: var(--radius);
+    border-radius: 150px;
     background-color: var(--color-surface);
+    background-image: var(--sheen);
+    box-shadow: var(--edge-light), var(--shadow-soft);
+    text-align: center;
     cursor: pointer;
-    transition: border-color var(--duration) var(--ease), background-color var(--duration) var(--ease);
+    transition: border-color var(--duration-hover) var(--ease-out),
+      background-color var(--duration-hover) var(--ease-out),
+      transform var(--duration-hover) var(--ease-out),
+      box-shadow var(--duration-hover) var(--ease-out);
   }
 
+  /* The rim goes violet rather than silver on hover. The lift is the nicer
+     signal but it is a transform, so it is gone for anyone who asks for
+     reduced motion — the colour has to carry the feedback on its own. */
   .bundle__label:hover {
-    border-color: var(--color-silver);
+    border-color: var(--color-accent);
+    transform: translateY(var(--lift-y));
+    box-shadow: var(--edge-light), var(--shadow-lift);
   }
 
   .bundle__card.is-selected .bundle__label {
     border-color: var(--color-accent);
     background-color: var(--color-accent-soft);
+    box-shadow: var(--edge-light), var(--shadow-lift);
+  }
+
+  .bundle__card.is-selected .bundle__tag {
+    transform: translateX(-50%) translateY(var(--lift-y-sm));
+  }
+
+  .bundle__tag {
+    transition: transform var(--duration-hover) var(--ease-out),
+      border-color var(--duration-hover) var(--ease-out);
   }
 
   .bundle__radio {
@@ -311,59 +393,112 @@
     height: 1px;
   }
 
+  /* The ring animates silver to violet on selection. */
   .bundle__marker {
     flex: 0 0 auto;
-    width: 20px;
-    height: 20px;
-    border: 1px solid var(--color-border);
-    border-radius: 999px;
-    background-color: var(--color-background);
+    width: 22px;
+    height: 22px;
+    border: 1px solid var(--color-silver);
+    border-radius: 50%;
+    background-color: transparent;
+    transition: border-color var(--duration-hover) var(--ease-out),
+      background-color var(--duration-hover) var(--ease-out),
+      box-shadow var(--duration-hover) var(--ease-out),
+      transform var(--duration-hover) var(--ease-out);
+  }
+
+  .bundle__label:hover .bundle__marker {
+    border-color: var(--color-accent);
+    transform: scale(var(--lift-scale));
   }
 
   .bundle__card.is-selected .bundle__marker {
     border-color: var(--color-accent);
     background-color: var(--color-accent);
-    box-shadow: inset 0 0 0 4px var(--color-surface);
+    box-shadow: inset 0 0 0 4px var(--color-accent-soft);
   }
 
   .bundle__radio:focus-visible + .bundle__marker {
-    outline: 2px solid var(--color-text);
+    outline: 2px solid var(--color-accent);
     outline-offset: 3px;
   }
 
   .bundle__body {
     display: grid;
-    gap: 2px;
-    flex: 1 1 auto;
+    gap: 4px;
   }
 
   .bundle__title {
-    font-weight: 600;
-    letter-spacing: -0.01em;
+    font-family: var(--font-display);
+    font-weight: var(--display-weight);
+    font-optical-sizing: auto;
+    font-size: 1.5rem;
+    letter-spacing: var(--display-tracking);
+    line-height: 1.1;
+  }
+
+  .bundle__subtitle {
+    color: var(--color-text-secondary);
+    font-size: 0.8125rem;
   }
 
   .bundle__pricing {
     display: grid;
-    gap: 2px;
-    text-align: right;
+    gap: 4px;
+    margin-top: auto;
+    /* Reserves the per-bottle line so the prices sit on one baseline across
+       all three cards, including the option that has no unit price. */
+    min-height: 3.2em;
+    align-content: start;
   }
 
   .bundle__pricing .price {
-    justify-content: flex-end;
+    justify-content: center;
+  }
+
+  .bundle__pricing .price__current {
+    font-size: 1.375rem;
   }
 
   .bundle__pricing .price__unit {
     display: block;
     width: 100%;
+    font-family: var(--font-display);
+    font-optical-sizing: auto;
+    font-size: 0.9375rem;
+    color: var(--color-accent-ink);
+  }
+
+  .bundle__form {
+    max-width: 520px;
+    margin-inline: auto;
   }
 
   .bundle__button {
-    margin-top: 20px;
+    margin-top: 34px;
   }
 
   .bundle__footnote {
-    margin: 12px 0 0;
+    margin: 16px 0 0;
     text-align: center;
+  }
+
+  @media screen and (min-width: 750px) {
+    .bundle__options {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .bundle__label {
+      padding: 46px 26px 40px;
+      gap: 18px;
+      border-radius: 170px;
+    }
+
+    .bundle__title {
+      font-size: 1.75rem;
+    }
   }
 {% endstyle %}
 
@@ -396,7 +531,7 @@
       "type": "text",
       "id": "heading",
       "label": "Heading",
-      "default": "One bottle lasts about 8 weeks"
+      "default": "Choose your bundle"
     },
     {
       "type": "textarea",
@@ -468,7 +603,7 @@
           "type": "text",
           "id": "subtitle",
           "label": "Subtitle",
-          "default": "Try it for 8 weeks"
+          "default": "Start here"
         },
         {
           "type": "text",
@@ -494,7 +629,7 @@
           "id": "variant_position",
           "label": "Variant position",
           "default": 1,
-          "info": "1 is the first variant on the product, 2 the second, and so on."
+          "info": "1 is the first variant on the product, 2 the second, and so on. If the product has no variant in this position the card is hidden, so a single-variant product shows one option rather than three identical ones."
         },
         {
           "type": "checkbox",
@@ -513,7 +648,7 @@
           "type": "option",
           "settings": {
             "title": "1 bottle",
-            "subtitle": "Try it for 8 weeks",
+            "subtitle": "Start here",
             "bottles": 1,
             "variant_position": 1
           }
@@ -522,8 +657,8 @@
           "type": "option",
           "settings": {
             "title": "2 bottles",
-            "subtitle": "Our most chosen supply",
-            "badge": "Most popular",
+            "subtitle": "Keep a spare sealed",
+            "badge": "Recommended",
             "bottles": 2,
             "variant_position": 2,
             "selected": true
@@ -533,7 +668,7 @@
           "type": "option",
           "settings": {
             "title": "3 bottles",
-            "subtitle": "Best value per bottle",
+            "subtitle": "Three in the cabinet",
             "bottles": 3,
             "variant_position": 3
           }

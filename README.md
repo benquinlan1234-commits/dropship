@@ -5,8 +5,12 @@ frameworks and no build step. The home page *is* the product page: every
 section reads its price and variants from one product you pick in Theme
 settings.
 
-- **52 files, `shopify theme check` clean** (0 errors; 4 warnings, all from the
+- **52 files, `shopify theme check` clean** (0 errors; 2 warnings, both from the
   Google Fonts `<link>` — see [Known warnings](#known-warnings)).
+
+> **[`STATUS.md`](STATUS.md) is the handover** — what is built, what is left
+> before this can sell anything, and what is still open. Start there if you are
+> picking this up.
 - Mobile-first, lazy-loaded imagery, `prefers-reduced-motion` respected.
 - Cart is a slide-out drawer using `/cart/add.js` and the Section Rendering API.
 
@@ -25,11 +29,27 @@ shopify theme dev --store your-store.myshopify.com
 That serves the theme at `http://127.0.0.1:9292` with hot reload. The first run
 opens a browser to log in.
 
-Check it before you push:
+Check it before you push — **both** of these:
 
 ```bash
 shopify theme check
+python3 scripts/validate-theme.py
 ```
+
+`shopify theme check` does not enforce everything Shopify enforces at runtime, so
+a theme can pass it and then fail to render. `scripts/validate-theme.py` covers
+that gap: range step/bounds/unit limits on schema defaults *and* on every value
+stored in templates and section groups, strict duplicate-key JSON parsing,
+setting id charsets, default-vs-type agreement, select defaults present in their
+options, declared block types, `order`/`block_order` integrity, `settings_data`
+keys existing in `settings_schema`, and `render`/`section` targets resolving.
+
+Both run in CI on every pull request
+([`.github/workflows/theme-checks.yml`](.github/workflows/theme-checks.yml)),
+and `validate-theme.py` exits non-zero, so it also drops into a pre-push hook.
+This is not hypothetical — a range value of `34` against `step: 5` passed theme
+check and made every page render the 404 template. See
+[`DECISIONS.md`](DECISIONS.md) for that one.
 
 ## Upload it
 
@@ -85,7 +105,8 @@ logo is uploaded), upload a logo and a favicon, and write the logo alt text.
 
 **Theme settings → Product → Free shipping threshold.** A plain number, no
 decimals, in your store currency. It drives the cart drawer progress bar and
-anywhere you type `[threshold]` in the guarantee strip.
+anywhere you type `[threshold]` in the guarantee strip (that section is not on
+the page by default — see [Sections built but not on the page](#sections-built-but-not-on-the-page)).
 
 ### 4. Header links
 
@@ -103,9 +124,11 @@ returns.
 
 ### 6. Review counts
 
-`4.8` and `2,431 reviews` are placeholders in three places: the hero, the
-product hero and the reviews section. They are plain text settings, so update
-them to whatever is true. The manual review blocks are placeholders too.
+The star rating and review count ship **empty**, and the star row stays hidden
+until you fill the count in — an empty five-star row reads as zero reviews.
+They are plain text settings in three places: the hero, the product hero and the
+reviews section. The manual review blocks are placeholders too — replace them
+before you put that section back on the page.
 
 ---
 
@@ -173,21 +196,37 @@ templates/
 sample-content/      Default copy as plain text, for editing outside the Customizer
 ```
 
-### Home page section order
+### What is on the page
 
-1. Hero video
-2. Ingredient cards
-3. How it works
-4. Why encapsulated
-5. Results gallery
-6. Bundle selector *(the offer — `#bundle`)*
-7. Reviews
-8. FAQ *(`#faq`)*
-9. Guarantee strip
-10. Sticky add to cart *(fixed to the viewport; its position in the list does not matter)*
+One product does not need a browse-then-buy funnel, so the offer sits directly
+under the hero.
 
-Reorder or remove any of them in the Customizer. Every section has a preset, so
-you can also add them to other templates.
+| | Home | Product |
+| --- | --- | --- |
+| 1 | Hero video | Product hero (gallery) |
+| 2 | Bundle selector — the offer, `#bundle` | Bundle selector |
+| 3 | How it works, `#how` | How it works |
+| 4 | FAQ, `#faq` | Product details |
+| 5 | — | FAQ |
+
+Plus **Sticky add to cart**, which is fixed to the viewport — its position in
+the list does not matter.
+
+### Sections built but not on the page
+
+These ship with the theme and are not in either template. Each has a preset, so
+adding one back is **Customize → Add section**, no code:
+
+- **Ingredient cards** — the three actives as editorial hairline rows
+- **Why encapsulated** — the dark plum section with the pull quote
+- **Results gallery** — tilted pearl frames, horizontal scroll
+- **Reviews** — staggered pearl cards, plus the reviews-app slot
+- **Guarantee strip** — the three trust items
+
+If you add just one back, make it Reviews, directly under the bundle. It is the
+page's only social proof, and on a $39 serum that is usually the most expensive
+thing to leave out. The guarantee line still appears in the bundle footnote
+under the add-to-cart button.
 
 ### Adding a reviews app later
 
@@ -203,31 +242,63 @@ Set in **Theme settings → Colors / Typography**; nothing is hard-coded.
 
 | Token | Default | Used for |
 | ----- | ------- | -------- |
-| Background | `#FAF8F6` | Page ground |
-| Surface | `#FFFFFF` | Cards, inputs |
-| Pearl | `#F4F1F7` | Media backgrounds, quiet panels |
-| Text | `#2E2640` | Primary — a plum ink, warmer than black |
-| Text secondary | `#6E6680` | Supporting copy |
-| Accent | `#7561B0` | Buttons, active states — 5.13:1 with white |
-| Accent soft | `#E8E1F5` | Selected cards, badges |
-| Hairline | `#E4E0EA` | Dividers and borders |
-| Silver | `#C8C3D7` | Rules, icon rings, small detail |
+| Page | `#F1ECF7` | Lilac-pearl ground. Deliberately not white |
+| Card | `#FAF8FD` | Pearl surfaces, drawer, inputs |
+| Media | `#E7DFF2` | Behind images and placeholder blocks |
+| Plum | `#2A2340` | The dark clinic section, footer, announcement bar |
+| Text on plum | `#EFE9F7` | 12.51:1 |
+| Accent on plum | `#BCA9EC` | Links inside dark sections — 7.10:1 |
+| Text | `#2A2340` | 12.80:1 on the page |
+| Text secondary | `#5C5470` | 6.11:1 |
+| Accent | `#6E5AAB` | Buttons, rings, fills — 5.66:1 with white |
+| Accent — text | `#635099` | Eyebrows, figures, unit prices — 4.94:1 worst case |
+| Accent — soft | `#E3D9F5` | Selected cards, tints |
+| Hairline | `#D6CEE4` | Borders |
+| Silver | `#C6C0D2` | Brushed-silver rules, rings, tags. Decorative only |
+| Silver — highlight | `#EDEBF2` | The bright point along a silver line or ring |
 
-Type is Manrope from Google Fonts, headings at 500 with −0.024em tracking, body
-at 400 / 1.7. Radius 12px on cards, pill buttons. No drop shadows. The only
-soft-edged element is an optional radial glow behind the hero and offer, which
-you can switch off in **Theme settings → Motion**.
+Two families, both from Google Fonts and both theme settings: **Fraunces** 400
+for display, numerals and prices (optical sizing on, SOFT axis at 30), and
+**Manrope** 400/500 for body and UI. Eyebrows are Manrope small caps at 0.14em
+tracking in accent ink.
+
+Materials rather than flat fills: a 3% generated grain over the whole page, a
+pearl-to-lilac radial wash behind the hero and the offer, a large blurred violet
+orb that drifts on a 60-second loop, and pearl surfaces carrying a sheen
+gradient, an inner top highlight and a soft violet halo.
+
+**Silver is drawn as metal, not as grey.** Rules are gradients that fade at both
+ends and catch the light in the middle; rings, tags and frame edges are gradient
+borders that follow the curve.
+
+**Depth is a violet halo, never a grey drop shadow** — the accent colour, wide
+blur, low opacity, the way beauty packaging photographs. Section padding 112px
+desktop / 64px mobile, content column 1180px.
+
+Glow, surface sheen, the orb and the grain are all settings (**Theme settings →
+Motion & softness**), so the page can be taken completely flat.
+
+Motion: hero copy rises in on load, sections reveal on scroll with siblings
+staggered, the hero media parallaxes gently, and every card, button and ring
+lifts on hover with its halo widening. All of it is disabled under
+`prefers-reduced-motion` — every lift is a token so reduced motion zeroes them
+from one place.
+
+Before and after renders, with a per-section rationale, are in
+[`design/COMPARE.md`](design/COMPARE.md).
 
 ## Known warnings
 
-`shopify theme check` reports four `RemoteAsset` warnings, all pointing at the
+`shopify theme check` reports two `RemoteAsset` warnings, both pointing at the
 Google Fonts `<link>` tags in `layout/theme.liquid`. That is theme check
 telling you a non-Shopify CDN is slower than Shopify's own. It is expected:
-Manrope is not in Shopify's font library. The links are loaded
-non-render-blocking with a `<noscript>` fallback.
+neither Fraunces nor Manrope is in Shopify's font library. One request carries
+both families, loaded non-render-blocking with a `<noscript>` fallback.
 
-To silence them, turn off **Theme settings → Typography → Load font from Google
-Fonts**. The theme falls back to the system sans stack and the warnings go away.
+To silence them, turn off **Theme settings → Typography → Load fonts from Google
+Fonts**. The theme falls back to the Georgia and system-sans stacks and the
+warnings go away — though the serif/sans contrast is most of the art direction,
+so expect it to look markedly plainer.
 
 ## Accessibility notes
 

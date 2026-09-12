@@ -1,6 +1,6 @@
 <div class="section main-404">
   <div class="page-width text-center">
-    <p class="section__eyebrow main-404__eyebrow">404</p>
+    <p class="numeral main-404__code">404</p>
     <h1>{{ section.settings.heading | default: 'Page not found' }}</h1>
     <p class="text-secondary main-404__text">
       {{- section.settings.text | default: 'The page you were looking for does not exist.' -}}
@@ -16,16 +16,12 @@
     padding-block: calc(var(--section-padding-desktop) * 1.2);
   }
 
-  .main-404__eyebrow {
-    justify-content: center;
-  }
-
-  .main-404__eyebrow::before,
-  .main-404__eyebrow::after {
-    content: '';
-    width: 32px;
-    height: 1px;
-    background-color: var(--color-silver);
+  .main-404__code {
+    margin: 0 0 12px;
+    font-size: 3rem;
+    line-height: 1;
+    color: var(--color-accent);
+    opacity: 0.35;
   }
 
   .main-404__text {

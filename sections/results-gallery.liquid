@@ -3,18 +3,20 @@
     <div class="results__header">
       <div>
         {%- if section.settings.eyebrow != blank -%}
-          <p class="section__eyebrow">{{ section.settings.eyebrow }}</p>
+          <p class="eyebrow eyebrow--rule">{{ section.settings.eyebrow }}</p>
         {%- endif -%}
         {%- if section.settings.heading != blank -%}
           <h2>{{ section.settings.heading }}</h2>
         {%- endif -%}
         {%- if section.settings.subheading != blank -%}
-          <p class="section__subheading">{{ section.settings.subheading }}</p>
+          <p class="lede">{{ section.settings.subheading }}</p>
         {%- endif -%}
       </div>
 
       {%- if section.settings.timeframe != blank -%}
-        <p class="results__timeframe badge badge--outline">{{ section.settings.timeframe }}</p>
+        <p class="results__timeframe">
+          <span class="numeral">{{ section.settings.timeframe }}</span>
+        </p>
       {%- endif -%}
     </div>
   </div>
@@ -25,6 +27,7 @@
         {%- for block in section.blocks -%}
           <li class="results__item" data-carousel-item {{ block.shopify_attributes }}>
             <figure class="results__figure">
+              <span class="results__frame" aria-hidden="true"></span>
               {%- if block.settings.video != blank or block.settings.video_mp4_url != blank -%}
                 {% render 'video',
                   shopify_video: block.settings.video,
@@ -51,7 +54,7 @@
                 </div>
               {%- else -%}
                 <div class="media media--portrait">
-                  <div class="placeholder-media">{{ 'lifestyle-1' | placeholder_svg_tag }}</div>
+                  <div class="placeholder-media"></div>
                 </div>
               {%- endif -%}
 
@@ -67,10 +70,10 @@
     </div>
 
     <div class="page-width results__controls">
-      <button class="results__control" type="button" data-carousel-prev aria-label="{{ 'general.accessibility.previous' | t }}">
+      <button class="carousel-control" type="button" data-carousel-prev aria-label="{{ 'general.accessibility.previous' | t }}">
         {% render 'icon', icon: 'chevron' %}
       </button>
-      <button class="results__control" type="button" data-carousel-next aria-label="{{ 'general.accessibility.next' | t }}">
+      <button class="carousel-control" type="button" data-carousel-next aria-label="{{ 'general.accessibility.next' | t }}">
         {% render 'icon', icon: 'chevron' %}
       </button>
     </div>
@@ -86,40 +89,52 @@
 {% style %}
   .results__header {
     display: flex;
-    align-items: flex-start;
+    align-items: flex-end;
     justify-content: space-between;
-    gap: 20px;
-    margin-bottom: 28px;
+    gap: 24px;
+    margin-bottom: 48px;
   }
 
   .results__header > div {
-    max-width: 640px;
+    max-width: 46ch;
   }
 
   .results__header h2 {
-    margin-bottom: 8px;
+    margin-bottom: 14px;
   }
 
   .results__timeframe {
     flex: 0 0 auto;
     margin: 0;
+    padding: 12px 24px;
+    border: 1px solid transparent;
+    border-radius: var(--radius-pill);
+    background-color: var(--color-surface);
+    background-image: linear-gradient(var(--color-surface), var(--color-surface)), var(--silver-fill);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    box-shadow: var(--edge-light), var(--shadow-soft);
+  }
+
+  .results__timeframe .numeral {
+    font-size: 1.25rem;
+    line-height: 1;
   }
 
   .results__track-wrap {
-    padding-inline: 0;
-    max-width: none;
     overflow: hidden;
   }
 
   .results__track {
     display: flex;
-    gap: 16px;
+    gap: 22px;
     margin: 0;
     padding-inline: var(--content-inset);
+    padding-block: 18px;
     list-style: none;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
-    /* Without this, snapping pulls the first card flush to the viewport edge. */
+    /* Without this, snapping pulls the first frame flush to the viewport edge. */
     scroll-padding-inline: var(--content-inset);
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
@@ -131,54 +146,75 @@
 
   .results__item {
     flex: 0 0 auto;
-    width: min(72vw, 300px);
+    width: min(74vw, 300px);
     scroll-snap-align: start;
   }
 
+  /* Each shot sits in a pearl frame, tilted a degree or so, like prints laid
+     on a table. The tilt alternates so the row does not read mechanical. */
   .results__figure {
+    position: relative;
     margin: 0;
+    padding: 14px 14px 0;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background-image: var(--sheen);
+    box-shadow: var(--edge-light), var(--shadow-soft);
+    transform: rotate(-1.1deg);
+    transition: transform 520ms var(--ease-out), box-shadow 520ms var(--ease-out);
+  }
+
+  .results__item:nth-child(even) .results__figure {
+    transform: rotate(1.3deg);
+  }
+
+  .results__item:nth-child(3n) .results__figure {
+    transform: rotate(-0.5deg);
+  }
+
+  /* Straightens and lifts, like picking a print up off the table. */
+  .results__figure:hover {
+    transform: rotate(0deg) translateY(var(--lift-y)) scale(1.015);
+    box-shadow: var(--edge-light), var(--shadow-lift);
+  }
+
+  .results__figure img {
+    transition: transform 1.2s var(--ease-out);
+  }
+
+  .results__figure:hover img {
+    transform: scale(1.04);
   }
 
   .results__caption {
-    margin-top: 12px;
+    display: block;
+    padding: 16px 4px 18px;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    font-variant-caps: all-small-caps;
+    letter-spacing: 0.1em;
+    line-height: 1.5;
+    color: var(--color-text-secondary);
+  }
+
+  @supports not (font-variant-caps: all-small-caps) {
+    .results__caption {
+      text-transform: uppercase;
+      font-size: 0.625rem;
+    }
   }
 
   .results__controls {
     display: none;
     gap: 8px;
     justify-content: flex-end;
-    margin-top: 20px;
-  }
-
-  .results__control {
-    display: inline-flex;
-    width: 40px;
-    height: 40px;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    border: 1px solid var(--color-border);
-    border-radius: 999px;
-    background: none;
-    color: inherit;
-    cursor: pointer;
-  }
-
-  .results__control[disabled] {
-    opacity: 0.35;
-    cursor: default;
-  }
-
-  .results__control:first-child .icon {
-    transform: rotate(90deg);
-  }
-
-  .results__control:last-child .icon {
-    transform: rotate(-90deg);
+    margin-top: 26px;
   }
 
   .results__disclaimer {
-    margin-top: 20px;
+    margin-top: 26px;
+    max-width: 62ch;
   }
 
   @media screen and (min-width: 750px) {
@@ -186,8 +222,19 @@
       display: flex;
     }
 
-    .results__track {
-      gap: 20px;
+    .results__item {
+      width: 320px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .results__figure,
+    .results__figure:hover {
+      transform: none;
+    }
+
+    .results__figure:hover img {
+      transform: none;
     }
   }
 {% endstyle %}

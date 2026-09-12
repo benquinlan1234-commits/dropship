@@ -1,3 +1,7 @@
+NOT ON THE PAGE BY DEFAULT
+This section ships with the theme but is not in either template. Add it from
+Customize > Add section, then this copy applies.
+
 WHY ENCAPSULATED
 Section: why-encapsulated
 
@@ -6,6 +10,9 @@ Eyebrow
 
 Heading
   Sealed until the second you use it
+
+Pull quote (display serif, one line)
+  Every orb is a first pump.
 
 Body
   PDRN is sensitive to air and light. In an open bottle it starts to lose its

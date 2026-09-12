@@ -7,6 +7,15 @@ Customizer, then paste the result into the matching section setting.
 Nothing in this folder is read by the theme at runtime. It is reference only,
 and it is excluded from theme check by .theme-check.yml.
 
+On the page by default
+  Home     hero -> bundle (3 choices) -> how it works -> FAQ
+  Product  hero -> bundle (3 choices) -> how it works -> details -> FAQ
+
+  So the live copy files are 01, 02, 07, 04, 09, 11, 12 and 13. The rest
+  (03 ingredients, 05 why encapsulated, 06 results, 08 reviews, 10 guarantee)
+  describe sections that ship with the theme but are not in either template.
+  Add one back from Customize > Add section and its copy file applies again.
+
 Files
   01-announcement-bar.txt
   02-hero-video.txt

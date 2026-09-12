@@ -280,6 +280,7 @@
       this.inputs = Array.prototype.slice.call(this.querySelectorAll('[data-bundle-option]'));
       this.variantInput = this.querySelector('[data-variant-input]');
       this.sellingPlanInput = this.querySelector('[data-selling-plan-input]');
+      this.quantityInput = this.querySelector('[data-quantity-input]');
       this.subscribeToggle = this.querySelector('[data-subscribe-toggle]');
 
       this.inputs.forEach(
@@ -289,6 +290,16 @@
       );
 
       if (this.subscribeToggle) this.subscribeToggle.addEventListener('change', this.onSelect.bind(this));
+
+      /* A card whose variant is missing is not rendered, so the one marked
+         selected in the theme editor may be gone. Fall back to the first
+         option that can actually be bought. */
+      if (!this.selected && this.inputs.length) {
+        var usable = this.inputs.filter(function (input) {
+          return !input.disabled;
+        })[0];
+        (usable || this.inputs[0]).checked = true;
+      }
 
       this.onSelect();
     }
@@ -311,8 +322,15 @@
       var subscribing = !!(this.subscribeToggle && this.subscribeToggle.checked);
       var sellingPlan = option.dataset.sellingPlan || '';
 
+      /* When the product has one variant the packs are quantities of it, so the
+         option carries how many to add. Real variants report 1 and nothing here
+         changes. */
+      var quantity = parseInt(option.dataset.quantity, 10);
+      if (!quantity || quantity < 1) quantity = 1;
+
       if (this.variantInput) this.variantInput.value = option.value;
       if (this.sellingPlanInput) this.sellingPlanInput.value = subscribing ? sellingPlan : '';
+      if (this.quantityInput) this.quantityInput.value = String(quantity);
 
       this.querySelectorAll('[data-price-onetime]').forEach(function (el) {
         el.hidden = subscribing;
@@ -326,6 +344,7 @@
           detail: {
             variantId: option.value,
             sellingPlan: subscribing ? sellingPlan : '',
+            quantity: quantity,
             label: option.dataset.label || '',
             price: option.dataset.price || '',
             subscribing: subscribing
@@ -387,6 +406,12 @@
         });
       }
       if (this.variantInput && detail.variantId) this.variantInput.value = detail.variantId;
+
+      /* Follow the chosen pack size, or the sticky bar would add one bottle
+         while the card above it says three. */
+      var quantityInput = this.querySelector('[data-quantity-input]');
+      if (quantityInput) quantityInput.value = String(detail.quantity || 1);
+
       if (detail.price) this.setPrice(detail.price);
       var planInput = this.querySelector('[data-selling-plan-input]');
       if (planInput) planInput.value = detail.sellingPlan || '';
@@ -474,23 +499,88 @@
      Accordion — one open at a time inside a group
      ---------------------------------------------------------------------- */
 
+  /* A <details> opens in one frame, so the panel is already at full height
+     before any animation on it can run. Taking the click over lets the panel
+     transition its height open, and lets the close transition finish before the
+     open attribute comes off — which is the only way to animate a details shut.
+
+     The is-ready class gates the CSS, so without JavaScript the answers are
+     plain open/closed details and still readable. */
   class AccordionGroup extends HTMLElement {
     connectedCallback() {
-      if (this.dataset.exclusive !== 'true') return;
+      this.exclusive = this.dataset.exclusive === 'true';
       this.items = Array.prototype.slice.call(this.querySelectorAll('details'));
+      if (!this.items.length) return;
+
       this.items.forEach(
         function (item) {
-          item.addEventListener(
-            'toggle',
-            function () {
-              if (!item.open) return;
-              this.items.forEach(function (other) {
-                if (other !== item) other.open = false;
-              });
+          if (item.open) item.classList.add('is-open');
+
+          var summary = item.querySelector('summary');
+          if (!summary) return;
+
+          summary.addEventListener(
+            'click',
+            function (event) {
+              event.preventDefault();
+              if (item.open) this.collapse(item);
+              else this.expand(item);
             }.bind(this)
           );
         }.bind(this)
       );
+
+      this.classList.add('is-ready');
+    }
+
+    expand(item) {
+      if (this.exclusive) {
+        this.items.forEach(
+          function (other) {
+            if (other !== item && other.open) this.collapse(other);
+          }.bind(this)
+        );
+      }
+
+      item.open = true;
+      /* Read a layout property so the panel is painted at its collapsed size
+         before the class flips it, or the browser coalesces both into one
+         frame and there is nothing to transition from. */
+      void item.offsetHeight;
+      item.classList.add('is-open');
+    }
+
+    collapse(item) {
+      var panel = item.querySelector('.accordion__panel');
+      item.classList.remove('is-open');
+
+      /* Ask the panel how long it is actually going to take rather than
+         inferring it from the motion preference — a stylesheet, a reduced-motion
+         override or the editor can all zero it, and waiting on a transitionend
+         that will never fire would leave the panel hanging open. */
+      var duration = panel ? parseFloat(getComputedStyle(panel).transitionDuration) || 0 : 0;
+      if (!panel || duration === 0) {
+        item.open = false;
+        return;
+      }
+
+      var settled = false;
+      var finish = function () {
+        if (settled) return;
+        settled = true;
+        panel.removeEventListener('transitionend', onEnd);
+        /* Re-opened mid-close: leave it open rather than yanking it shut. */
+        if (!item.classList.contains('is-open')) item.open = false;
+      };
+      var onEnd = function (event) {
+        if (event.target !== panel || event.propertyName !== 'grid-template-rows') return;
+        finish();
+      };
+
+      panel.addEventListener('transitionend', onEnd);
+      /* transitionend does not fire when the panel is off-screen or the
+         transition is interrupted, so never leave it half-closed. */
+      setTimeout(finish, 600);
     }
   }
 
@@ -585,8 +675,25 @@
      ---------------------------------------------------------------------- */
 
   function setupReveal() {
-    if (settings.animationsEnabled === false || prefersReducedMotion.matches) return;
-    if (!('IntersectionObserver' in window)) return;
+    var items = document.querySelectorAll('.reveal');
+    if (!items.length) return;
+
+    if (settings.animationsEnabled === false || prefersReducedMotion.matches || !('IntersectionObserver' in window)) {
+      items.forEach(function (el) {
+        el.classList.add('is-visible');
+      });
+      return;
+    }
+
+    /* Siblings inside one parent arrive in sequence. The index drives a CSS
+       transition-delay, so a row of three cards cascades instead of popping. */
+    var groups = new Map();
+    items.forEach(function (el) {
+      var parent = el.parentElement;
+      var index = groups.get(parent) || 0;
+      el.style.setProperty('--reveal-index', Math.min(index, 5));
+      groups.set(parent, index + 1);
+    });
 
     var observer = new IntersectionObserver(
       function (entries, obs) {
@@ -596,17 +703,66 @@
           obs.unobserve(entry.target);
         });
       },
-      { rootMargin: '0px 0px -10% 0px' }
+      { rootMargin: '0px 0px -12% 0px', threshold: 0.05 }
     );
 
-    document.querySelectorAll('.reveal').forEach(function (el) {
+    items.forEach(function (el) {
       observer.observe(el);
+    });
+  }
+
+  /* Parallax: the hero media drifts slower than the page. Driven from a
+     single rAF-throttled scroll listener, and clamped so nothing ever
+     detaches from its column. */
+  function setupParallax() {
+    var layers = Array.prototype.slice.call(document.querySelectorAll('[data-parallax]'));
+    if (!layers.length) return;
+
+    if (prefersReducedMotion.matches || settings.animationsEnabled === false) {
+      layers.forEach(function (el) {
+        el.style.setProperty('--parallax-y', '0px');
+      });
+      return;
+    }
+
+    var ticking = false;
+
+    var update = function () {
+      ticking = false;
+      var viewport = window.innerHeight;
+      layers.forEach(function (el) {
+        var rect = el.getBoundingClientRect();
+        if (rect.bottom < -200 || rect.top > viewport + 200) return;
+        var rate = parseFloat(el.dataset.parallax) || 0.06;
+        /* Distance of the element's centre from the viewport centre. */
+        var offset = rect.top + rect.height / 2 - viewport / 2;
+        var shift = Math.max(-48, Math.min(48, offset * rate * -1));
+        el.style.setProperty('--parallax-y', shift.toFixed(1) + 'px');
+      });
+    };
+
+    var onScroll = function () {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(update);
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    update();
+
+    prefersReducedMotion.addEventListener('change', function () {
+      if (!prefersReducedMotion.matches) return;
+      layers.forEach(function (el) {
+        el.style.setProperty('--parallax-y', '0px');
+      });
     });
   }
 
   function init() {
     setupVideos();
     setupReveal();
+    setupParallax();
   }
 
   if (document.readyState === 'loading') {

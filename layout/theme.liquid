@@ -22,19 +22,30 @@
       <meta name="description" content="{{ page_description | escape }}">
     {%- endif -%}
 
-    {%- if settings.use_google_font and settings.google_font_family != blank -%}
-      {%- assign google_font = settings.google_font_family | strip | replace: ' ', '+' -%}
+    {%- if settings.use_google_font -%}
+      {%- liquid
+        assign families = ''
+        if settings.body_font_family != blank
+          assign body_family = settings.body_font_family | strip | replace: ' ', '+'
+          assign families = families | append: 'family=' | append: body_family | append: ':wght@300..700'
+        endif
+        if settings.display_font_family != blank
+          assign display_family = settings.display_font_family | strip | replace: ' ', '+'
+          if families != blank
+            assign families = families | append: '&'
+          endif
+          comment
+            Fraunces carries opsz and SOFT axes. Google serves the request unchanged
+            for families without them, so this is safe for any display font.
+          endcomment
+          assign families = families | append: 'family=' | append: display_family | append: ':opsz,wght,SOFT@9..144,300..700,0..100'
+        endif
+        assign fonts_href = 'https://fonts.googleapis.com/css2?' | append: families | append: '&display=swap'
+      -%}
       <link rel="preconnect" href="https://fonts.googleapis.com">
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-      <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family={{ google_font }}:wght@300;400;500;600&display=swap"
-        media="print"
-        onload="this.media='all'"
-      >
-      <noscript>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family={{ google_font }}:wght@300;400;500;600&display=swap">
-      </noscript>
+      <link rel="stylesheet" href="{{ fonts_href }}" media="print" onload="this.media='all'">
+      <noscript><link rel="stylesheet" href="{{ fonts_href }}"></noscript>
     {%- endif -%}
 
     {% render 'css-variables' %}

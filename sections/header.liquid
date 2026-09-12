@@ -77,8 +77,8 @@
   .header {
     position: relative;
     z-index: 20;
-    background-color: rgba(var(--color-background-rgb), 0.88);
-    backdrop-filter: saturate(140%) blur(12px);
+    background-color: rgba(var(--color-background-rgb), 0.82);
+    backdrop-filter: saturate(150%) blur(14px);
     border-bottom: 1px solid var(--color-border);
   }
 
@@ -108,8 +108,8 @@
   .header__link {
     font-size: 0.75rem;
     font-weight: 500;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
+    font-variant-caps: all-small-caps;
+    letter-spacing: 0.13em;
     text-decoration: none;
     color: var(--color-text-secondary);
     transition: color var(--duration) var(--ease);
@@ -132,11 +132,12 @@
   }
 
   .header__wordmark {
-    font-family: var(--font-heading);
-    font-weight: 500;
-    font-size: 1rem;
-    letter-spacing: 0.32em;
-    text-indent: 0.32em;
+    font-family: var(--font-display);
+    font-weight: var(--display-weight);
+    font-optical-sizing: auto;
+    font-size: 1.125rem;
+    letter-spacing: 0.34em;
+    text-indent: 0.34em;
     text-transform: uppercase;
   }
 
@@ -156,16 +157,16 @@
 
   .header__cart-count {
     position: absolute;
-    top: 4px;
-    right: 2px;
-    min-width: 18px;
-    padding: 0 4px;
-    border-radius: 999px;
+    top: 3px;
+    right: 0;
+    min-width: 19px;
+    padding: 0 5px;
+    border-radius: var(--radius-pill);
     background-color: var(--color-accent);
     color: var(--color-accent-text);
     font-size: 0.6875rem;
-    font-weight: 600;
-    line-height: 18px;
+    font-weight: 500;
+    line-height: 19px;
     text-align: center;
   }
 

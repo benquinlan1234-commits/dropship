@@ -1,3 +1,7 @@
+NOT ON THE PAGE BY DEFAULT
+This section ships with the theme but is not in either template. Add it from
+Customize > Add section, then this copy applies.
+
 INGREDIENT CARDS
 Section: ingredient-cards
 
@@ -5,26 +9,32 @@ Eyebrow
   What is inside
 
 Heading
-  Three actives, nothing loud
+  Three actives. Nothing else.
 
 Subhead
-  A short ingredient list designed to support hydration and a comfortable
+  A short ingredient list, designed to support hydration and a comfortable
   barrier.
 
-Card 1
-  Title    Hyaluronic PDRN 30,000ppm
+Row 1
+  Name     Hyaluronic PDRN
   Benefit  Repair & renewal
+  Figure   30,000ppm
   Icon     drop
 
-Card 2
-  Title    Ectoin
+Row 2
+  Name     Ectoin
   Benefit  Barrier protection
+  Figure   (none)
   Icon     shield
 
-Card 3
-  Title    Glutathione
+Row 3
+  Name     Glutathione
   Benefit  Brightening
+  Figure   (none)
   Icon     sparkle
+
+The Figure is set large in the display serif at the end of the row. Leave it
+empty where there is no number worth showing.
 
 Optional side image
   Alt      Close-up of the ingredient list printed on the box

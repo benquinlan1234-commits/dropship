@@ -1,7 +1,31 @@
 {%- liquid
+  comment
+    Free shipping is earned by going OVER the threshold, not by reaching it.
+    That distinction is the whole point when the threshold is set to the price
+    of a single bottle: one bottle must not qualify, two must. Rounding first
+    because the setting carries cents and Liquid's float arithmetic does not
+    always land exactly on the integer.
+  endcomment
   assign threshold = settings.free_shipping_threshold | default: 0
-  assign threshold_cents = threshold | times: 100
-  assign remaining = threshold_cents | minus: cart.total_price
+  assign threshold_cents = threshold | times: 100 | round
+  assign remaining = threshold_cents | minus: cart.total_price | plus: 1
+  if cart.total_price > threshold_cents
+    assign remaining = 0
+  endif
+
+  comment
+    With the threshold set at the price of one bottle, a one-bottle cart is a
+    penny short, and "you are $0.01 away from free shipping" is useless — there
+    is nothing a customer can spend a penny on. When one more of what they are
+    already buying would clear the line, say that instead.
+  endcomment
+  assign add_one_clears_it = false
+  if remaining > 0 and cart.item_count > 0
+    assign first_unit = cart.items.first.final_price
+    if remaining <= first_unit
+      assign add_one_clears_it = true
+    endif
+  endif
   assign upsell = settings.cart_upsell_product
   assign upsell_in_cart = false
   if upsell != blank
@@ -35,7 +59,12 @@
       <div class="cart-drawer__shipping">
         {%- if remaining > 0 -%}
           <p class="text-small">
-            {{ 'sections.cart.free_shipping_progress_html' | t: amount: remaining | money }}
+            {%- if add_one_clears_it -%}
+              {{ 'sections.cart.free_shipping_add_one' | t }}
+            {%- else -%}
+              {%- assign remaining_money = remaining | money -%}
+              {{ 'sections.cart.free_shipping_progress_html' | t: amount: remaining_money }}
+            {%- endif -%}
           </p>
         {%- else -%}
           <p class="text-small">{{ 'sections.cart.free_shipping_reached' | t }}</p>
@@ -63,7 +92,12 @@
       <ul class="cart-drawer__items" role="list">
         {%- for item in cart.items -%}
           <li class="cart-item" data-line="{{ forloop.index }}">
-            <a class="cart-item__media" href="{{ item.url }}" tabindex="-1" aria-hidden="true">
+            {%- comment -%}
+              Not a link. The thumbnail sat next to a title that already links
+              to the same place, so clicking the picture only ever took someone
+              out of the cart by accident.
+            {%- endcomment -%}
+            <div class="cart-item__media" aria-hidden="true">
               {%- if item.image -%}
                 <img
                   src="{{ item.image | image_url: width: 160 }}"
@@ -74,10 +108,15 @@
                   loading="lazy"
                 >
               {%- endif -%}
-            </a>
+            </div>
 
             <div class="cart-item__details">
-              <a class="cart-item__title" href="{{ item.url }}">{{ item.product.title }}</a>
+              {%- comment -%}
+                Also not a link. On a one-product store the product page is a
+                second copy of the home page, so sending someone there from
+                inside the cart only interrupts the checkout they had started.
+              {%- endcomment -%}
+              <p class="cart-item__title">{{ item.product.title }}</p>
               {%- unless item.product.has_only_default_variant -%}
                 <p class="cart-item__variant text-small text-secondary">{{ item.variant.title }}</p>
               {%- endunless -%}
@@ -131,7 +170,7 @@
 
     {%- if upsell != blank and upsell_in_cart == false and upsell.available -%}
       <div class="cart-drawer__upsell">
-        <h3 class="text-eyebrow text-secondary">{{ settings.cart_upsell_heading }}</h3>
+        <h3 class="eyebrow">{{ settings.cart_upsell_heading }}</h3>
         <div class="cart-upsell">
           {%- if upsell.featured_image -%}
             <img
@@ -202,7 +241,7 @@
   .cart-drawer__overlay {
     position: absolute;
     inset: 0;
-    background-color: rgba(var(--color-text-rgb), 0.35);
+    background-color: rgba(var(--color-deep-rgb), 0.42);
     opacity: 0;
     transition: opacity var(--duration) ease;
   }
@@ -219,7 +258,7 @@
     flex-direction: column;
     width: min(420px, 100%);
     height: 100%;
-    background-color: var(--color-background);
+    background-color: var(--color-surface);
     border-left: 1px solid var(--color-border);
     transform: translateX(100%);
     transition: transform 280ms ease;
@@ -244,7 +283,7 @@
 
   .cart-drawer__title {
     margin: 0;
-    font-size: 1.125rem;
+    font-size: 1.375rem;
   }
 
   .cart-drawer__close {
@@ -311,16 +350,29 @@
     border-bottom: 1px solid var(--color-border);
   }
 
+  /* A grid child stretches to the row by default, so this box grew to the
+     height of the whole line and showed its pearl fill as a band under an
+     80px picture. Pin it square and sit it at the top of the row. */
   .cart-item__media {
-    display: block;
-    border-radius: var(--radius);
+    align-self: start;
+    width: 80px;
+    height: 80px;
+    border-radius: var(--radius-sm);
     overflow: hidden;
-    background-color: var(--color-surface);
+    background-color: var(--color-pearl);
+  }
+
+  .cart-item__media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   .cart-item__title {
+    margin: 0;
+    color: var(--color-text);
     font-weight: 600;
-    text-decoration: none;
   }
 
   .cart-item__variant {
@@ -343,7 +395,7 @@
     display: inline-flex;
     align-items: center;
     border: 1px solid var(--color-border);
-    border-radius: var(--radius);
+    border-radius: var(--radius-pill);
     overflow: hidden;
   }
 
@@ -395,7 +447,11 @@
   }
 
   .cart-upsell__image {
-    border-radius: var(--radius);
+    width: 60px;
+    height: 60px;
+    border-radius: var(--radius-sm);
+    object-fit: cover;
+    background-color: var(--color-pearl);
   }
 
   .cart-upsell__title {
@@ -408,7 +464,7 @@
     position: sticky;
     bottom: 0;
     padding: 20px;
-    background-color: var(--color-background);
+    background-color: var(--color-surface);
     border-top: 1px solid var(--color-border);
   }
 
@@ -418,7 +474,7 @@
     padding: 12px;
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
-    background-color: var(--color-surface);
+    background-color: var(--color-background);
     color: inherit;
     font: inherit;
     resize: vertical;
@@ -439,9 +495,6 @@
     overflow: hidden;
   }
 
-  .form-error {
-    color: #9b2c2c;
-  }
 {% endstyle %}
 
 {% schema %}

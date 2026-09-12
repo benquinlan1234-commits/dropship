@@ -22,16 +22,16 @@
       color: var(--announcement-color);
       font-size: 0.6875rem;
       font-weight: 500;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
+      font-variant-caps: all-small-caps;
+      letter-spacing: 0.15em;
     }
 
     .announcement-bar__inner {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 48px;
-      min-height: 40px;
+      gap: 52px;
+      min-height: 42px;
       text-align: center;
     }
 
@@ -60,13 +60,13 @@
       "type": "color",
       "id": "background",
       "label": "Background",
-      "default": "#2E2640"
+      "default": "#2A2340"
     },
     {
       "type": "color",
       "id": "text_color",
       "label": "Text",
-      "default": "#FAF8F6"
+      "default": "#EFE9F7"
     }
   ],
   "blocks": [
@@ -79,7 +79,7 @@
           "type": "text",
           "id": "text",
           "label": "Text",
-          "default": "Free shipping over $35"
+          "default": "Free shipping over $44.70"
         },
         {
           "type": "url",
@@ -93,7 +93,7 @@
     {
       "name": "Announcement bar",
       "blocks": [
-        { "type": "announcement", "settings": { "text": "Free shipping over $35" } },
+        { "type": "announcement", "settings": { "text": "Free shipping over $44.70" } },
         { "type": "announcement", "settings": { "text": "30-day money-back guarantee" } },
         { "type": "announcement", "settings": { "text": "Ships in 7–11 days" } }
       ]

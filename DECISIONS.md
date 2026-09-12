@@ -59,11 +59,11 @@ than copied:
   "PDRN SPHERICAL WATER-BLASTING ESSENCE". Mine is a drop icon and "Hyaluronic
   PDRN orb serum".
 - **A trust line under the CTA** — their "30ml · Dermatologist Tested · For All
-  Skin Types". Mine drops the dermatologist claim (see below) and reads "45g ·
+  Skin Types". Mine drops the dermatologist claim (see below) and reads "30ml ·
   For all skin types · 30-day money-back guarantee".
 - **A stat row** — their "Instant / Absorption", "PDRN / Salmon DNA". Mine sits
   in the Why encapsulated section as "30,000ppm / Hyaluronic PDRN", "One dose /
-  Sealed per orb", "45g / About 8 weeks".
+  Sealed per orb", "30ml / Net content".
 - **A specifications table** — their Net Content / Size / Applicable People /
   Packing List. Mine is in Product details as Net content / Texture / Skin types
   / In the box.
@@ -178,6 +178,153 @@ not ship it by default on your behalf.
   normal text. This is what caught the accent: my first pick looked right and
   measured 3.76:1.
 
+---
+
+## Design pass — editorial purple / silver
+
+A second pass rebuilt the art direction on the same functionality. Full before
+and after renders with a per-section rationale are in
+[`design/COMPARE.md`](design/COMPARE.md); this records the defaults it changed.
+
+**Palette, again.** The first pass was pearl-and-plum but still sat on a
+near-white ground, which is the tell of a template. Now: page `#F1ECF7`
+lilac-pearl, cards `#FAF8FD`, media `#E7DFF2`, plum `#2A2340` for the one dark
+section and the footer, accent `#6E5AAB`. No `#FFFFFF` background anywhere in
+the theme — verified by querying computed styles on the rendered page, not by
+grepping.
+
+**Two typefaces.** Fraunces 400 for display, numerals and prices; Manrope
+400/500 for body and UI. One request loads both. Manrope alone was too even to
+carry a page at three sizes. Both families, both fallback stacks and the display
+weight, tracking and SOFT axis are theme settings.
+
+**Numbers are display type.** `30,000ppm`, `$34.50/bottle`, `28 days`, the step
+folios and every price render in Fraunces, larger than their surroundings. On a
+page selling an ingredient concentration, the figures are the argument.
+
+**Materials over flat colour.** A 3% grain generated from an inline SVG
+turbulence filter (no asset request), a pearl-to-lilac radial wash behind the
+hero and the offer, a blurred violet orb on a 60-second drift, and pearl
+surfaces with a sheen gradient and an inner top highlight. The orb, grain, glow
+and sheen are all settings, so the page can be taken completely flat.
+
+**Depth is a violet halo, and the earlier no-drop-shadows rule is retired.**
+The first pass banned shadows outright, which is what made the page read
+architectural rather than dewy. Reading the reference page's CSS, its depth is
+`0 16px 40px rgba(150,130,200,.22)` — the accent colour, wide blur, low opacity
+— and its surfaces carry soft diagonal gradients. Both are tokens here, scaled
+by a **Glow** setting; 0 restores the flat look exactly. No grey shadow is used
+anywhere.
+
+**Silver is drawn as metal.** Every rule is a gradient that fades at both ends
+and brightens in the middle; every ring, tag and frame edge is a gradient border
+painted in the border box with the fill in the padding box, so the metal follows
+the curve. A second token, **Silver — highlight `#EDEBF2`**, provides the bright
+point. Flat `1px solid grey` disappears next to purple; this does not.
+
+**Motion is tokenised, not hand-written per rule.** Hero copy rises on load
+(520ms, 80ms stagger); sections reveal on scroll (900ms expo-out, siblings
+staggered 90ms by an index set in JS); the hero media parallaxes on a
+rAF-throttled listener clamped to ±48px; cards, buttons and rings lift on hover
+over 240ms with their halo widening. Every displacement is a custom property
+(`--lift-y`, `--lift-y-sm`, `--lift-scale`) so `prefers-reduced-motion` zeroes
+all of them in one block. That mattered: the first attempt reset hovers rule by
+rule and the bundle card still lifted under reduced motion — rendering in
+`reducedMotion: 'reduce'` caught it.
+
+**A second accent token, and why.** `#6E5AAB` passes AA on the page ground and
+with white button text, but violet *text* on the tinted fills did not: the
+per-bottle price on a selected card measured 4.18:1 and the reviews eyebrow on
+the pearl band 4.37:1. Both looked fine. **Accent — text `#635099`** now carries
+eyebrows, figures and unit prices, worst case 4.94:1 across all four surfaces.
+
+**Review numbers ship empty, and the stars hide with them.** The brief asked for
+empty defaults; rendering an empty five-star row alongside no number reads as
+zero reviews, so the whole summary is suppressed until a count exists.
+
+**Compositions, not a grid of three.** Hero asymmetric with pill-masked media
+bleeding off the right edge; ingredients as hairline rows in a two-column
+spread; step numerals as folios behind the copy; a dark clinic section with a
+pull quote; tilted pearl frames in the gallery; three tall pill cards for the
+offer with the tag astride the top edge; staggered review cards on a pearl band;
+a single-column serif FAQ. The brief's rule — if a section could be dropped into
+another Shopify store unchanged, it isn't done — is the one I designed against.
+
+**Overrides are listed in COMPARE.md**, with measurements: the accent ink split,
+the hidden star row, hairline separators instead of the brief's `·` dots (which
+orphan a floating dot when the stat row wraps), and grain under the header
+rather than over it.
+
+**One bug the render caught.** `.section--deep a` was overriding `.button--light`,
+painting the dark section's button light violet on a pearl fill at roughly 2:1.
+Scoped to `a:not(.button)`. It is the second time rendering and measuring has
+caught something that reading the CSS did not.
+
+## The 404, and what it cost
+
+The design pass shipped a theme that uploaded cleanly and then rendered the 404
+template on every page, including Home in the theme editor.
+
+**Root cause: `overlay_opacity: 34` against a range of `min: 0, max: 70,
+step: 5`.** Shopify requires a range value to be exactly `min + N x step`. 34 is
+not reachable from 0 in fives. It was wrong in two places, which is why the
+damage was theme-wide rather than confined to the home page: the schema
+**default** in `sections/hero-video.liquid`, and the stored **value** in
+`templates/index.json`. `main` had 30 and rendered fine.
+
+Nothing static catches this. The JSON is valid, the type is right, the number
+sits inside min and max, and theme check has no rule for step alignment. I
+introduced it by nudging an opacity from 30 to 34 for looks.
+
+Two further defects surfaced in the same sweep. Both **pre-existed on `main`**,
+so neither caused the 404, but both are real:
+
+- `heading_tracking` used `unit: "/1000em"`. Shopify caps a range unit at three
+  characters. The unit is gone; the explanation moved into `info`.
+- `sections/footer.liquid` had
+  `t: year: 'now' | date: '%Y', brand: brand`. That does not nest the way it
+  reads — Liquid applies `| date` to the output of `t` and hands `brand:` to
+  `date` as a third argument, which raises "wrong number of arguments" at render
+  time. The year is assigned before the filter now.
+
+**Ruled out**, so they do not need re-investigating: `comment`/`endcomment`
+inside `{% liquid %}` (the real Ruby Liquid gem parses it clean in strict mode),
+duplicate JSON keys, id charsets, block and order integrity, `enabled_on`
+misuse, section-group wiring, invalid UTF-8 and BOMs, and theme check with every
+check enabled at `--fail-level warning`.
+
+**`scripts/validate-theme.py` exists because of this.** It encodes the runtime
+rules theme check does not enforce. I regression-tested it rather than trusting
+a green result: 3 failures on the broken head, 1 on `main`, 0 on the fix. Run it
+alongside theme check; it exits non-zero.
+
+## Cutting the page down
+
+One product does not need a browse-then-buy funnel, so the three-option selector
+moved directly under the hero on both templates:
+
+    Home     hero -> bundle (3 choices) -> how it works -> FAQ
+    Product  hero -> bundle (3 choices) -> how it works -> details -> FAQ
+
+Removed from the templates: why encapsulated (the dark plum section), ingredient
+cards, results gallery, reviews, guarantee strip. **The section files all stay**,
+presets included, so each goes back from Customize with no code. Nothing was
+deleted.
+
+- The bundle heading "One bottle lasts about 8 weeks" is gone. The section reads
+  "The serum / Choose your bundle", with shipping and refund terms in the
+  footnote under the button, where they do the most work.
+- The FAQ gained "How do I use it?" as its second question, carrying the same
+  three steps, so that content survives in both places.
+- Home page height went from 7963px to 4379px at 1440, and 5251px at 390.
+
+**The judgement call I would revisit.** This removes the page's only social
+proof and its only trust block. The guarantee line survives in the bundle
+footnote, but the review cards are gone entirely, and on a $39 DTC serum those
+are usually the last thing you should cut. The instruction was explicit and
+named four sections, so I took it literally rather than quietly keeping a fifth
+— but if anything goes back, it should be Reviews, directly under the bundle.
+
 ## Not done
 
 - **Lighthouse ≥ 90 is not measured.** It needs a running store with real
@@ -188,8 +335,9 @@ not ship it by default on your behalf.
   and imagery are in, because the number will be dominated by your image weight
   and any apps you install, not by this theme.
 - **No `shopify theme dev` run against a live store.** I have no store
-  credentials, so Liquid is validated by theme check rather than by rendering
-  against real product data. The variant-position logic in particular is worth
-  eyeballing once your three variants exist.
+  credentials. Liquid is now validated three ways — theme check, a strict parse
+  with the real Ruby Liquid gem, and a mock-engine render of every section — but
+  none of that is Shopify itself. The variant-position logic in particular is
+  worth eyeballing once your three variants exist.
 - **No customer account templates.** The brief did not mention accounts. If you
   enable them, add `templates/customers/*`.

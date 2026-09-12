@@ -5,12 +5,15 @@
       "settings": {
         "eyebrow": "Hyaluronic PDRN orb serum",
         "subheading": "Salmon DNA serum, sealed in each orb until it touches your skin.",
-        "trust_line": "45g · Ships in 7–11 days · 30-day money-back guarantee",
-        "button_label": "Add to cart",
+        "trust_line": "45 g · Ships in 7–11 days · 30-day money-back guarantee",
+        "button_label": "Choose your bundle",
         "show_description": false,
         "show_rating": true,
-        "rating_value": "4.8",
-        "review_count_text": "2,431 reviews"
+        "rating_value": "",
+        "review_count_text": "",
+        "button_link": "#bundle",
+        "show_price": false,
+        "price_prefix": "From"
       }
     },
     "bundle": {
@@ -20,7 +23,7 @@
           "type": "option",
           "settings": {
             "title": "1 bottle",
-            "subtitle": "Try it for 8 weeks",
+            "subtitle": "Start here",
             "bottles": 1,
             "variant_position": 1,
             "selected": false
@@ -30,8 +33,8 @@
           "type": "option",
           "settings": {
             "title": "2 bottles",
-            "subtitle": "Our most chosen supply",
-            "badge": "Most popular",
+            "subtitle": "Keep a spare sealed",
+            "badge": "Recommended",
             "bottles": 2,
             "variant_position": 2,
             "selected": true
@@ -41,25 +44,68 @@
           "type": "option",
           "settings": {
             "title": "3 bottles",
-            "subtitle": "Best value per bottle",
+            "subtitle": "Three in the cabinet",
             "bottles": 3,
             "variant_position": 3,
             "selected": false
           }
         }
       },
-      "block_order": ["one", "two", "three"],
+      "block_order": [
+        "one",
+        "two",
+        "three"
+      ],
       "settings": {
         "anchor": "bundle",
-        "eyebrow": "Choose your supply",
-        "heading": "One bottle lasts about 8 weeks",
-        "subheading": "Most people start with two. Every order is covered by the 30-day money-back guarantee.",
+        "eyebrow": "The serum",
+        "heading": "Choose your bundle",
+        "subheading": "Every order is covered by the 30-day money-back guarantee.",
         "button_label": "Add to cart",
         "footnote": "Ships in 7–11 days · 30-day money-back guarantee",
-        "show_divider": true,
+        "show_divider": false,
         "show_subscribe": true,
         "subscribe_label": "Subscribe and save 15%",
         "subscribe_note": "Delivered on your schedule. Skip or cancel any time."
+      }
+    },
+    "how-it-works": {
+      "type": "how-it-works",
+      "blocks": {
+        "step-1": {
+          "type": "step",
+          "settings": {
+            "title": "Tap 2–3 orbs onto your palm",
+            "text": "Tip the bottle gently. The orbs stay whole until you press them."
+          }
+        },
+        "step-2": {
+          "type": "step",
+          "settings": {
+            "title": "Press to burst them into serum",
+            "text": "A light press is enough. The orbs collapse into a clear, watery serum."
+          }
+        },
+        "step-3": {
+          "type": "step",
+          "settings": {
+            "title": "Pat into clean skin, morning and night",
+            "text": "Press it in with your fingertips, then follow with moisturiser."
+          }
+        }
+      },
+      "block_order": [
+        "step-1",
+        "step-2",
+        "step-3"
+      ],
+      "settings": {
+        "eyebrow": "How to use",
+        "heading": "Three steps, morning and night",
+        "subheading": "The orbs stay whole in the bottle. You break them open yourself.",
+        "number_style": "padded",
+        "show_divider": true,
+        "anchor": "how"
       }
     },
     "product-details": {
@@ -70,14 +116,14 @@
           "settings": {
             "title": "Ingredients",
             "open": true,
-            "content": "<p>Key actives: Hyaluronic PDRN 30,000ppm, Ectoin, Glutathione.</p><p>Full INCI: Water, Glycerin, Butylene Glycol, Sodium DNA, Sodium Hyaluronate, Ectoin, Glutathione, 1,2-Hexanediol, Betaine, Panthenol, Allantoin, Trehalose, Sodium Polyacrylate, Carbomer, Tromethamine, Xanthan Gum, Disodium EDTA, Ethylhexylglycerin.</p><p>Replace this list with the exact INCI printed on your box before you publish.</p>"
+            "content": "<p>Key ingredients, as printed on the box: Hyaluronic PDRN 30,000ppm, Ectoin, Glutathione, Sodium Hyaluronate Crosspolymer, Sodium DNA.</p><p><strong>The full INCI list still needs adding.</strong> Copy it from the back of the carton exactly as printed and replace this paragraph. Do not paraphrase it — an ingredient list is a regulated declaration.</p>"
           }
         },
         "how-to-use": {
           "type": "tab",
           "settings": {
             "title": "How to use",
-            "content": "<p>Tap 2–3 orbs onto your palm. Press to burst them into serum, then pat into clean skin morning and night. Follow with moisturiser.</p><p>If your skin reacts easily, patch test on your inner arm for 24 hours first.</p>"
+            "content": "<p>Push the cap down and turn to open. Tap 2–3 orbs onto your palm, press to burst them into serum, then pat into clean skin morning and night and follow with moisturiser.</p><p>Close the cap tightly after use — the orbs are sealed doses and the cap keeps the rest of the bottle that way.</p><p>If your skin reacts easily, patch test on your inner arm for 24 hours first.</p>"
           }
         },
         "shipping": {
@@ -88,159 +134,24 @@
           }
         }
       },
-      "block_order": ["ingredients", "how-to-use", "shipping"],
+      "block_order": [
+        "ingredients",
+        "how-to-use",
+        "shipping"
+      ],
       "settings": {
         "eyebrow": "Product details",
         "heading": "The full specification",
         "one_at_a_time": true,
         "show_divider": true,
         "spec_one_label": "Net content",
-        "spec_one_value": "45g",
+        "spec_one_value": "45 g / 1.58 oz",
         "spec_two_label": "Texture",
         "spec_two_value": "Encapsulated orbs, water-light once burst",
         "spec_three_label": "Skin types",
         "spec_three_value": "All, including sensitive",
         "spec_four_label": "In the box",
         "spec_four_value": "Serum bottle x1"
-      }
-    },
-    "ingredients": {
-      "type": "ingredient-cards",
-      "blocks": {
-        "pdrn": {
-          "type": "ingredient",
-          "settings": { "title": "Hyaluronic PDRN 30,000ppm", "benefit": "Repair & renewal", "icon": "drop" }
-        },
-        "ectoin": {
-          "type": "ingredient",
-          "settings": { "title": "Ectoin", "benefit": "Barrier protection", "icon": "shield" }
-        },
-        "glutathione": {
-          "type": "ingredient",
-          "settings": { "title": "Glutathione", "benefit": "Brightening", "icon": "sparkle" }
-        }
-      },
-      "block_order": ["pdrn", "ectoin", "glutathione"],
-      "settings": {
-        "eyebrow": "What is inside",
-        "heading": "Three actives, nothing loud",
-        "subheading": "A short ingredient list designed to support hydration and a comfortable barrier.",
-        "columns": "3",
-        "show_divider": true
-      }
-    },
-    "how-it-works": {
-      "type": "how-it-works",
-      "blocks": {
-        "step-1": {
-          "type": "step",
-          "settings": {
-            "title": "Tap 2–3 orbs onto your palm",
-            "text": "Tip the bottle gently. The orbs stay whole until you press them.",
-            "icon": "drop"
-          }
-        },
-        "step-2": {
-          "type": "step",
-          "settings": {
-            "title": "Press to burst them into serum",
-            "text": "A light press is enough. The orbs collapse into a clear, watery serum.",
-            "icon": "sparkle"
-          }
-        },
-        "step-3": {
-          "type": "step",
-          "settings": {
-            "title": "Pat into clean skin, morning and night",
-            "text": "Press it in with your fingertips, then follow with moisturiser.",
-            "icon": "check"
-          }
-        }
-      },
-      "block_order": ["step-1", "step-2", "step-3"],
-      "settings": {
-        "eyebrow": "How to use",
-        "heading": "Three steps, morning and night",
-        "subheading": "The orbs stay whole in the bottle. You break them open yourself.",
-        "number_style": "padded",
-        "show_divider": true
-      }
-    },
-    "results": {
-      "type": "results-gallery",
-      "blocks": {
-        "shot-1": {
-          "type": "item",
-          "settings": {
-            "caption": "Day 1 — the orbs burst into a clear, watery serum.",
-            "image_alt": "Orbs bursting between two fingertips"
-          }
-        },
-        "shot-2": {
-          "type": "item",
-          "settings": {
-            "caption": "Day 14 — may help skin feel more cushioned by the afternoon.",
-            "image_alt": "Close-up of skin after applying the serum"
-          }
-        },
-        "shot-3": {
-          "type": "item",
-          "settings": {
-            "caption": "Day 28 — supports a smoother, more even-looking finish.",
-            "image_alt": "Portrait in daylight after four weeks of use"
-          }
-        }
-      },
-      "block_order": ["shot-1", "shot-2", "shot-3"],
-      "settings": {
-        "eyebrow": "In routine",
-        "heading": "What people notice",
-        "subheading": "Real routines, photographed at home. Skin is individual, so results vary.",
-        "timeframe": "28 days",
-        "show_divider": true
-      }
-    },
-    "reviews": {
-      "type": "reviews-carousel",
-      "blocks": {
-        "review-1": {
-          "type": "review",
-          "settings": {
-            "name": "Mina",
-            "meta": "Combination skin · 6 weeks in",
-            "rating": "5",
-            "text": "The orbs burst the second I press them. My skin feels cushioned by the afternoon instead of tight.",
-            "verified": true
-          }
-        },
-        "review-2": {
-          "type": "review",
-          "settings": {
-            "name": "Soo-Ah",
-            "meta": "Dry skin · 3 months in",
-            "rating": "5",
-            "text": "I was sceptical about the capsules, but it sinks in faster than any serum I have used and leaves nothing sticky behind.",
-            "verified": true
-          }
-        },
-        "review-3": {
-          "type": "review",
-          "settings": {
-            "name": "Hana",
-            "meta": "Sensitive skin · 4 weeks in",
-            "rating": "5",
-            "text": "Nothing stung, which is rare for me. My cheeks look calmer and the texture around my nose is softer.",
-            "verified": true
-          }
-        }
-      },
-      "block_order": ["review-1", "review-2", "review-3"],
-      "settings": {
-        "eyebrow": "Customer love",
-        "heading": "What people say after a month",
-        "show_summary": true,
-        "show_divider": true,
-        "show_app_slot": true
       }
     },
     "faq": {
@@ -252,6 +163,14 @@
             "question": "What is PDRN?",
             "answer": "<p>PDRN stands for polydeoxyribonucleotide, a fragment of DNA sourced from salmon. In skincare it is used as a hydrating, conditioning ingredient. Ours sits at 30,000ppm alongside hyaluronic acid.</p>",
             "open": true
+          }
+        },
+        "how-to-use": {
+          "type": "question",
+          "settings": {
+            "question": "How do I use it?",
+            "answer": "<p>Tap 2–3 orbs onto your palm. Press to burst them into serum, then pat into clean skin morning and night, and follow with moisturiser.</p><p>If your skin reacts easily, patch test on your inner arm for 24 hours first.</p>",
+            "open": false
           }
         },
         "q2": {
@@ -279,7 +198,7 @@
           "type": "question",
           "settings": {
             "question": "How long does one bottle last?",
-            "answer": "<p>The 45g bottle holds about eight weeks of use at 2–3 orbs, morning and night.</p>"
+            "answer": "<p>The 45 g bottle is designed for daily use at 2–3 orbs, morning and night.</p>"
           }
         },
         "q6": {
@@ -290,7 +209,15 @@
           }
         }
       },
-      "block_order": ["q1", "q2", "q3", "q4", "q5", "q6"],
+      "block_order": [
+        "q1",
+        "how-to-use",
+        "q2",
+        "q3",
+        "q4",
+        "q5",
+        "q6"
+      ],
       "settings": {
         "anchor": "faq",
         "eyebrow": "Questions",
@@ -301,52 +228,20 @@
         "show_divider": true
       }
     },
-    "guarantee": {
-      "type": "guarantee-strip",
-      "blocks": {
-        "g1": {
-          "type": "item",
-          "settings": {
-            "icon": "shield",
-            "title": "30-day money-back guarantee",
-            "text": "Not right for your skin? Email us within 30 days for a refund."
-          }
-        },
-        "g2": {
-          "type": "item",
-          "settings": {
-            "icon": "lock",
-            "title": "Secure checkout",
-            "text": "Payments are handled by Shopify. We never see your card details."
-          }
-        },
-        "g3": {
-          "type": "item",
-          "settings": {
-            "icon": "truck",
-            "title": "Free shipping over [threshold]",
-            "text": "Tracked delivery in 7–11 days, wherever you are."
-          }
-        }
-      },
-      "block_order": ["g1", "g2", "g3"],
-      "settings": { "show_divider": true }
-    },
     "sticky-atc": {
       "type": "sticky-atc",
-      "settings": { "button_label": "Add to cart", "always_on_mobile": true }
+      "settings": {
+        "button_label": "Add to cart",
+        "always_on_mobile": true
+      }
     }
   },
   "order": [
     "product-hero",
     "bundle",
-    "product-details",
-    "ingredients",
     "how-it-works",
-    "results",
-    "reviews",
+    "product-details",
     "faq",
-    "guarantee",
     "sticky-atc"
   ]
 }

@@ -1,6 +1,6 @@
 <div class="section main-list-collections">
   <div class="page-width">
-    <header class="section__header section__header--center">
+    <header class="page-header">
       <h1>{{ page_title }}</h1>
     </header>
 
@@ -18,7 +18,7 @@
                   loading="lazy"
                 >
               {%- else -%}
-                <div class="placeholder-media">{{ 'collection-1' | placeholder_svg_tag }}</div>
+                <div class="placeholder-media"></div>
               {%- endif -%}
             </div>
             <h2 class="product-card__title">{{ collection.title }}</h2>
