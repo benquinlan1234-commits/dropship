@@ -733,20 +733,16 @@ ol {
    outer margin. Fading from the middle out washes the product itself — the white
    ground barely needs help against a pale page, it is only the last few percent
    at the edge that reads as a rectangle. */
+/* No mask on the photograph itself. A feather that reaches inward far enough to
+   soften an edge also eats whatever is near it, and on a tightly cropped
+   packshot that means the corners — which is where the loose orbs sit. It is
+   not needed either: the frame fill is the photo's own white, so the edge of
+   the picture meets the same colour and the pool behind it carries that white
+   out into the page. There is nothing to feather. */
 .media--float img,
 .media--float video {
-  -webkit-mask-image: radial-gradient(
-    ellipse 96% 98% at 50% 48%,
-    rgba(0, 0, 0, 1) 68%,
-    rgba(0, 0, 0, calc(1 - 0.35 * var(--media-blend))) 87%,
-    rgba(0, 0, 0, calc(1 - var(--media-blend))) 100%
-  );
-  mask-image: radial-gradient(
-    ellipse 96% 98% at 50% 48%,
-    rgba(0, 0, 0, 1) 68%,
-    rgba(0, 0, 0, calc(1 - 0.35 * var(--media-blend))) 87%,
-    rgba(0, 0, 0, calc(1 - var(--media-blend))) 100%
-  );
+  -webkit-mask-image: none;
+  mask-image: none;
 }
 
 .media--float::after {

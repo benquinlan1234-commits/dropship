@@ -82,7 +82,12 @@
             </div>
 
             <div class="cart-item__details">
-              <a class="cart-item__title" href="{{ item.url }}">{{ item.product.title }}</a>
+              {%- comment -%}
+                Also not a link. On a one-product store the product page is a
+                second copy of the home page, so sending someone there from
+                inside the cart only interrupts the checkout they had started.
+              {%- endcomment -%}
+              <p class="cart-item__title">{{ item.product.title }}</p>
               {%- unless item.product.has_only_default_variant -%}
                 <p class="cart-item__variant text-small text-secondary">{{ item.variant.title }}</p>
               {%- endunless -%}
@@ -336,8 +341,9 @@
   }
 
   .cart-item__title {
+    margin: 0;
+    color: var(--color-text);
     font-weight: 600;
-    text-decoration: none;
   }
 
   .cart-item__variant {
