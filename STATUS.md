@@ -121,15 +121,19 @@ returns the page to a flat colour exactly.
 Depth is a soft violet halo rather than a grey drop shadow; silver is drawn as
 gradient metal rather than flat grey.
 
-**Photography.** The hero ships a cut-out packshot as a theme asset,
-`assets/hero-packshot.webp` — product media 5 with its white studio ground
-removed, so it sits on the page with no edge to blend rather than a rectangle
-to disguise. The source file is kept in `design/source-photos/`. The removal
-flood-fills inward from the edges rather than thresholding on colour, which is
-what preserves the white lettering, the orbs and the cap highlight; a global
-threshold erases them, and no blend mode can separate a near-white product from
-a white ground. **Bundled packshot** points at the asset — clear it to fall back
-to the product's own photo, or upload a **Poster image** to override both.
+**Photography.** The hero ships `assets/hero-packshot.webp` — product media 5,
+cropped in to the product so it fills the frame. **The white studio ground and
+the shadow are kept exactly as shot.** An earlier version had the white removed
+entirely; that was wrong, because the cast shadow then had nothing to sit on and
+read as floating. The source file is in `design/source-photos/` and
+`scripts/crop-packshot.mjs` is the tool.
+
+The crop measures the *product*, not the content: a cast shadow is neutral grey
+and mid-toned, so a chroma-or-darkness test skips it. That matters here because
+the shadow runs all the way to the right edge of the original — cropping to
+"everything that isn't white" would have gained nothing at all. Measured, the
+product goes from filling 82.2% of the frame to 87.7%, and the crop lands where
+the shadow has already faded to near-white so the cut does not show.
 
 **Frame style** decides what is drawn behind: None for a cut-out (nothing, which
 is the default), Soft light pool for a photo still on white, Panel with a silver
