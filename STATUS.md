@@ -2,10 +2,24 @@
 
 Where the theme stands, what was done to get here, and what is left.
 
-- **Branch:** `claude/pdrn-orb-serum-theme-iqu86p` — [PR #2](https://github.com/benquinlan1234-commits/dropship/pull/2), open against `main`
+- **Work branch:** `claude/pdrn-orb-serum-theme-iqu86p` — [PR #2](https://github.com/benquinlan1234-commits/dropship/pull/2), open against `main`. Develop here
+- **Deploy branch:** `shopify-deploy` — nothing but the seven theme folders at the root, for Shopify's GitHub connection. **Rebuilt from the work branch; never edit it directly**
 - **`main`** is v1, merged as PR #1. It renders, but it is the pre-design-pass theme
-- **To upload:** `dist/v2-fixed.zip`
 - **Checks:** `shopify theme check` 0 errors / 2 warnings · `scripts/validate-theme.py` 0 failures · both run in CI on every PR
+
+### Getting it onto the store
+
+**Connected via GitHub.** Online Store → Themes → Add theme → Connect from GitHub →
+`benquinlan1234-commits/dropship`, branch **`shopify-deploy`**. Every push to that
+branch syncs on its own; there is no zip step. `dist/v2-fixed.zip` is still built
+and kept current as a fallback, but downloading it tripped a browser virus
+scanner — the archive is text-only and was checked for `eval`, `Function()`,
+base64 blobs and obfuscated strings, all absent — so the GitHub connection is the
+route that works.
+
+Note that with GitHub connected, edits made in the **theme editor** are committed
+back to `shopify-deploy` by Shopify. If a Customizer change and a push ever
+collide, pull before pushing.
 
 Companion documents:
 
@@ -72,11 +86,30 @@ wash and the seams go. **Background depth** scales every layer of it and `0`
 returns the page to a flat colour exactly.
 
 Depth is a soft violet halo rather than a grey drop shadow; silver is drawn as
-gradient metal rather than flat grey. Photography is feathered into the page at
-its edges and eased in saturation — **Photo blending** — so a supplier shot on
-its own backdrop does not read as pasted on. Glow, sheen, grain, blending,
-background depth and the drifting orb are each a setting. Full table in the
-README.
+gradient metal rather than flat grey.
+
+**Photography.** The hero frame takes its shape from **Image frame shape**, and
+the shape drives the ratio, the corner radius and whether the media bleeds off
+the right edge. Square is the default: a packshot fills it exactly, so there is
+neither a crop nor a letterbox, and it sits inside the column with a gutter
+rather than having its soft edge sliced off against the window. The tall pill
+keeps its bleed, which is what made the original composition asymmetric.
+**Image fit** decides whether the photo fills the frame or is shown whole.
+**Photo blending** masks the photograph transparent at its rim, so it dissolves
+into whatever is behind it — the pearl fill, the silver edge, the field —
+rather than into one flat colour that would only match in the middle of the
+page.
+
+**Motion under `prefers-reduced-motion`.** Animation, parallax, the drifting orb
+and every transform are off. Colour, opacity, shadow, the FAQ panel height and
+the button sheen stay, at a shorter duration: a 220ms disclosure is not the
+motion that query is about, and suppressing it left panels and buttons with no
+feedback at all. Where a lift is the primary signal — bundle cards, buttons —
+a colour change carries it too, so the feedback survives the transform being
+zeroed. Measured in Chromium in both modes.
+
+Glow, sheen, grain, blending, background depth, frame shape, image fit and the
+drifting orb are each a setting. Full table in the README.
 
 ---
 
