@@ -21,6 +21,39 @@ Note that with GitHub connected, edits made in the **theme editor** are committe
 back to `shopify-deploy` by Shopify. If a Customizer change and a push ever
 collide, pull before pushing.
 
+**Keep `shopify-deploy` linear.** Each commit's *first* parent must be the
+previous commit on this branch. Shopify's GitHub integration follows
+first-parent history to work out which files changed, and it fails quietly when
+that lineage leads somewhere else.
+
+This bit once. The branch was being rebuilt with `git commit-tree -p <work
+branch> -p <deploy head>`, which put the work branch first — so first-parent
+walked into a tree carrying `design/`, `dist/` and `scripts/` instead of the
+previous theme. The store took `assets/theme.css` and
+`assets/hero-packshot.webp` but kept `sections/hero-video.liquid` from three
+commits earlier, the version with no `poster_asset` setting, so the hero fell
+back to the product's own photo with its white ground still on it and looked
+unchanged no matter how many times it was pushed. Nothing in CI catches this:
+the tree is correct, only the history is wrong.
+
+Rebuild it as a single-parent commit on the deploy head:
+
+```bash
+export GIT_INDEX_FILE=$(mktemp)
+git read-tree HEAD
+git rm -r --cached -q --ignore-unmatch .github .gitignore .theme-check.yml \
+  DECISIONS.md README.md STATUS.md design dist sample-content scripts
+c=$(git commit-tree "$(git write-tree)" -p origin/shopify-deploy -m "…")
+git branch -f shopify-deploy "$c" && git push -u origin shopify-deploy
+```
+
+**`templates/index.json` is the theme editor's file, not yours.** The live copy
+carries Shopify's "auto-generated, may be overwritten" header, and the store's
+version diverges from every commit in the repo. Anything that must survive
+belongs in a **schema default** in the section, not only in the stored template
+settings — a setting absent from the JSON falls back to its default, so the
+default is the thing that actually ships.
+
 Companion documents:
 
 | File | What it holds |
