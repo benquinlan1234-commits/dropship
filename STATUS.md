@@ -238,9 +238,22 @@ and the sticky bar in one move.
 - **`30,000ppm` hyaluronic PDRN** — the first hero stat. It is printed on the
   carton, so it is the supplier's claim rather than an invented one, but it is
   still a claim you would have to stand behind. Worth getting in writing.
-- **Currency is AUD**, and the free-shipping threshold is **$35** — below one
-  bottle, so the cart progress bar is satisfied by every possible order. Raise
-  it or turn it off.
+- **Free shipping is set at $44.70**, the price of one bottle, and is earned by
+  going **over** it — so a single bottle pays shipping and two do not. The cart
+  bar says "Add another bottle and shipping is free" rather than "$0.01 away",
+  which is what a penny shortfall would otherwise read as.
+
+  **The theme only displays this.** What a customer is actually charged comes
+  from **Settings → Shipping and delivery**, and it does not exist yet. In the
+  general profile, on the zone you ship to, add two price-based rates:
+
+  | Order total | Rate |
+  | --- | --- |
+  | $0.00 – $44.70 | $6.00 |
+  | $44.71 and up | Free |
+
+  Until those exist the page promises free shipping and checkout charges
+  whatever the default rate is, which is the worst of both.
 - **Alt text.** None of the six images has any. The theme falls back to the
   product title wherever an image is content rather than decoration. Real alt
   text in admin is still better.

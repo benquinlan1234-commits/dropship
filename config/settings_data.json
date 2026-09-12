@@ -16,7 +16,7 @@
     "currency_code_enabled": false,
     "rating_value": "",
     "review_count_text": "",
-    "free_shipping_threshold": 35,
+    "free_shipping_threshold": 44.7,
     "cart_upsell_heading": "Add to your order",
     "cart_show_note": false,
     "enable_animations": true,
