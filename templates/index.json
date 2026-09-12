@@ -27,7 +27,8 @@
         "image_position": 50,
         "frame_style": "bare",
         "product_image": 5,
-        "poster_asset": "hero-packshot.webp"
+        "poster_asset": "hero-packshot.webp",
+        "media_span": 125
       },
       "blocks": {
         "s1": {

@@ -25,6 +25,8 @@
     tall crop and wrong for a square one: it would take the corners off a
     packshot, which is the crop this setting exists to avoid.
   endcomment
+  assign media_span = section.settings.media_span | default: 125 | divided_by: 100.0
+
   case section.settings.media_shape
     when 'portrait'
       assign media_ratio = '4 / 5'
@@ -82,7 +84,7 @@
 <section
   class="hero hero--{{ section.settings.layout }}{% unless is_overlay %} section--wash{% endunless %}"
   data-sticky-trigger
-  style="--hero-height: {{ section.settings.height }}vh; --hero-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }}; --hero-text: {{ section.settings.text_color }}; --media-fit: {{ section.settings.media_fit | default: 'contain' }}; --media-ratio: {{ media_ratio }}; --media-radius: {{ media_radius }}; --media-bleed: {{ media_bleed }}; --media-gutter: {{ media_gutter }}; --media-frame: {{ section.settings.frame_color }}; --media-zoom: {{ section.settings.image_zoom | divided_by: 100.0 }}; --media-pos-y: {{ section.settings.image_position }}%;"
+  style="--hero-height: {{ section.settings.height }}vh; --hero-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }}; --hero-text: {{ section.settings.text_color }}; --media-fit: {{ section.settings.media_fit | default: 'contain' }}; --media-ratio: {{ media_ratio }}; --media-radius: {{ media_radius }}; --media-bleed: {{ media_bleed }}; --media-gutter: {{ media_gutter }}; --media-span: {{ media_span }}fr; --media-frame: {{ section.settings.frame_color }}; --media-zoom: {{ section.settings.image_zoom | divided_by: 100.0 }}; --media-pos-y: {{ section.settings.image_position }}%;"
 >
   {%- unless is_overlay -%}
     <span class="orb hero__orb" aria-hidden="true"></span>
@@ -308,9 +310,9 @@
 
   @media screen and (min-width: 990px) {
     .hero__grid {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1.02fr);
+      grid-template-columns: minmax(0, 1fr) minmax(0, var(--media-span, 1.02fr));
       align-items: center;
-      gap: 64px;
+      gap: 56px;
       padding-block: 88px 96px;
     }
 
@@ -432,6 +434,17 @@
       "label": "Bundled packshot",
       "default": "hero-packshot.webp",
       "info": "A theme asset, shipped with the theme: the product shot with its white studio ground removed, so it sits on the page with no edge to blend. Clear this to fall back to the product's own photo, or upload a Poster image below to override it."
+    },
+    {
+      "type": "range",
+      "id": "media_span",
+      "label": "Photo size",
+      "min": 80,
+      "max": 170,
+      "step": 5,
+      "default": 125,
+      "unit": "%",
+      "info": "How much of the row the photograph takes next to the copy. 100 splits it evenly."
     },
     {
       "type": "select",
