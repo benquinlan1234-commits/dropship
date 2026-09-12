@@ -15,6 +15,35 @@
   endif
 
   comment
+    A product photograph is rarely the shape of the frame it lands in. Cropping
+    one to a tall pill eats a third of its width, which on a packshot means the
+    box loses its top. Default to showing all of it and letting the pearl fill
+    carry the rest.
+  endcomment
+  comment
+    The frame carries the radius as well as the ratio. An oval is right for a
+    tall crop and wrong for a square one: it would take the corners off a
+    packshot, which is the crop this setting exists to avoid.
+  endcomment
+  case section.settings.media_shape
+    when 'portrait'
+      assign media_ratio = '4 / 5'
+      assign media_radius = '52px'
+      assign media_bleed = '0px'
+      assign media_gutter = 'var(--content-inset)'
+    when 'square'
+      assign media_ratio = '1 / 1'
+      assign media_radius = '52px'
+      assign media_bleed = '0px'
+      assign media_gutter = 'var(--content-inset)'
+    else
+      assign media_ratio = '3 / 4.4'
+      assign media_radius = '220px 220px 220px 220px / 180px 180px 180px 180px'
+      assign media_bleed = '-6vw'
+      assign media_gutter = '0px'
+  endcase
+
+  comment
     The product already carries its photography. Fall back to it so linking the
     featured product is the only step needed to light the hero up.
   endcomment
@@ -38,7 +67,7 @@
 <section
   class="hero hero--{{ section.settings.layout }}{% unless is_overlay %} section--wash{% endunless %}"
   data-sticky-trigger
-  style="--hero-height: {{ section.settings.height }}vh; --hero-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }}; --hero-text: {{ section.settings.text_color }};"
+  style="--hero-height: {{ section.settings.height }}vh; --hero-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }}; --hero-text: {{ section.settings.text_color }}; --media-fit: {{ section.settings.media_fit | default: 'contain' }}; --media-ratio: {{ media_ratio }}; --media-radius: {{ media_radius }}; --media-bleed: {{ media_bleed }}; --media-gutter: {{ media_gutter }};"
 >
   {%- unless is_overlay -%}
     <span class="orb hero__orb" aria-hidden="true"></span>
@@ -53,7 +82,7 @@
           webm_url: section.settings.video_webm_url,
           poster: hero_poster,
           alt: hero_poster_alt,
-          ratio: '3 / 4.4',
+          ratio: media_ratio,
           loading_eager: true
         %}
       </div>
@@ -276,15 +305,19 @@
       max-width: 620px;
     }
 
-    /* The media runs past the right edge of the viewport. */
+    /* The tall pill runs past the right edge of the viewport, which is what
+       makes the composition asymmetric. A square or portrait frame does not:
+       bleeding one off-screen cuts the feathered edge off on that side and
+       leaves the photograph looking half-finished against the window. */
     .hero__media {
       order: 2;
-      padding-inline: 0;
-      margin-right: -6vw;
+      padding-inline: 0 var(--media-gutter, 0);
+      margin-right: var(--media-bleed, 0);
     }
 
     .hero__media .media--tall {
       max-height: 78vh;
+      max-width: 100%;
     }
   }
 
@@ -376,6 +409,29 @@
       "id": "video_webm_url",
       "label": "WebM URL",
       "info": "Optional. Upload a .webm under Content > Files and paste its URL. Served first where supported."
+    },
+    {
+      "type": "select",
+      "id": "media_fit",
+      "label": "Image fit",
+      "options": [
+        { "value": "contain", "label": "Show the whole photo" },
+        { "value": "cover", "label": "Fill the frame (crops)" }
+      ],
+      "default": "contain",
+      "info": "Supplier packshots are rarely the shape of the frame. Filling it crops the edges, which on a box shot usually takes the top off."
+    },
+    {
+      "type": "select",
+      "id": "media_shape",
+      "label": "Image frame shape",
+      "options": [
+        { "value": "square", "label": "Square" },
+        { "value": "portrait", "label": "Portrait" },
+        { "value": "tall", "label": "Tall pill" }
+      ],
+      "default": "square",
+      "info": "The closer this is to the shape of your photo, the less empty space around it."
     },
     {
       "type": "range",

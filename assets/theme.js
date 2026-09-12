@@ -554,7 +554,12 @@
       var panel = item.querySelector('.accordion__panel');
       item.classList.remove('is-open');
 
-      if (!panel || prefersReducedMotion.matches) {
+      /* Ask the panel how long it is actually going to take rather than
+         inferring it from the motion preference — a stylesheet, a reduced-motion
+         override or the editor can all zero it, and waiting on a transitionend
+         that will never fire would leave the panel hanging open. */
+      var duration = panel ? parseFloat(getComputedStyle(panel).transitionDuration) || 0 : 0;
+      if (!panel || duration === 0) {
         item.open = false;
         return;
       }

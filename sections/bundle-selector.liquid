@@ -362,8 +362,11 @@
       box-shadow var(--duration-hover) var(--ease-out);
   }
 
+  /* The rim goes violet rather than silver on hover. The lift is the nicer
+     signal but it is a transform, so it is gone for anyone who asks for
+     reduced motion — the colour has to carry the feedback on its own. */
   .bundle__label:hover {
-    border-color: var(--color-silver);
+    border-color: var(--color-accent);
     transform: translateY(var(--lift-y));
     box-shadow: var(--edge-light), var(--shadow-lift);
   }

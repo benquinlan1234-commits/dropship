@@ -19,7 +19,9 @@
         "link_url": "#how",
         "button_link": "#bundle",
         "show_price": false,
-        "price_prefix": "From"
+        "price_prefix": "From",
+        "media_fit": "contain",
+        "media_shape": "square"
       },
       "blocks": {
         "s1": {

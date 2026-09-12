@@ -607,7 +607,7 @@ ol {
 .media video {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: var(--media-fit, cover);
   transition: transform 1.2s var(--ease-out);
 }
 
@@ -626,7 +626,7 @@ ol {
 }
 
 .media--tall {
-  aspect-ratio: 3 / 4.4;
+  aspect-ratio: var(--media-ratio, 3 / 4.4);
 }
 
 .media--landscape {
@@ -637,7 +637,7 @@ ol {
    box, the fill in the padding box, so the metal follows the curve. */
 .media--pill {
   position: relative;
-  border-radius: 220px 220px 220px 220px / 180px 180px 180px 180px;
+  border-radius: var(--media-radius, 220px 220px 220px 220px / 180px 180px 180px 180px);
   border: 1px solid transparent;
   background-image: linear-gradient(var(--color-pearl), var(--color-pearl)), var(--silver-fill);
   background-origin: border-box;
@@ -645,16 +645,35 @@ ol {
   box-shadow: var(--shadow-soft);
 }
 
-/* Supplier photography arrives on its own backdrop, which meets the page at a
-   hard edge and reads as a photo pasted onto a colour. Feather the rim into
-   the page and pull the saturation back a little, so the shot sits in the
-   palette instead of on top of it. --media-blend takes it back to a clean cut. */
+/* Supplier photography arrives on its own backdrop and meets the page at a hard
+   edge, reading as a photo pasted onto a colour.
+
+   The rim is feathered with a mask rather than a vignette painted in the page
+   colour: the photograph itself becomes transparent at its edges, so it blends
+   into whatever is actually behind it — the pearl fill, the silver rim, the
+   gradient field — instead of into one flat colour that only matches in the
+   middle of the page. Saturation eases back a touch so the shot sits in the
+   palette. --media-blend at 0 restores a clean cut. */
 .media--pill img,
 .media--pill video {
-  filter: saturate(calc(1 - 0.14 * var(--media-blend))) contrast(calc(1 - 0.03 * var(--media-blend)))
-    brightness(calc(1 + 0.02 * var(--media-blend)));
+  filter: saturate(calc(1 - 0.16 * var(--media-blend))) contrast(calc(1 - 0.04 * var(--media-blend)))
+    brightness(calc(1 + 0.025 * var(--media-blend)));
+  -webkit-mask-image: radial-gradient(
+    ellipse 90% 92% at 50% 48%,
+    rgba(0, 0, 0, 1) 42%,
+    rgba(0, 0, 0, calc(1 - 0.5 * var(--media-blend))) 74%,
+    rgba(0, 0, 0, calc(1 - var(--media-blend))) 100%
+  );
+  mask-image: radial-gradient(
+    ellipse 90% 92% at 50% 48%,
+    rgba(0, 0, 0, 1) 42%,
+    rgba(0, 0, 0, calc(1 - 0.5 * var(--media-blend))) 74%,
+    rgba(0, 0, 0, calc(1 - var(--media-blend))) 100%
+  );
 }
 
+/* A single soft highlight down the top-left, so the pill reads as a lit surface
+   the photograph is sitting in rather than a hole cut out of the page. */
 .media--pill::after {
   content: '';
   position: absolute;
@@ -662,18 +681,11 @@ ol {
   z-index: 1;
   border-radius: inherit;
   pointer-events: none;
-  background:
-    radial-gradient(
-      ellipse 78% 72% at 50% 46%,
-      rgba(var(--color-background-rgb), 0) 58%,
-      rgba(var(--color-background-rgb), calc(0.5 * var(--media-blend))) 84%,
-      rgba(var(--color-background-rgb), calc(0.88 * var(--media-blend))) 100%
-    ),
-    linear-gradient(
-      148deg,
-      rgba(255, 255, 255, calc(0.22 * var(--media-blend))) 0%,
-      rgba(255, 255, 255, 0) 42%
-    );
+  background: linear-gradient(
+    148deg,
+    rgba(255, 255, 255, calc(0.30 * var(--media-blend))) 0%,
+    rgba(255, 255, 255, 0) 46%
+  );
 }
 
 @media screen and (max-width: 749px) {
@@ -972,12 +984,6 @@ ol {
     transform: none;
   }
 
-  .accordion__panel {
-    transition: none;
-    opacity: 1;
-    transform: none;
-  }
-
   accordion-group.is-ready .accordion__panel {
     grid-template-rows: 0fr;
     opacity: 0;
@@ -998,8 +1004,8 @@ ol {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-property: background-color, border-color, color, fill, stroke, opacity,
-      box-shadow !important;
-    transition-duration: 200ms !important;
+      box-shadow, grid-template-rows, background-position !important;
+    transition-duration: 220ms !important;
     scroll-behavior: auto !important;
   }
 }
