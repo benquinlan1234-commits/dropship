@@ -639,7 +639,8 @@ ol {
   position: relative;
   border-radius: var(--media-radius, 220px 220px 220px 220px / 180px 180px 180px 180px);
   border: 1px solid transparent;
-  background-image: linear-gradient(var(--color-pearl), var(--color-pearl)), var(--silver-fill);
+  background-image: linear-gradient(var(--media-frame, var(--color-pearl)), var(--media-frame, var(--color-pearl))),
+    var(--silver-fill);
   background-origin: border-box;
   background-clip: padding-box, border-box;
   box-shadow: var(--shadow-soft);
@@ -656,19 +657,25 @@ ol {
    palette. --media-blend at 0 restores a clean cut. */
 .media--pill img,
 .media--pill video {
+  object-position: 50% var(--media-pos-y, 50%);
+  scale: var(--media-zoom, 1);
+  /* Scale about the chosen line rather than the middle, or zooming trims the
+     top and the bottom equally and can never crop past a banner printed across
+     the top of a supplier's photograph. */
+  transform-origin: 50% var(--media-pos-y, 50%);
   filter: saturate(calc(1 - 0.16 * var(--media-blend))) contrast(calc(1 - 0.04 * var(--media-blend)))
     brightness(calc(1 + 0.025 * var(--media-blend)));
   -webkit-mask-image: radial-gradient(
-    ellipse 90% 92% at 50% 48%,
-    rgba(0, 0, 0, 1) 42%,
-    rgba(0, 0, 0, calc(1 - 0.5 * var(--media-blend))) 74%,
-    rgba(0, 0, 0, calc(1 - var(--media-blend))) 100%
+    ellipse 88% 90% at 50% 48%,
+    rgba(0, 0, 0, 1) 34%,
+    rgba(0, 0, 0, calc(1 - 0.42 * var(--media-blend))) 68%,
+    rgba(0, 0, 0, calc(1 - var(--media-blend))) 99%
   );
   mask-image: radial-gradient(
-    ellipse 90% 92% at 50% 48%,
-    rgba(0, 0, 0, 1) 42%,
-    rgba(0, 0, 0, calc(1 - 0.5 * var(--media-blend))) 74%,
-    rgba(0, 0, 0, calc(1 - var(--media-blend))) 100%
+    ellipse 88% 90% at 50% 48%,
+    rgba(0, 0, 0, 1) 34%,
+    rgba(0, 0, 0, calc(1 - 0.42 * var(--media-blend))) 68%,
+    rgba(0, 0, 0, calc(1 - var(--media-blend))) 99%
   );
 }
 

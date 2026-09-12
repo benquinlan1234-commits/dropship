@@ -165,10 +165,10 @@
                           {%- assign pack_sub_compare = allocation.compare_at_price | times: pack_quantity -%}
                           <s class="price__compare">{{ pack_sub_compare | money }}</s>
                         {%- endif -%}
-                        {%- if bottles > 1 -%}
-                          {%- assign sub_unit = pack_sub_price | divided_by: bottles -%}
+                        {%- if bottles > 1 and pack_quantity == 1 -%}
+                          {%- assign sub_unit = pack_sub_price | divided_by: bottles | money -%}
                           <span class="price__unit">
-                            {{- 'products.product.per_bottle' | t: price: sub_unit | money -}}
+                            {{- 'products.product.per_bottle' | t: price: sub_unit -}}
                           </span>
                         {%- endif -%}
                       </span>

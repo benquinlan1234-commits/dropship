@@ -71,11 +71,31 @@
     </s>
   {%- endif -%}
 
+  {%- comment -%}
+    Two things about this line.
+
+    `t: price: unit_price | money` does not nest the way it reads: Liquid applies
+    `money` to what `t` returns, so the translation received raw cents and the
+    "/bottle" suffix was eaten by the money filter. Format first, pass second.
+
+    And it only earns its place when the pack actually beats buying singly. When
+    a bundle is simply N of the same bottle, the per-bottle figure is the shelf
+    price repeated under the total — it reads as a second, contradictory price
+    rather than as a saving.
+  {%- endcomment -%}
   {%- if unit_count and unit_count > 1 and price > 0 -%}
     {%- assign unit_price = price | divided_by: unit_count -%}
-    <span class="price__unit">
-      {{- 'products.product.per_bottle' | t: price: unit_price | money -}}
-    </span>
+    {%- assign single_price = unit_price -%}
+    {%- if pack > 1 -%}
+      {%- comment -%} A quantity pack has no per-unit saving by construction. {%- endcomment -%}
+      {%- assign single_price = 0 -%}
+    {%- endif -%}
+    {%- if single_price > 0 -%}
+      {%- assign unit_money = unit_price | money -%}
+      <span class="price__unit">
+        {{- 'products.product.per_bottle' | t: price: unit_money -}}
+      </span>
+    {%- endif -%}
   {%- endif -%}
 
   {%- unless available -%}

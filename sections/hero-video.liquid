@@ -67,7 +67,7 @@
 <section
   class="hero hero--{{ section.settings.layout }}{% unless is_overlay %} section--wash{% endunless %}"
   data-sticky-trigger
-  style="--hero-height: {{ section.settings.height }}vh; --hero-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }}; --hero-text: {{ section.settings.text_color }}; --media-fit: {{ section.settings.media_fit | default: 'contain' }}; --media-ratio: {{ media_ratio }}; --media-radius: {{ media_radius }}; --media-bleed: {{ media_bleed }}; --media-gutter: {{ media_gutter }};"
+  style="--hero-height: {{ section.settings.height }}vh; --hero-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }}; --hero-text: {{ section.settings.text_color }}; --media-fit: {{ section.settings.media_fit | default: 'contain' }}; --media-ratio: {{ media_ratio }}; --media-radius: {{ media_radius }}; --media-bleed: {{ media_bleed }}; --media-gutter: {{ media_gutter }}; --media-frame: {{ section.settings.frame_color }}; --media-zoom: {{ section.settings.image_zoom | divided_by: 100.0 }}; --media-pos-y: {{ section.settings.image_position }}%;"
 >
   {%- unless is_overlay -%}
     <span class="orb hero__orb" aria-hidden="true"></span>
@@ -409,6 +409,35 @@
       "id": "video_webm_url",
       "label": "WebM URL",
       "info": "Optional. Upload a .webm under Content > Files and paste its URL. Served first where supported."
+    },
+    {
+      "type": "color",
+      "id": "frame_color",
+      "label": "Frame fill",
+      "default": "#5C4A8C",
+      "info": "Match this to the backdrop of your photograph. A photo cannot fade into a pale page — it only goes grey. It fades into a frame that is already its own colour, and the frame then sits on the page as a panel."
+    },
+    {
+      "type": "range",
+      "id": "image_zoom",
+      "label": "Photo zoom",
+      "min": 100,
+      "max": 180,
+      "step": 5,
+      "default": 100,
+      "unit": "%",
+      "info": "Zoom in to crop past anything printed into the supplier's image, such as a promotional banner."
+    },
+    {
+      "type": "range",
+      "id": "image_position",
+      "label": "Photo vertical position",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 50,
+      "unit": "%",
+      "info": "0 shows the top of the photo, 100 the bottom. Use with zoom to choose what the crop keeps."
     },
     {
       "type": "select",

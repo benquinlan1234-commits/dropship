@@ -20,8 +20,11 @@
         "button_link": "#bundle",
         "show_price": false,
         "price_prefix": "From",
-        "media_fit": "contain",
-        "media_shape": "square"
+        "media_fit": "cover",
+        "media_shape": "square",
+        "frame_color": "#5C4A8C",
+        "image_zoom": 135,
+        "image_position": 75
       },
       "blocks": {
         "s1": {
