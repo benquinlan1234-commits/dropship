@@ -22,13 +22,13 @@
         "price_prefix": "From",
         "media_fit": "contain",
         "media_shape": "square",
-        "frame_color": "#FBFAFE",
+        "frame_color": "#FFFFFF",
         "image_zoom": 100,
         "image_position": 50,
-        "frame_style": "bare",
+        "frame_style": "float",
         "product_image": 5,
         "poster_asset": "hero-packshot.webp",
-        "media_span": 125
+        "media_span": 140
       },
       "blocks": {
         "s1": {
