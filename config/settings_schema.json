@@ -310,8 +310,8 @@
         "type": "number",
         "id": "free_shipping_threshold",
         "label": "Free shipping threshold",
-        "default": 35,
-        "info": "In your store currency, without decimals. Used in the guarantee strip and cart drawer."
+        "default": 44.70,
+        "info": "In your store currency; decimals are fine. Free shipping is earned by going OVER this figure, not by reaching it — so setting it to the price of one bottle means a single bottle pays shipping and two do not. Used in the guarantee strip and cart drawer."
       }
     ]
   },

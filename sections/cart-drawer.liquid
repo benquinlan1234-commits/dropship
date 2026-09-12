@@ -1,7 +1,31 @@
 {%- liquid
+  comment
+    Free shipping is earned by going OVER the threshold, not by reaching it.
+    That distinction is the whole point when the threshold is set to the price
+    of a single bottle: one bottle must not qualify, two must. Rounding first
+    because the setting carries cents and Liquid's float arithmetic does not
+    always land exactly on the integer.
+  endcomment
   assign threshold = settings.free_shipping_threshold | default: 0
-  assign threshold_cents = threshold | times: 100
-  assign remaining = threshold_cents | minus: cart.total_price
+  assign threshold_cents = threshold | times: 100 | round
+  assign remaining = threshold_cents | minus: cart.total_price | plus: 1
+  if cart.total_price > threshold_cents
+    assign remaining = 0
+  endif
+
+  comment
+    With the threshold set at the price of one bottle, a one-bottle cart is a
+    penny short, and "you are $0.01 away from free shipping" is useless — there
+    is nothing a customer can spend a penny on. When one more of what they are
+    already buying would clear the line, say that instead.
+  endcomment
+  assign add_one_clears_it = false
+  if remaining > 0 and cart.item_count > 0
+    assign first_unit = cart.items.first.final_price
+    if remaining <= first_unit
+      assign add_one_clears_it = true
+    endif
+  endif
   assign upsell = settings.cart_upsell_product
   assign upsell_in_cart = false
   if upsell != blank
@@ -35,7 +59,12 @@
       <div class="cart-drawer__shipping">
         {%- if remaining > 0 -%}
           <p class="text-small">
-            {{ 'sections.cart.free_shipping_progress_html' | t: amount: remaining | money }}
+            {%- if add_one_clears_it -%}
+              {{ 'sections.cart.free_shipping_add_one' | t }}
+            {%- else -%}
+              {%- assign remaining_money = remaining | money -%}
+              {{ 'sections.cart.free_shipping_progress_html' | t: amount: remaining_money }}
+            {%- endif -%}
           </p>
         {%- else -%}
           <p class="text-small">{{ 'sections.cart.free_shipping_reached' | t }}</p>
