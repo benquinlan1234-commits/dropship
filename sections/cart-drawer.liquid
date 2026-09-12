@@ -63,7 +63,12 @@
       <ul class="cart-drawer__items" role="list">
         {%- for item in cart.items -%}
           <li class="cart-item" data-line="{{ forloop.index }}">
-            <a class="cart-item__media" href="{{ item.url }}" tabindex="-1" aria-hidden="true">
+            {%- comment -%}
+              Not a link. The thumbnail sat next to a title that already links
+              to the same place, so clicking the picture only ever took someone
+              out of the cart by accident.
+            {%- endcomment -%}
+            <div class="cart-item__media" aria-hidden="true">
               {%- if item.image -%}
                 <img
                   src="{{ item.image | image_url: width: 160 }}"
@@ -74,7 +79,7 @@
                   loading="lazy"
                 >
               {%- endif -%}
-            </a>
+            </div>
 
             <div class="cart-item__details">
               <a class="cart-item__title" href="{{ item.url }}">{{ item.product.title }}</a>
@@ -311,11 +316,23 @@
     border-bottom: 1px solid var(--color-border);
   }
 
+  /* A grid child stretches to the row by default, so this box grew to the
+     height of the whole line and showed its pearl fill as a band under an
+     80px picture. Pin it square and sit it at the top of the row. */
   .cart-item__media {
-    display: block;
+    align-self: start;
+    width: 80px;
+    height: 80px;
     border-radius: var(--radius-sm);
     overflow: hidden;
     background-color: var(--color-pearl);
+  }
+
+  .cart-item__media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   .cart-item__title {
@@ -395,7 +412,11 @@
   }
 
   .cart-upsell__image {
-    border-radius: var(--radius);
+    width: 60px;
+    height: 60px;
+    border-radius: var(--radius-sm);
+    object-fit: cover;
+    background-color: var(--color-pearl);
   }
 
   .cart-upsell__title {

@@ -208,6 +208,31 @@ Until one of those exists, no card claims a saving. "Best value per bottle" and
 "Our most chosen supply" are gone — the first would have been false, the second
 is unsupported on a store with no orders.
 
+### The checkout is not the theme
+
+Checkout is Shopify's own, not Liquid you can edit here. `checkoutBranding` in
+the Admin API is gated to Plus and development stores — this shop is neither, so
+it cannot be styled from code at all. It is set by hand in **Settings →
+Checkout → Customize**. To match the theme:
+
+| Checkout setting | Value |
+| --- | --- |
+| Accent / primary button | `#6E5AAB` |
+| Button label | `#FFFFFF` |
+| Background | `#F1ECF7` |
+| Surface / cards | `#FAF8FD` |
+| Body text | `#2A2340` |
+| Borders | `#D6CEE4` |
+| Heading font | Fraunces |
+| Body font | Manrope |
+| Corner radius | 22px, or the roundest option offered |
+
+**The checkout's line-item thumbnail is the product's featured image**, which is
+media 1 — the supplier frame with "Ready stock and shipped in seconds" printed
+across it. No theme setting reaches it. Reordering the product's media in admin
+so the clean packshot is first fixes the checkout thumbnail, the cart drawer,
+and the sticky bar in one move.
+
 ### Still contradictory or unverified
 
 - **`30,000ppm` hyaluronic PDRN** — the first hero stat. It is printed on the
