@@ -30,7 +30,9 @@
               </span>
             </summary>
             <div class="accordion__panel">
-              <div class="rte text-secondary">{{ block.settings.answer }}</div>
+              <div class="accordion__panel-inner">
+                <div class="rte text-secondary accordion__body">{{ block.settings.answer }}</div>
+              </div>
             </div>
           </details>
         {%- endfor -%}
@@ -147,28 +149,39 @@
     background-image: linear-gradient(var(--color-accent-soft), var(--color-accent-soft)), var(--silver-fill);
   }
 
-  /* The answer unrolls rather than appearing. */
-  .accordion[open] .accordion__panel {
-    animation: accordion-open 420ms var(--ease-out);
+  /* A <details> snaps open: the browser reveals the panel at full height in one
+     frame, so any animation on it starts after the layout has already jumped.
+     The panel is a grid whose single row goes 0fr -> 1fr, which is a real
+     height transition both ways, and the custom element holds the open
+     attribute on until the closing transition has finished.
+
+     Only once the element has upgraded — until then an open panel is simply
+     open, so the answers are readable with no JavaScript at all. */
+  .accordion__panel-inner {
+    overflow: hidden;
+    min-height: 0;
   }
 
-  @keyframes accordion-open {
-    from {
-      opacity: 0;
-      transform: translateY(-6px);
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .accordion[open] .accordion__panel {
-      animation: none;
-    }
-  }
-
-  .accordion__panel {
+  .accordion__body {
     padding: 0 0 28px;
     max-width: 60ch;
     font-size: 0.9375rem;
+  }
+
+  accordion-group.is-ready .accordion__panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transition: grid-template-rows 420ms var(--ease-out), opacity 260ms var(--ease-out);
+  }
+
+  accordion-group.is-ready .accordion.is-open .accordion__panel {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+
+  accordion-group.is-ready .accordion.is-open .accordion__body {
+    transition: transform 420ms var(--ease-out);
   }
 
   @media screen and (min-width: 750px) {
@@ -296,7 +309,7 @@
           "type": "question",
           "settings": {
             "question": "How long does one bottle last?",
-            "answer": "<p>The 30ml bottle is designed for daily use at 2–3 orbs, morning and night.</p>"
+            "answer": "<p>The 45 g bottle is designed for daily use at 2–3 orbs, morning and night.</p>"
           }
         },
         {

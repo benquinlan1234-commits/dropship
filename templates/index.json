@@ -18,7 +18,7 @@
         "link_label": "How it works",
         "link_url": "#how",
         "button_link": "#bundle",
-        "show_price": true,
+        "show_price": false,
         "price_prefix": "From"
       },
       "blocks": {
@@ -32,8 +32,8 @@
         "s2": {
           "type": "stat",
           "settings": {
-            "value": "30ml",
-            "label": "Net content"
+            "value": "45 g",
+            "label": "Net weight"
           }
         },
         "s3": {
@@ -67,8 +67,8 @@
           "type": "option",
           "settings": {
             "title": "2 bottles",
-            "subtitle": "Our most chosen supply",
-            "badge": "Most popular",
+            "subtitle": "Keep a spare sealed",
+            "badge": "Recommended",
             "bottles": 2,
             "variant_position": 2,
             "selected": true
@@ -78,7 +78,7 @@
           "type": "option",
           "settings": {
             "title": "3 bottles",
-            "subtitle": "Best value per bottle",
+            "subtitle": "Three in the cabinet",
             "bottles": 3,
             "variant_position": 3,
             "selected": false
@@ -187,7 +187,7 @@
           "type": "question",
           "settings": {
             "question": "How long does one bottle last?",
-            "answer": "<p>The 30ml bottle is designed for daily use at 2–3 orbs, morning and night.</p>"
+            "answer": "<p>The 45 g bottle is designed for daily use at 2–3 orbs, morning and night.</p>"
           }
         },
         "q6": {

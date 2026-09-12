@@ -18,14 +18,20 @@
     The product already carries its photography. Fall back to it so linking the
     featured product is the only step needed to light the hero up.
   endcomment
+  assign hero_media = hero_product.featured_media
+  assign wanted_media = section.settings.product_image | minus: 1
+  if wanted_media > 0 and hero_product.media[wanted_media] != blank
+    assign hero_media = hero_product.media[wanted_media]
+  endif
+
   assign hero_poster = section.settings.poster
   if hero_poster == blank
-    assign hero_poster = hero_product.featured_media.preview_image
+    assign hero_poster = hero_media.preview_image
   endif
 
   assign hero_poster_alt = section.settings.poster_alt
   if hero_poster_alt == blank
-    assign hero_poster_alt = hero_product.featured_media.alt | default: hero_product.title
+    assign hero_poster_alt = hero_media.alt | default: hero_product.title
   endif
 -%}
 
@@ -372,6 +378,16 @@
       "info": "Optional. Upload a .webm under Content > Files and paste its URL. Served first where supported."
     },
     {
+      "type": "range",
+      "id": "product_image",
+      "label": "Which product photo",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 1,
+      "info": "Counts through the product's own media in admin order. Ignored when a poster image is uploaded below."
+    },
+    {
       "type": "image_picker",
       "id": "poster",
       "label": "Poster image",
@@ -441,7 +457,9 @@
       "type": "checkbox",
       "id": "show_price",
       "label": "Show the price",
-      "default": true
+      "default": false,
+      "info": "Off by default. The offer section below already prices every option, and two prices above the fold read as two different products."
+
     },
     {
       "type": "text",
@@ -571,7 +589,7 @@
       "name": "Hero video",
       "blocks": [
         { "type": "stat", "settings": { "value": "30,000ppm", "label": "Hyaluronic PDRN" } },
-        { "type": "stat", "settings": { "value": "30ml", "label": "Net content" } },
+        { "type": "stat", "settings": { "value": "45 g", "label": "Net weight" } },
         { "type": "stat", "settings": { "value": "30 days", "label": "Money-back guarantee" } }
       ]
     }

@@ -37,7 +37,7 @@
         {%- form 'product', sticky_product, id: 'StickyAtcForm', novalidate: 'novalidate' -%}
           <input type="hidden" name="id" value="{{ chosen_variant.id }}" data-variant-input>
           <input type="hidden" name="selling_plan" value="" data-selling-plan-input>
-          <input type="hidden" name="quantity" value="1">
+          <input type="hidden" name="quantity" value="1" data-quantity-input>
 
           {%- if sticky_product.variants.size > 1 -%}
             <label class="visually-hidden" for="StickyAtcVariant">

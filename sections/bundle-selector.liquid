@@ -77,6 +77,20 @@
               endif
 
               assign bottles = block.settings.bottles | default: 1
+
+              comment
+                A product with a single variant has no second or third variant to
+                point at, so the pack becomes a quantity of the one variant:
+                two bottles is two of it. Only when the product has exactly one
+                variant, so that adding real variants later takes over silently
+                and nothing has to be reconfigured.
+              endcomment
+              assign pack_quantity = 1
+              if block_variant == blank and bundle_product.variants.size == 1
+                assign block_variant = bundle_product.selected_or_first_available_variant
+                assign pack_quantity = bottles
+              endif
+
               assign allocation = blank
               if has_selling_plans
                 assign allocation = block_variant.selling_plan_allocations | first
@@ -97,7 +111,7 @@
               {%- endif -%}
 
               {%- capture price_html -%}
-                {% render 'product-price', variant: block_variant, unit_count: bottles %}
+                {% render 'product-price', variant: block_variant, unit_count: bottles, pack_quantity: pack_quantity %}
               {%- endcapture -%}
 
               <label class="bundle__label" for="Bundle-{{ section.id }}-{{ block.id }}">
@@ -110,6 +124,7 @@
                   data-bundle-option
                   data-label="{{ block.settings.title | escape }}"
                   data-price="{{ price_html | escape }}"
+                  data-quantity="{{ pack_quantity }}"
                   {% if allocation != blank %}
                     data-selling-plan="{{ allocation.selling_plan.id }}"
                   {% endif %}
@@ -132,24 +147,26 @@
 
                 <span class="bundle__pricing">
                   <span data-price-onetime>
-                    {% render 'product-price', variant: block_variant, unit_count: bottles %}
+                    {% render 'product-price', variant: block_variant, unit_count: bottles, pack_quantity: pack_quantity %}
                   </span>
 
                   {%- if allocation != blank -%}
                     <span data-price-subscription hidden>
                       <span class="price">
                         <span class="price__current">
+                          {%- assign pack_sub_price = allocation.price | times: pack_quantity -%}
                           {%- if settings.currency_code_enabled -%}
-                            {{ allocation.price | money_with_currency }}
+                            {{ pack_sub_price | money_with_currency }}
                           {%- else -%}
-                            {{ allocation.price | money }}
+                            {{ pack_sub_price | money }}
                           {%- endif -%}
                         </span>
                         {%- if allocation.compare_at_price > allocation.price -%}
-                          <s class="price__compare">{{ allocation.compare_at_price | money }}</s>
+                          {%- assign pack_sub_compare = allocation.compare_at_price | times: pack_quantity -%}
+                          <s class="price__compare">{{ pack_sub_compare | money }}</s>
                         {%- endif -%}
                         {%- if bottles > 1 -%}
-                          {%- assign sub_unit = allocation.price | divided_by: bottles -%}
+                          {%- assign sub_unit = pack_sub_price | divided_by: bottles -%}
                           <span class="price__unit">
                             {{- 'products.product.per_bottle' | t: price: sub_unit | money -}}
                           </span>
@@ -171,7 +188,7 @@
           {%- form 'product', bundle_product, id: 'BundleForm', novalidate: 'novalidate' -%}
             <input type="hidden" name="id" value="{{ bundle_product.selected_or_first_available_variant.id }}" data-variant-input>
             <input type="hidden" name="selling_plan" value="" data-selling-plan-input>
-            <input type="hidden" name="quantity" value="1">
+            <input type="hidden" name="quantity" value="1" data-quantity-input>
 
             <button class="button button--full bundle__button" type="submit">
               <span data-button-label>{{ section.settings.button_label | default: 'Add to cart' }}</span>
@@ -637,8 +654,8 @@
           "type": "option",
           "settings": {
             "title": "2 bottles",
-            "subtitle": "Our most chosen supply",
-            "badge": "Most popular",
+            "subtitle": "Keep a spare sealed",
+            "badge": "Recommended",
             "bottles": 2,
             "variant_position": 2,
             "selected": true
@@ -648,7 +665,7 @@
           "type": "option",
           "settings": {
             "title": "3 bottles",
-            "subtitle": "Best value per bottle",
+            "subtitle": "Three in the cabinet",
             "bottles": 3,
             "variant_position": 3
           }

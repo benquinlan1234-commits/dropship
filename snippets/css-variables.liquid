@@ -23,6 +23,8 @@
   assign softness = settings.display_softness | default: 30
   assign shadow_scale = settings.shadow_strength | default: 60 | divided_by: 100.0
   assign sheen_scale = settings.surface_sheen | default: 50 | divided_by: 100.0
+  assign atmosphere = settings.atmosphere_strength | default: 100 | divided_by: 100.0
+  assign media_blend = settings.media_blend | default: 100 | divided_by: 100.0
 -%}
 <style>
   :root {
@@ -83,6 +85,10 @@
     --lift-scale: 1.06;
 
     --grain-opacity: {{ grain }};
+    /* Scales every layer of the page field. 0 is the flat background colour. */
+    --atmosphere: {{ atmosphere }};
+    /* How far photography is feathered into the page at its edges. 0 is a hard cut. */
+    --media-blend: {{ media_blend }};
     --orb-opacity: {% if settings.show_orb_glow %}0.12{% else %}0{% endif %};
 
     /* Glass: a 1px inner highlight along the top edge. */

@@ -61,18 +61,28 @@ code. Nothing was deleted.
 ### Design system
 
 Pearl, lilac and plum with one violet accent, all theme settings. Fraunces for
-display and numerals, Manrope for body and UI. Depth is a soft violet halo
-rather than a grey drop shadow; silver is drawn as gradient metal rather than
-flat grey. Glow, sheen, grain and the drifting orb are each a setting, so the
-page can be taken completely flat without touching code. Full table in the
+display and numerals, Manrope for body and UI.
+
+The page ground is **one continuous field fixed behind every section** rather
+than a colour each section repaints: two violet pools in opposite corners, two
+cool silver pools, a pearl bloom under the header, and a wide diagonal sheen
+raking across all of it. Sections that butt against each other used to read as
+bands of flat colour; with the field fixed, content scrolls over an unbroken
+wash and the seams go. **Background depth** scales every layer of it and `0`
+returns the page to a flat colour exactly.
+
+Depth is a soft violet halo rather than a grey drop shadow; silver is drawn as
+gradient metal rather than flat grey. Photography is feathered into the page at
+its edges and eased in saturation — **Photo blending** — so a supplier shot on
+its own backdrop does not read as pasted on. Glow, sheen, grain, blending,
+background depth and the drifting orb are each a setting. Full table in the
 README.
 
 ---
 
 ## The live product
 
-Read from the store on 11 September 2026 via the Shopify connector, not from
-memory. This is what the theme is now wired to.
+Read from the store via the Shopify connector. This is what the theme is wired to.
 
 | | Live listing |
 | --- | --- |
@@ -82,39 +92,53 @@ memory. This is what the theme is now wired to.
 | Variants | **1** — "Pdrn spherical water-blasting essence", SKU `SU00075859-…` |
 | Price | **44.70 AUD**, inventory 1000 |
 | Images | 6, all with **empty alt text** |
-| Description | Supplier boilerplate. States **Net Content: 30ml**, and hotlinks six images from `oss.teemdrop.com` |
+| Description | Supplier boilerplate. Hotlinks six images from `oss.teemdrop.com` |
 
-### What this changed in the theme
+### Net weight: the carton wins
 
-- **Linked.** `hero_product: "salmon-facial-essence"`. The hero poster now falls
-  back to `product.featured_media`, so the listing's own photography carries it.
-- **Alt text.** Every image on the product has none. The theme falls back to the
-  product title wherever an image is content rather than decoration — the
-  product-page gallery was the last place still emitting a bare `alt=""`, and
-  now does not. Real alt text on the six images in admin is still better.
-- **Net content.** The page said `45g`, read off the carton photos. The listing
-  says `30ml`. A storefront must not contradict its own product description, so
-  the theme now says **30ml** everywhere: hero stat, trust line, Product details
-  spec, FAQ. **One of the two figures is wrong and I cannot tell which** — check
-  the physical carton and correct whichever is off. It is four settings.
-- **Longevity.** "About 8 weeks" and "one bottle lasts about eight weeks" are
-  gone. At 30ml that figure was no longer supportable, and you had asked for the
-  heading removed anyway. Nothing replaced it with a different number.
+The listing description says "Net Content: 30ml". The carton and the bottle both
+read **NET WT. 45 G (1.58 OZ.)**. The theme says **45 g**, because the printed
+pack is the primary source and the description is supplier boilerplate.
+
+**The listing is the thing that is wrong here.** Fix "Net Content: 30ml" in the
+product description in admin, or the page and the description below it will
+disagree in front of the customer.
+
+### Bundles run on quantity, not variants
+
+The product has one variant, so there is no second or third variant for the
+bundle cards to point at. Rather than showing one card, each option now adds
+**that many of the one variant**: two bottles is quantity 2. Prices follow —
+$44.70 / $89.40 / $134.10 — and the per-bottle figure is the same on all three,
+because at the moment it genuinely is.
+
+This is a real offer but a weak one: there is no reason to take three. To make
+the packs worth choosing, either
+
+1. **create 2- and 3-bottle variants** priced below the multiple — the cards
+   pick real variants up automatically the moment they exist, because the
+   quantity fallback only applies while the product has exactly one variant, or
+2. **set a Shopify automatic discount** ("buy 2, save 10%"). The cart will apply
+   it; the card prices will not show it, so say so in the subtitle.
+
+Until one of those exists, no card claims a saving. "Best value per bottle" and
+"Our most chosen supply" are gone — the first would have been false, the second
+is unsupported on a store with no orders.
 
 ### Still contradictory or unverified
 
-- **`30,000ppm` hyaluronic PDRN** — the first hero stat. Nothing on the listing
-  substantiates it. Unlike the net content it contradicts nothing, so it was
-  left alone rather than swapped for another invented figure. Get it from the
-  supplier in writing or change the stat.
-- **Currency is AUD.** Pricing copy elsewhere assumed dollars generically and
-  reads fine, but the free-shipping threshold is **$35** — below the price of a
-  single bottle, so the cart progress bar is satisfied by every possible order.
-  Either raise it or turn it off.
-- **The description is supplier boilerplate** and hotlinks six images from
-  `oss.teemdrop.com`. Those are third-party URLs on someone else's CDN: they can
-  change or disappear without warning. The theme does not read the description,
-  so this is a listing cleanup, not a theme one.
+- **`30,000ppm` hyaluronic PDRN** — the first hero stat. It is printed on the
+  carton, so it is the supplier's claim rather than an invented one, but it is
+  still a claim you would have to stand behind. Worth getting in writing.
+- **Currency is AUD**, and the free-shipping threshold is **$35** — below one
+  bottle, so the cart progress bar is satisfied by every possible order. Raise
+  it or turn it off.
+- **Alt text.** None of the six images has any. The theme falls back to the
+  product title wherever an image is content rather than decoration. Real alt
+  text in admin is still better.
+- **The description hotlinks six images from `oss.teemdrop.com`** — third-party
+  URLs on someone else's CDN, which can change or vanish. The theme does not read
+  the description, so this is a listing cleanup, not a theme one.
 
 ---
 
@@ -182,22 +206,11 @@ straight into CI or a pre-push hook.
 2. ~~**Set the featured product.**~~ **Done** — `hero_product` is linked to
    `salmon-facial-essence` in `config/settings_data.json`, so every section
    resolves against the live listing with no Customizer step.
-3. **Add the 2- and 3-bottle variants.** The live product has **one** variant.
-   The bundle cards are keyed to variant positions 1/2/3, and a card whose
-   variant does not exist is skipped rather than duplicated — so today the
-   offer section renders a single card at $44.70. Functional, but it is not the
-   three-choice section you asked for. Suggested shape, prices yours to set:
-
-   | Position | Title | Price (AUD) | Compare at |
-   | --- | --- | --- | --- |
-   | 1 | 1 bottle | 44.70 | — |
-   | 2 | 2 bottles | ~79.00 | 89.40 |
-   | 3 | 3 bottles | ~110.00 | 134.10 |
-
-   Per-bottle prices are computed from the "Bottles in this option" setting, so
-   they stay correct if prices change. If the variants land in a different
-   order, fix **Variant position** on each bundle card or paste the numeric
-   **Variant ID**.
+3. **Decide how the bundles earn their price.** They work today — three cards,
+   quantities 1/2/3 of the single variant — but nothing makes two better value
+   than two singles. Either create 2- and 3-bottle variants priced below the
+   multiple (the cards switch to them automatically), or set a Shopify automatic
+   discount. See "Bundles run on quantity" above.
 
 4. **Imagery.** The product already carries six supplier photos, so the hero
    and the gallery light up from the listing with no theme setting. What is

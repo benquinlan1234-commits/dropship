@@ -27,6 +27,62 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* The page ground.
+
+   One continuous field fixed behind every section, rather than each section
+   painting its own. Sections that butt against each other used to show as
+   bands of flat colour; with the field fixed, content scrolls over an
+   unbroken wash and the seams disappear.
+
+   Six layers, back to front: a cool silver pool bottom-left and a second
+   low on the right — this is where the metal enters the page rather than
+   only appearing as hairlines — then lilac and violet pools top-right and
+   bottom-right, a warm pearl top-left, and a wide diagonal sheen raking
+   across all of it. Every alpha is scaled by --atmosphere, so 0 returns the
+   page to the flat colour exactly. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-color: var(--color-background);
+  background-image:
+    linear-gradient(
+      112deg,
+      rgba(var(--color-silver-rgb), 0) 8%,
+      rgba(255, 255, 255, calc(0.60 * var(--atmosphere))) 34%,
+      rgba(var(--color-silver-rgb), calc(0.52 * var(--atmosphere))) 57%,
+      rgba(255, 255, 255, calc(0.46 * var(--atmosphere))) 74%,
+      rgba(var(--color-silver-rgb), 0) 96%
+    ),
+    radial-gradient(
+      ellipse 44% 38% at 92% 4%,
+      rgba(var(--color-accent-rgb), calc(0.34 * var(--atmosphere))) 0%,
+      rgba(var(--color-accent-rgb), 0) 72%
+    ),
+    radial-gradient(
+      ellipse 50% 40% at 6% 92%,
+      rgba(var(--color-accent-rgb), calc(0.26 * var(--atmosphere))) 0%,
+      rgba(var(--color-accent-rgb), 0) 74%
+    ),
+    radial-gradient(
+      ellipse 40% 52% at 98% 62%,
+      rgba(var(--color-silver-rgb), calc(0.95 * var(--atmosphere))) 0%,
+      rgba(var(--color-silver-rgb), 0) 70%
+    ),
+    radial-gradient(
+      ellipse 38% 34% at 2% 30%,
+      rgba(var(--color-silver-rgb), calc(0.70 * var(--atmosphere))) 0%,
+      rgba(var(--color-silver-rgb), 0) 72%
+    ),
+    radial-gradient(
+      ellipse 46% 34% at 26% -4%,
+      rgba(var(--color-surface-rgb), calc(0.90 * var(--atmosphere))) 0%,
+      rgba(var(--color-surface-rgb), 0) 70%
+    );
+}
+
 /* A fine grain over everything, so large flat areas do not read as digital.
    Generated, not an asset request. */
 body::after {
@@ -277,11 +333,14 @@ ol {
 }
 
 /* A pearl-centred wash, for the hero and the offer. */
+/* A local lift, not a second ground. The page field behind it stays visible,
+   so two washed sections in a row read as one surface with a bloom in each
+   rather than as two blocks. */
 .section--wash {
   background: radial-gradient(
-    ellipse 120% 90% at 50% 18%,
-    var(--color-surface) 0%,
-    var(--color-background) 62%
+    ellipse 96% 70% at 50% 14%,
+    rgba(var(--color-surface-rgb), calc(0.42 * var(--atmosphere))) 0%,
+    rgba(var(--color-surface-rgb), 0) 64%
   );
 }
 
@@ -398,15 +457,31 @@ ol {
   text-decoration: none;
   cursor: pointer;
   box-shadow: var(--shadow-soft);
+  background-image: linear-gradient(
+    118deg,
+    rgba(255, 255, 255, 0) 30%,
+    rgba(255, 255, 255, 0.26) 50%,
+    rgba(255, 255, 255, 0) 70%
+  );
+  background-repeat: no-repeat;
+  background-size: 260% 100%;
+  background-position: 130% 0;
   transition: background-color var(--duration-hover) var(--ease-out),
+    background-position 620ms var(--ease-out),
     color var(--duration-hover) var(--ease-out),
     transform var(--duration-hover) var(--ease-out),
     box-shadow var(--duration-hover) var(--ease-out),
     border-color var(--duration-hover) var(--ease-out);
 }
 
+/* A light rakes across the button on hover. It rides the background layer
+   rather than a pseudo-element, so it always passes under the label instead of
+   tinting it — buttons here carry bare text that cannot be raised above an
+   overlay. The colour only deepens a step: a violet button jumping to
+   near-black reads as a different button, not as this one under the cursor. */
 .button:hover {
-  background-color: var(--color-text);
+  background-color: var(--color-accent-ink);
+  background-position: -30% 0;
   transform: translateY(var(--lift-y-sm));
   box-shadow: var(--shadow-lift);
 }
@@ -436,9 +511,9 @@ ol {
 }
 
 .button--secondary:hover {
-  background-color: var(--color-text);
-  border-color: var(--color-text);
-  color: var(--color-surface);
+  background-color: rgba(var(--color-accent-rgb), 0.09);
+  border-color: var(--color-accent);
+  color: var(--color-accent-ink);
 }
 
 .button--light {
@@ -561,12 +636,44 @@ ol {
 /* A tall pill mask edged in brushed silver: the gradient sits in the border
    box, the fill in the padding box, so the metal follows the curve. */
 .media--pill {
+  position: relative;
   border-radius: 220px 220px 220px 220px / 180px 180px 180px 180px;
   border: 1px solid transparent;
   background-image: linear-gradient(var(--color-pearl), var(--color-pearl)), var(--silver-fill);
   background-origin: border-box;
   background-clip: padding-box, border-box;
   box-shadow: var(--shadow-soft);
+}
+
+/* Supplier photography arrives on its own backdrop, which meets the page at a
+   hard edge and reads as a photo pasted onto a colour. Feather the rim into
+   the page and pull the saturation back a little, so the shot sits in the
+   palette instead of on top of it. --media-blend takes it back to a clean cut. */
+.media--pill img,
+.media--pill video {
+  filter: saturate(calc(1 - 0.14 * var(--media-blend))) contrast(calc(1 - 0.03 * var(--media-blend)))
+    brightness(calc(1 + 0.02 * var(--media-blend)));
+}
+
+.media--pill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse 78% 72% at 50% 46%,
+      rgba(var(--color-background-rgb), 0) 58%,
+      rgba(var(--color-background-rgb), calc(0.5 * var(--media-blend))) 84%,
+      rgba(var(--color-background-rgb), calc(0.88 * var(--media-blend))) 100%
+    ),
+    linear-gradient(
+      148deg,
+      rgba(255, 255, 255, calc(0.22 * var(--media-blend))) 0%,
+      rgba(255, 255, 255, 0) 42%
+    );
 }
 
 @media screen and (max-width: 749px) {
@@ -865,12 +972,34 @@ ol {
     transform: none;
   }
 
+  .accordion__panel {
+    transition: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  accordion-group.is-ready .accordion__panel {
+    grid-template-rows: 0fr;
+    opacity: 0;
+  }
+
+  accordion-group.is-ready .accordion.is-open .accordion__panel {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+
+  /* Stop every animation and every transform, but leave colour and opacity
+     fades alone. A 200ms colour change is not the motion this query is about,
+     and killing it globally left buttons and panels snapping between states
+     with no feedback at all. */
   *,
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    transition-property: background-color, border-color, color, fill, stroke, opacity,
+      box-shadow !important;
+    transition-duration: 200ms !important;
     scroll-behavior: auto !important;
   }
 }

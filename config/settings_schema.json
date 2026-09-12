@@ -388,6 +388,28 @@
         "info": "A faint gradient across card fills so they are not flat colour."
       },
       {
+        "type": "range",
+        "id": "atmosphere_strength",
+        "label": "Background depth",
+        "min": 0,
+        "max": 150,
+        "step": 5,
+        "default": 100,
+        "unit": "%",
+        "info": "Scales the layered violet and silver field behind the page. 0 is a flat background colour."
+      },
+      {
+        "type": "range",
+        "id": "media_blend",
+        "label": "Photo blending",
+        "min": 0,
+        "max": 100,
+        "step": 5,
+        "default": 100,
+        "unit": "%",
+        "info": "Feathers the hero photograph into the page at its edges and eases its saturation, so a supplier shot on its own backdrop does not read as pasted on. 0 is a hard edge."
+      },
+      {
         "type": "checkbox",
         "id": "enable_animations",
         "label": "Reveal sections on scroll",

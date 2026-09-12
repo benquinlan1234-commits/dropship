@@ -280,6 +280,7 @@
       this.inputs = Array.prototype.slice.call(this.querySelectorAll('[data-bundle-option]'));
       this.variantInput = this.querySelector('[data-variant-input]');
       this.sellingPlanInput = this.querySelector('[data-selling-plan-input]');
+      this.quantityInput = this.querySelector('[data-quantity-input]');
       this.subscribeToggle = this.querySelector('[data-subscribe-toggle]');
 
       this.inputs.forEach(
@@ -321,8 +322,15 @@
       var subscribing = !!(this.subscribeToggle && this.subscribeToggle.checked);
       var sellingPlan = option.dataset.sellingPlan || '';
 
+      /* When the product has one variant the packs are quantities of it, so the
+         option carries how many to add. Real variants report 1 and nothing here
+         changes. */
+      var quantity = parseInt(option.dataset.quantity, 10);
+      if (!quantity || quantity < 1) quantity = 1;
+
       if (this.variantInput) this.variantInput.value = option.value;
       if (this.sellingPlanInput) this.sellingPlanInput.value = subscribing ? sellingPlan : '';
+      if (this.quantityInput) this.quantityInput.value = String(quantity);
 
       this.querySelectorAll('[data-price-onetime]').forEach(function (el) {
         el.hidden = subscribing;
@@ -336,6 +344,7 @@
           detail: {
             variantId: option.value,
             sellingPlan: subscribing ? sellingPlan : '',
+            quantity: quantity,
             label: option.dataset.label || '',
             price: option.dataset.price || '',
             subscribing: subscribing
@@ -397,6 +406,12 @@
         });
       }
       if (this.variantInput && detail.variantId) this.variantInput.value = detail.variantId;
+
+      /* Follow the chosen pack size, or the sticky bar would add one bottle
+         while the card above it says three. */
+      var quantityInput = this.querySelector('[data-quantity-input]');
+      if (quantityInput) quantityInput.value = String(detail.quantity || 1);
+
       if (detail.price) this.setPrice(detail.price);
       var planInput = this.querySelector('[data-selling-plan-input]');
       if (planInput) planInput.value = detail.sellingPlan || '';
@@ -484,23 +499,83 @@
      Accordion — one open at a time inside a group
      ---------------------------------------------------------------------- */
 
+  /* A <details> opens in one frame, so the panel is already at full height
+     before any animation on it can run. Taking the click over lets the panel
+     transition its height open, and lets the close transition finish before the
+     open attribute comes off — which is the only way to animate a details shut.
+
+     The is-ready class gates the CSS, so without JavaScript the answers are
+     plain open/closed details and still readable. */
   class AccordionGroup extends HTMLElement {
     connectedCallback() {
-      if (this.dataset.exclusive !== 'true') return;
+      this.exclusive = this.dataset.exclusive === 'true';
       this.items = Array.prototype.slice.call(this.querySelectorAll('details'));
+      if (!this.items.length) return;
+
       this.items.forEach(
         function (item) {
-          item.addEventListener(
-            'toggle',
-            function () {
-              if (!item.open) return;
-              this.items.forEach(function (other) {
-                if (other !== item) other.open = false;
-              });
+          if (item.open) item.classList.add('is-open');
+
+          var summary = item.querySelector('summary');
+          if (!summary) return;
+
+          summary.addEventListener(
+            'click',
+            function (event) {
+              event.preventDefault();
+              if (item.open) this.collapse(item);
+              else this.expand(item);
             }.bind(this)
           );
         }.bind(this)
       );
+
+      this.classList.add('is-ready');
+    }
+
+    expand(item) {
+      if (this.exclusive) {
+        this.items.forEach(
+          function (other) {
+            if (other !== item && other.open) this.collapse(other);
+          }.bind(this)
+        );
+      }
+
+      item.open = true;
+      /* Read a layout property so the panel is painted at its collapsed size
+         before the class flips it, or the browser coalesces both into one
+         frame and there is nothing to transition from. */
+      void item.offsetHeight;
+      item.classList.add('is-open');
+    }
+
+    collapse(item) {
+      var panel = item.querySelector('.accordion__panel');
+      item.classList.remove('is-open');
+
+      if (!panel || prefersReducedMotion.matches) {
+        item.open = false;
+        return;
+      }
+
+      var settled = false;
+      var finish = function () {
+        if (settled) return;
+        settled = true;
+        panel.removeEventListener('transitionend', onEnd);
+        /* Re-opened mid-close: leave it open rather than yanking it shut. */
+        if (!item.classList.contains('is-open')) item.open = false;
+      };
+      var onEnd = function (event) {
+        if (event.target !== panel || event.propertyName !== 'grid-template-rows') return;
+        finish();
+      };
+
+      panel.addEventListener('transitionend', onEnd);
+      /* transitionend does not fire when the panel is off-screen or the
+         transition is interrupted, so never leave it half-closed. */
+      setTimeout(finish, 600);
     }
   }
 
