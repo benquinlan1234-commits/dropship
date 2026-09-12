@@ -683,6 +683,34 @@ ol {
    rim and a fill it reads as a photo mounted on a card; given none, and a fill
    that is itself only a soft bloom, the white dissolves into the page and the
    product is left floating on it. No hard edge anywhere on the element. */
+/* A photograph that is already cut out needs nothing at all behind it: no fill,
+   no rim, no pool of light, no feather. Anything added is the only rectangle on
+   the page. */
+.media--bare {
+  border: 0;
+  box-shadow: none;
+  background-color: transparent;
+  background-image: none;
+}
+
+/* The wrapper inside carries the pearl fill for a loading poster; with a
+   cut-out there is nothing to fill behind. */
+.media--bare .video-wrapper,
+.media--bare .video-wrapper__poster {
+  background: transparent;
+}
+
+.media--bare img,
+.media--bare video {
+  -webkit-mask-image: none;
+  mask-image: none;
+  filter: none;
+}
+
+.media--bare::after {
+  content: none;
+}
+
 /* A packshot on white cannot have its ground removed: the product is itself
    near-white, so every blend mode that drops the white damages the pack too.
    Instead the white is allowed to spread past the frame as a wide, soft pool

@@ -14,6 +14,8 @@
     mp4_url       - URL of an .mp4 uploaded to Settings > Files
     webm_url      - URL of a .webm uploaded to Settings > Files
     poster        - an image object used as the poster and reduced-motion fallback
+    poster_url    - a ready-made URL, for a poster that is a theme asset rather
+                    than an uploaded file. Takes precedence over `poster`
     alt           - alt text for the poster image
     ratio         - CSS aspect-ratio value, e.g. '16 / 9'. Defaults to '16 / 9'
     controls      - boolean, show native controls (default false)
@@ -26,9 +28,14 @@
   if shopify_video != blank or mp4_url != blank or webm_url != blank
     assign has_sources = true
   endif
-  assign poster_url = ''
-  if poster != blank
-    assign poster_url = poster | image_url: width: 1600
+  comment
+    The <video poster> attribute takes whichever source exists: a passed-in URL
+    for a theme asset, otherwise the uploaded image. Kept under its own name so
+    it cannot clobber the poster_url argument.
+  endcomment
+  assign video_poster = poster_url
+  if video_poster == blank and poster != blank
+    assign video_poster = poster | image_url: width: 1600
   endif
 -%}
 <div class="video-wrapper" style="--video-ratio: {{ video_ratio }};">
@@ -41,7 +48,7 @@
       loop
       preload="none"
       {% if controls %}controls{% endif %}
-      {% if poster_url != blank %}poster="{{ poster_url }}"{% endif %}
+      {% if video_poster != blank %}poster="{{ video_poster }}"{% endif %}
       {% if poster_alt != blank %}aria-label="{{ poster_alt | escape }}"{% endif %}
     >
       {%- if webm_url != blank -%}
@@ -60,7 +67,26 @@
     </video>
   {%- endif -%}
 
-  {%- if poster != blank -%}
+  {%- if poster_url != blank -%}
+    {%- comment -%}
+      A theme asset, not an uploaded file: it has no image object behind it, so
+      there is no image_url to build a srcset from and no intrinsic size to
+      read. The asset is authored at the size it is served at.
+    {%- endcomment -%}
+    <img
+      class="video-wrapper__poster{% if has_sources %} video-wrapper__poster--overlay{% endif %}"
+      src="{{ poster_url }}"
+      width="1000"
+      height="1000"
+      alt="{{ poster_alt | escape }}"
+      {% if loading_eager %}
+        loading="eager"
+        fetchpriority="high"
+      {% else %}
+        loading="lazy"
+      {% endif %}
+    >
+  {%- elsif poster != blank -%}
     <img
       class="video-wrapper__poster{% if has_sources %} video-wrapper__poster--overlay{% endif %}"
       src="{{ poster | image_url: width: 1600 }}"

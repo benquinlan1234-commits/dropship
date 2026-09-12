@@ -53,9 +53,24 @@
     assign hero_media = hero_product.media[wanted_media]
   endif
 
+  comment
+    The bundled packshot is the product photograph with its white studio ground
+    removed, so it sits on the page with no edge at all rather than as a
+    rectangle to be blended. It wins over the product's own media, because the
+    media is the same shot with the white still on it. Clear the setting to go
+    back to the live product photo.
+  endcomment
+  assign hero_poster_url = blank
+  if section.settings.poster_asset != blank
+    assign hero_poster_url = section.settings.poster_asset | asset_url
+  endif
+
   assign hero_poster = section.settings.poster
   if hero_poster == blank
     assign hero_poster = hero_media.preview_image
+  endif
+  if section.settings.poster != blank
+    assign hero_poster_url = blank
   endif
 
   assign hero_poster_alt = section.settings.poster_alt
@@ -75,12 +90,13 @@
 
   <div class="hero__grid">
     <div class="hero__media parallax" data-parallax="0.06">
-      <div class="media {% if is_overlay %}media--fill{% else %}media--tall media--pill{% if section.settings.frame_style == 'float' %} media--float{% endif %}{% endif %}">
+      <div class="media {% if is_overlay %}media--fill{% else %}media--tall media--pill{% if section.settings.frame_style == 'float' %} media--float{% elsif section.settings.frame_style == 'bare' %} media--bare{% endif %}{% endif %}">
         {% render 'video',
           shopify_video: section.settings.video,
           mp4_url: section.settings.video_mp4_url,
           webm_url: section.settings.video_webm_url,
           poster: hero_poster,
+          poster_url: hero_poster_url,
           alt: hero_poster_alt,
           ratio: media_ratio,
           loading_eager: true
@@ -411,15 +427,23 @@
       "info": "Optional. Upload a .webm under Content > Files and paste its URL. Served first where supported."
     },
     {
+      "type": "text",
+      "id": "poster_asset",
+      "label": "Bundled packshot",
+      "default": "hero-packshot.webp",
+      "info": "A theme asset, shipped with the theme: the product shot with its white studio ground removed, so it sits on the page with no edge to blend. Clear this to fall back to the product's own photo, or upload a Poster image below to override it."
+    },
+    {
       "type": "select",
       "id": "frame_style",
       "label": "Frame style",
       "options": [
-        { "value": "float", "label": "Floating — no rim" },
+        { "value": "bare", "label": "None — for a cut-out photo" },
+        { "value": "float", "label": "Soft light pool — for a photo on white" },
         { "value": "panel", "label": "Panel — silver rim and shadow" }
       ],
-      "default": "float",
-      "info": "Floating suits a packshot shot on white or another pale ground: the frame goes, and the photo's own light spreads into the page instead of ending at an edge. Panel suits a photo with a strong coloured backdrop, which needs a frame of its own colour to fade into: it dissolves into the page and the product is left sitting on it. Panel suits a photo with its own coloured backdrop, which needs a frame to fade into."
+      "default": "bare",
+      "info": "None is right for a photo with a transparent background, which the bundled packshot has: nothing is drawn behind it, so there is no rectangle. Soft light pool suits a photo still on a white or pale ground: the frame goes, and the photo's own light spreads into the page instead of ending at an edge. Panel suits a photo with a strong coloured backdrop, which needs a frame of its own colour to fade into: it dissolves into the page and the product is left sitting on it. Panel suits a photo with its own coloured backdrop, which needs a frame to fade into."
     },
     {
       "type": "color",

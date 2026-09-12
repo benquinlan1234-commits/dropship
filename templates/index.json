@@ -25,8 +25,9 @@
         "frame_color": "#FBFAFE",
         "image_zoom": 100,
         "image_position": 50,
-        "frame_style": "float",
-        "product_image": 5
+        "frame_style": "bare",
+        "product_image": 5,
+        "poster_asset": "hero-packshot.webp"
       },
       "blocks": {
         "s1": {

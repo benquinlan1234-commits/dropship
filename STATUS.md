@@ -88,7 +88,20 @@ returns the page to a flat colour exactly.
 Depth is a soft violet halo rather than a grey drop shadow; silver is drawn as
 gradient metal rather than flat grey.
 
-**Photography.** The hero frame takes its shape from **Image frame shape**, and
+**Photography.** The hero ships a cut-out packshot as a theme asset,
+`assets/hero-packshot.webp` — product media 5 with its white studio ground
+removed, so it sits on the page with no edge to blend rather than a rectangle
+to disguise. The source file is kept in `design/source-photos/`. The removal
+flood-fills inward from the edges rather than thresholding on colour, which is
+what preserves the white lettering, the orbs and the cap highlight; a global
+threshold erases them, and no blend mode can separate a near-white product from
+a white ground. **Bundled packshot** points at the asset — clear it to fall back
+to the product's own photo, or upload a **Poster image** to override both.
+
+**Frame style** decides what is drawn behind: None for a cut-out (nothing, which
+is the default), Soft light pool for a photo still on white, Panel with a silver
+rim and a matched fill for a photo on a strong coloured backdrop. The frame
+takes its shape from **Image frame shape**, and
 the shape drives the ratio, the corner radius and whether the media bleeds off
 the right edge. Square is the default: a packshot fills it exactly, so there is
 neither a crop nor a letterbox, and it sits inside the column with a gutter
