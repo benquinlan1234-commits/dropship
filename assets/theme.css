@@ -679,6 +679,52 @@ ol {
   );
 }
 
+/* A packshot already cut out on white needs the opposite of a panel. Given a
+   rim and a fill it reads as a photo mounted on a card; given none, and a fill
+   that is itself only a soft bloom, the white dissolves into the page and the
+   product is left floating on it. No hard edge anywhere on the element. */
+/* A packshot on white cannot have its ground removed: the product is itself
+   near-white, so every blend mode that drops the white damages the pack too.
+   Instead the white is allowed to spread past the frame as a wide, soft pool
+   and fade into the page over a distance — there is then no edge anywhere for
+   the eye to catch, and the pool reads as light thrown behind the product.
+   The spread is a box-shadow rather than a background so it can extend well
+   beyond the element's own box. */
+.media--float {
+  border: 0;
+  background-color: transparent;
+  background-image: radial-gradient(
+    ellipse 84% 84% at 50% 48%,
+    var(--media-frame, var(--color-surface)) 0%,
+    rgba(var(--color-surface-rgb), 0) 92%
+  );
+  box-shadow: 0 0 120px 60px var(--media-frame, var(--color-surface));
+}
+
+/* A cut-out packshot fills most of its frame, so the feather has to stay in the
+   outer margin. Fading from the middle out washes the product itself — the white
+   ground barely needs help against a pale page, it is only the last few percent
+   at the edge that reads as a rectangle. */
+.media--float img,
+.media--float video {
+  -webkit-mask-image: radial-gradient(
+    ellipse 96% 98% at 50% 48%,
+    rgba(0, 0, 0, 1) 68%,
+    rgba(0, 0, 0, calc(1 - 0.35 * var(--media-blend))) 87%,
+    rgba(0, 0, 0, calc(1 - var(--media-blend))) 100%
+  );
+  mask-image: radial-gradient(
+    ellipse 96% 98% at 50% 48%,
+    rgba(0, 0, 0, 1) 68%,
+    rgba(0, 0, 0, calc(1 - 0.35 * var(--media-blend))) 87%,
+    rgba(0, 0, 0, calc(1 - var(--media-blend))) 100%
+  );
+}
+
+.media--float::after {
+  content: none;
+}
+
 /* A single soft highlight down the top-left, so the pill reads as a lit surface
    the photograph is sitting in rather than a hole cut out of the page. */
 .media--pill::after {
